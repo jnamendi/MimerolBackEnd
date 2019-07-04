@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">1234567aA</property>
+        <property name="hibernate.connection.url">jdbc:mysql://42.112.210.46/ofo</property>
+        <property name="hibernate.connection.username">ofo_bmb</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.search.autoregister_listeners">true</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+        <mapping class="bmbsoft.orderfoodonline.entities.AttributeGroup"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Promotion"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Category"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Voucher"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.VoucherLineitem"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.ContentEntry"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.UserInfo"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.SmtpConfig"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Country"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Menu"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Order"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.UserRestaurant"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.OrderExtraItem"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.FoodType"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Role"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Favouries"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.ExtraItem"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.PaymentProvider"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.PromotionLineitem"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.CurrencyRate"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Currency"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.MenuExtraItem"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.OrderPayment"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.RestaurantAttribute"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.OrderHistory"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.ContentDefinition"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.ModuleAction"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.RestaurantPaymentProvider"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.LanguageResource"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Media"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.OrderInfo"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Tax"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.RestaurantInfo"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.UserRole"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.District"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.OrderTransaction"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Restaurant"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Rating"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.City"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.RestaurantComment"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.MenuItem"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Address"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.RestaurantCategory"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.RoleModule"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Language"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.User"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.Attribute"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.ContactUs"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.ContentEmail"/>
+        <mapping class="bmbsoft.orderfoodonline.entities.OrderLineItem"/>
+    </session-factory>
+</hibernate-configuration>
