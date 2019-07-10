@@ -25,3 +25,4 @@
 /.nb-gradle/
 src/main/java/bmbsoft/orderfoodonline/.vs/slnx.sqlite
 src/main/java/bmbsoft/orderfoodonline/.vs/ProjectSettings.json
+/bin/
