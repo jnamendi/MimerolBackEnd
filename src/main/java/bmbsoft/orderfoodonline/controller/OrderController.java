@@ -210,20 +210,20 @@ public class OrderController extends BaseController {
 					if (cm != null) {
 						TemplateMatcher matcher = new TemplateMatcher("${", "}");
 						Map<String, String> vars = new HashMap<String, String>();
-						vars.put("orderCode", ps.getorderCode());
-						vars.put("restaurantName", ps.getName());
-						vars.put("restaurantAddress", ps.getAddressLine());
-						vars.put("restaurantPhone", ps.getPhone1());
-						vars.put("deliveryCost", req.getDeliveryCost().toString());
-						vars.put("totalPrice", req.getOrderItem().getTotalPrice().toString());
-						vars.put("userName", req.getName());
-						vars.put("userAddress", req.getAddress());
-						vars.put("userDistrict", req.getDistrict());
-						vars.put("userCity", req.getCity());
+						vars.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+						vars.put("restaurantName", ps.getName() == null ? "" : ps.getName());
+						vars.put("restaurantAddress", ps.getAddressLine() == null ? "" : ps.getAddressLine());
+						vars.put("restaurantPhone", ps.getPhone1() == null ? "" : ps.getPhone1());
+						vars.put("deliveryCost", req.getDeliveryCost() == null ? "" : req.getDeliveryCost().toString());
+						vars.put("totalPrice", req.getOrderItem().getTotalPrice() == null ? "" : req.getOrderItem().getTotalPrice().toString());
+						vars.put("userName", req.getName() == null ? "" : req.getName());
+						vars.put("userAddress", req.getAddress() == null ? "" : req.getAddress());
+						vars.put("userDistrict", req.getDistrict() == null ? "" : req.getDistrict());
+						vars.put("userCity", req.getCity() == null ? "" : req.getCity());
 						vars.put("userNumber",
 								req.getNumber() != null && !req.getNumber().isEmpty() ? req.getNumber() : "");
-						vars.put("deliveryTime", req.getTime());
-						vars.put("remarks", req.getRemarks());
+						vars.put("deliveryTime", req.getTime() == null ? "" : req.getTime());
+						vars.put("remarks", req.getRemarks() == null ? "" : req.getRemarks());
 						vars.put("symbolLeft", req.getSymbolLeft() == null && req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
@@ -260,8 +260,8 @@ public class OrderController extends BaseController {
 						// title
 						TemplateMatcher title = new TemplateMatcher("${", "}");
 						Map<String, String> t = new HashMap<String, String>();
-						t.put("orderCode", ps.getorderCode());
-						t.put("restaurantName", ps.getName());
+						t.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+						t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
 						String trpc = title.replace(cm.getSubject(), t);
 
 						// receive voucher
@@ -293,8 +293,8 @@ public class OrderController extends BaseController {
 					rs.setMessage("OK");
 					rs.setContent(new HashMap() {
 						{
-							put("orderId", ps.getOrderId());
-							put("invoiceCode", ps.getorderCode());
+							put("orderId", ps.getOrderId() == null ? "" : ps.getOrderId());
+							put("invoiceCode", ps.getorderCode() == null ? "" : ps.getorderCode());
 						}
 					});
 
@@ -644,10 +644,10 @@ public class OrderController extends BaseController {
 									if (cm != null) {
 										TemplateMatcher matcher = new TemplateMatcher("${", "}");
 										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName());
-										map.put("openTime", vm.getOpenTime());
-										map.put("closeTime", vm.getCloseTime());
+										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
+										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
+										map.put("openTime", vm.getOpenTime() == null ? "" : vm.getOpenTime());
+										map.put("closeTime", vm.getCloseTime() == null ? "" : vm.getCloseTime());
 
 										String body = matcher.replace(cm.getBody(), map);
 
@@ -669,17 +669,17 @@ public class OrderController extends BaseController {
 									if (review != null) {
 										TemplateMatcher matcher = new TemplateMatcher("${", "}");
 										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName());
-										map.put("fullName", vm.getUserName());
+										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
+										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
+										map.put("fullName", vm.getUserName() == null ? "" : vm.getUserName());
 
 										String body = matcher.replace(review.getBody(), map);
 
 										// title
 										TemplateMatcher title = new TemplateMatcher("${", "}");
 										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", vm.getOrderCode());
-										t.put("restaurantName", vm.getRestaurantName());
+										t.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
+										t.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
 										String trpc = title.replace(review.getSubject(), t);
 
 										logger.info("------------send review to " + vm.getEmail());
@@ -716,17 +716,17 @@ public class OrderController extends BaseController {
 									if (cm != null) {
 										TemplateMatcher matcher = new TemplateMatcher("${", "}");
 										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName());
-										map.put("openTime", vm.getOpenTime());
-										map.put("closeTime", vm.getCloseTime());
+										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
+										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
+										map.put("openTime", vm.getOpenTime() == null ? "" : vm.getOpenTime());
+										map.put("closeTime", vm.getCloseTime() == null ? "" : vm.getCloseTime());
 
 										String body = matcher.replace(cm.getBody(), map);
 
 										// title
 										TemplateMatcher title = new TemplateMatcher("${", "}");
 										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", vm.getOrderCode());
+										t.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
 										String trpc = title.replace(cm.getSubject(), t);
 
 										logger.info("------------send delivered to " + vm.getEmail());
@@ -741,17 +741,17 @@ public class OrderController extends BaseController {
 									if (review != null) {
 										TemplateMatcher matcher = new TemplateMatcher("${", "}");
 										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName());
-										map.put("fullName", vm.getUserName());
+										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
+										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
+										map.put("fullName", vm.getUserName() == null ? "" : vm.getUserName());
 
 										String body = matcher.replace(review.getBody(), map);
 
 										// title
 										TemplateMatcher title = new TemplateMatcher("${", "}");
 										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", vm.getOrderCode());
-										t.put("restaurantName", vm.getRestaurantName());
+										t.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
+										t.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
 										String trpc = title.replace(review.getSubject(), t);
 
 										logger.info("------------send review to " + vm.getEmail());
