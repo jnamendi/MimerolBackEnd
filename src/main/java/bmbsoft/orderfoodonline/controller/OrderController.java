@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 
 import javax.mail.MessagingException;
 
+import bmbsoft.orderfoodonline.model.AddressViewModel;
+import bmbsoft.orderfoodonline.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +40,6 @@ import bmbsoft.orderfoodonline.model.shared.PaymentRequest;
 import bmbsoft.orderfoodonline.model.shared.PaymentResponse;
 import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.service.ContentEmailService;
-import bmbsoft.orderfoodonline.service.CountryService;
-import bmbsoft.orderfoodonline.service.EmailService;
-import bmbsoft.orderfoodonline.service.OrderPaymentService;
-import bmbsoft.orderfoodonline.service.OrderService;
-import bmbsoft.orderfoodonline.service.UserService;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
 import bmbsoft.orderfoodonline.util.Constant.PaymentMethod;
@@ -65,6 +61,9 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private AddressService addressService;
 
 	@Autowired
 	private ContentEmailService ce;
@@ -192,6 +191,14 @@ public class OrderController extends BaseController {
 					rs.setErrorType(Constant.ErrorTypeCommon.EMAIL_EXISTS);
 					return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
 				}
+			}
+
+			if(req.getAddressId() != null) {
+				AddressViewModel model = addressService.getById(req.getAddressId());
+				req.setAddress(model.getAddress() == null ? "" : model.getAddress());
+				req.setDistrict(model.getDistrict() == null ? "" : model.getDistrict());
+				req.setCity(model.getCity() == null ? "" : model.getCity());
+				req.setAddressDesc(model.getAddressDesc() == null ? "" : model.getCity());
 			}
 
 			PaymentResponse ps = ops.create(req);
