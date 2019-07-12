@@ -142,12 +142,12 @@ public class OrderPaymentDAO {
 			User u = null;
 			RandomStringHelper gen = new RandomStringHelper(8, ThreadLocalRandom.current());
 			String token = gen.nextString();
-
+			String hpw = CommonHelper.HasPw(token);
 			if (req.getUserId() == null) {
 				u = new User();
 
-				u.setUserHash(token);
-				u.setUserSalt(token);
+				u.setUserHash(hpw);
+				u.setUserSalt(hpw );
 				u.setProvider(Constant.Provider.NORMAL.getValue());
 				u.setUserName(req.getName());
 				u.setFullName(req.getName());
