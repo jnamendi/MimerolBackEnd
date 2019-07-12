@@ -1,22 +1,16 @@
 package bmbsoft.orderfoodonline.dao;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
-import javax.persistence.Convert;
-import javax.transaction.Transactional;
-
+import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
+import bmbsoft.orderfoodonline.model.shared.OrderItem;
+import bmbsoft.orderfoodonline.model.shared.PaymentRequest;
+import bmbsoft.orderfoodonline.model.shared.PaymentResponse;
+import bmbsoft.orderfoodonline.service.*;
+import bmbsoft.orderfoodonline.util.CommonHelper;
+import bmbsoft.orderfoodonline.util.Constant;
+import bmbsoft.orderfoodonline.util.RandomStringHelper;
+import com.google.gson.Gson;
+import jlibs.core.util.regex.TemplateMatcher;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,36 +20,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import com.google.gson.Gson;
-
-import bmbsoft.orderfoodonline.entities.Address;
-import bmbsoft.orderfoodonline.entities.City;
-import bmbsoft.orderfoodonline.entities.District;
-import bmbsoft.orderfoodonline.entities.ExtraItem;
-import bmbsoft.orderfoodonline.entities.MenuExtraItem;
-import bmbsoft.orderfoodonline.entities.MenuItem;
-import bmbsoft.orderfoodonline.entities.Order;
-import bmbsoft.orderfoodonline.entities.OrderExtraItem;
-import bmbsoft.orderfoodonline.entities.OrderInfo;
-import bmbsoft.orderfoodonline.entities.OrderLineItem;
-import bmbsoft.orderfoodonline.entities.OrderPayment;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.entities.UserRole;
-import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
-import bmbsoft.orderfoodonline.model.shared.OrderItem;
-import bmbsoft.orderfoodonline.model.shared.PaymentRequest;
-import bmbsoft.orderfoodonline.model.shared.PaymentResponse;
-import bmbsoft.orderfoodonline.service.AddressService;
-import bmbsoft.orderfoodonline.service.ContentEmailService;
-import bmbsoft.orderfoodonline.service.DistrictService;
-import bmbsoft.orderfoodonline.service.EmailService;
-import bmbsoft.orderfoodonline.service.RoleService;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
-import bmbsoft.orderfoodonline.util.RandomStringHelper;
-import jlibs.core.util.regex.TemplateMatcher;
+import javax.mail.MessagingException;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Repository(value = "orderPaymentDAO")
 @Transactional(rollbackOn = Exception.class)
@@ -64,9 +39,6 @@ public class OrderPaymentDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-
-	@Autowired
-	private RestaurantDAO rd;
 
 	@Autowired
 	private UserDAO ud;
@@ -139,7 +111,7 @@ public class OrderPaymentDAO {
 				}
 			}
 
-			User u = null;
+			User u;
 			RandomStringHelper gen = new RandomStringHelper(8, ThreadLocalRandom.current());
 			String token = gen.nextString();
 			String hpw = CommonHelper.HasPw(token);
@@ -151,6 +123,7 @@ public class OrderPaymentDAO {
 				u.setProvider(Constant.Provider.NORMAL.getValue());
 				u.setUserName(req.getName());
 				u.setFullName(req.getName());
+				u.setPhone(req.getNumber());
 				u.setEmail(req.getEmail());
 				u.setCreatedDate(new Date());
 				u.setStatus(Constant.Status.Publish.getValue());
