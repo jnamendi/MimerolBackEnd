@@ -48,7 +48,7 @@ public class ContactUsDAO {
 
 	public ContactUs getByType(int type) {
 		Session session = this.sessionFactory.getCurrentSession();
-		String q = "SELECT * FROM ContactUs where contactType=:type and isStatus=:sta";
+		String q = "SELECT * FROM contact_us where contactType=:type and isStatus=:sta";
 		List<ContactUs> ce = session.createNativeQuery(q).setParameter("sta", Constant.Status.Publish.getValue())
 				.setParameter("type", type).list();
 		if (ce != null && ce.size() > 0) {
