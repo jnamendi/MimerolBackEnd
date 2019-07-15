@@ -54,21 +54,19 @@ public class ContentEmailDAO {
 				.setParameter("type", type).list();
 		if (ce != null && ce.size() > 0) {
 
-			ContentEmail c = ce.get(0);
 			if (code.isEmpty()) {
-				return c;
+				return ce.get(0);
 			}
-
-			Language l = c.getLanguage();
 			ContentEmail cem = new ContentEmail();
-			if (l.getCode().equals(code)) {
-				cem.setSubject(c.getSubject());
-				cem.setTitle(c.getTitle());
-				cem.setContentBody(c.getContentBody());
-
-				return cem;
+			for (ContentEmail mail : ce){
+				Language l = mail.getLanguage();
+				if (l.getCode().equals(code)) {
+					cem.setSubject(mail.getSubject());
+					cem.setTitle(mail.getTitle());
+					cem.setContentBody(mail.getContentBody());
+					return cem;
+				}
 			}
-
 		}
 		return null;
 	}
