@@ -122,13 +122,13 @@ public class CommonHelper {
 
 			// delete file
 			if (oldFile != null && !oldFile.isEmpty()) {
-				String uploadRootPath = System.getProperty("user.dir") + "/";
+				String uploadRootPath = System.getProperty("user.home") + "/";
 				delete(new File(uploadRootPath + oldFile));
 			}
 
 			// test
 			String imgUrl = null;
-			String uploadRootPath = System.getProperty("user.dir") + "/images";
+			String uploadRootPath = System.getProperty("user.home") + "/images";
 			System.out.println("uploadRootPath=" + uploadRootPath);
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 			String time = format.format(new Date());
