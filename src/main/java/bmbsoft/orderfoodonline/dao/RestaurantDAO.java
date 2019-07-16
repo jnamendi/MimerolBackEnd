@@ -429,7 +429,9 @@ public class RestaurantDAO {
 			c.setSortOrder(vm.getSortOrder());
 			c.setAddressDesc(vm.getAddressDesc());
 
-			c.setKeySearch(CommonHelper.toPrettyURL(vm.getDistrict()) + "#" + CommonHelper.toPrettyURL(vm.getCity()));
+//			c.setKeySearch(CommonHelper.toPrettyURL(vm.getDistrict()) + "#" + CommonHelper.toPrettyURL(vm.getCity()));
+			// keysearch only city
+			c.setKeySearch("#" + CommonHelper.toPrettyURL(vm.getCity()));
 			c.setMinPrice(vm.getMinPrice());
 			// c.setCity(vm.getCity());
 			// c.setDistrict(vm.getDistrict());
