@@ -1,21 +1,13 @@
 package bmbsoft.orderfoodonline.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-
+import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.*;
+import bmbsoft.orderfoodonline.model.shared.CategoryLiteRequest;
+import bmbsoft.orderfoodonline.model.shared.RestaurantRequest;
+import bmbsoft.orderfoodonline.model.shared.UserRequest;
+import bmbsoft.orderfoodonline.service.*;
+import bmbsoft.orderfoodonline.util.CommonHelper;
+import bmbsoft.orderfoodonline.util.Constant;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,40 +18,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import bmbsoft.orderfoodonline.entities.Category;
-import bmbsoft.orderfoodonline.entities.City;
-import bmbsoft.orderfoodonline.entities.ContentDefinition;
-import bmbsoft.orderfoodonline.entities.ContentEntry;
-import bmbsoft.orderfoodonline.entities.District;
-import bmbsoft.orderfoodonline.entities.Language;
-import bmbsoft.orderfoodonline.entities.PaymentProvider;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.RestaurantAttribute;
-import bmbsoft.orderfoodonline.entities.RestaurantCategory;
-import bmbsoft.orderfoodonline.entities.RestaurantPaymentProvider;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.model.AttributeViewModel;
-import bmbsoft.orderfoodonline.model.CityViewModel;
-import bmbsoft.orderfoodonline.model.ContentDefModel;
-import bmbsoft.orderfoodonline.model.LanguageViewModel;
-import bmbsoft.orderfoodonline.model.PaymentProviderViewModel;
-import bmbsoft.orderfoodonline.model.UserInfoRequest;
-import bmbsoft.orderfoodonline.model.shared.CategoryLiteRequest;
-import bmbsoft.orderfoodonline.model.shared.CategoryReq;
-import bmbsoft.orderfoodonline.model.shared.RestaurantRequest;
-import bmbsoft.orderfoodonline.model.shared.UserRequest;
-import bmbsoft.orderfoodonline.service.CategoryService;
-import bmbsoft.orderfoodonline.service.ContentDefinitionService;
-import bmbsoft.orderfoodonline.service.ContentEntryService;
-import bmbsoft.orderfoodonline.service.DistrictService;
-import bmbsoft.orderfoodonline.service.LanguageService;
-import bmbsoft.orderfoodonline.service.MediaService;
-import bmbsoft.orderfoodonline.service.PaymentProviderService;
-import bmbsoft.orderfoodonline.service.RestaurantAttributeService;
-import bmbsoft.orderfoodonline.service.RestaurantPaymentProviderService;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Repository(value = "restaurantDAO")
 @Transactional(rollbackOn = Exception.class)
@@ -456,7 +420,8 @@ public class RestaurantDAO {
 			e.setModifiedDate(new Date());
 			e.setMinPrice(vm.getMinPrice());
 			e.setAddressDesc(vm.getAddressDesc());
-			e.setKeySearch(CommonHelper.toPrettyURL(vm.getDistrict()) + "#" + CommonHelper.toPrettyURL(vm.getCity()));
+			// keysearch only city
+			e.setKeySearch("#" + CommonHelper.toPrettyURL(vm.getCity()));
 			// e.setCity(vm.getCity());
 			e.setAddressDesc(vm.getAddressDesc());
 			// e.setDistrict(vm.getDistrict());
