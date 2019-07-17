@@ -426,6 +426,7 @@ public class RestaurantDAO {
 			e.setAddressDesc(vm.getAddressDesc());
 			// e.setDistrict(vm.getDistrict());
 			e.setImageUrl(vm.getImageUrl());
+			e.setStatus(vm.getStatus());
 			e.setDeliveryCost(vm.getDeliveryCost());
 			e.setEstimateDeliveryTime(vm.getEstDeliveryTime());
 			return e;
