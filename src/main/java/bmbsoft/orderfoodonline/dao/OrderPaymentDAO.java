@@ -112,34 +112,44 @@ public class OrderPaymentDAO {
 			}
 
 			User u;
+			boolean isExistUser = false;
 			RandomStringHelper gen = new RandomStringHelper(8, ThreadLocalRandom.current());
 			String token = gen.nextString();
 			String hpw = CommonHelper.HasPw(token);
 			if (req.getUserId() == null) {
-				u = new User();
+				//check email
+				isExistUser = ud.getUserByEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
+						Constant.AccountType.Anonymous.getValue()) != null;
+				if(isExistUser) {
+					u = ud.getUserByEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
+							Constant.AccountType.Anonymous.getValue());
+				} else {
+					u = new User();
 
-				u.setUserHash(hpw);
-				u.setUserSalt(hpw );
-				u.setProvider(Constant.Provider.NORMAL.getValue());
-				u.setUserName(req.getName());
-				u.setFullName(req.getName());
-				u.setPhone(req.getNumber());
-				u.setEmail(req.getEmail());
-				u.setCreatedDate(new Date());
-				u.setStatus(Constant.Status.Publish.getValue());
-				u.setReceiveNewsletter(true);
-				u.setAccountType(Constant.AccountType.Anonymous.getValue());
-				u.setIsLock(false);
+					u.setUserHash(hpw);
+					u.setUserSalt(hpw );
+					u.setProvider(Constant.Provider.NORMAL.getValue());
+					u.setUserName(req.getName());
+					u.setFullName(req.getName());
+					u.setPhone(req.getNumber());
+					u.setEmail(req.getEmail());
+					u.setCreatedDate(new Date());
+					u.setStatus(Constant.Status.Publish.getValue());
+					u.setReceiveNewsletter(true);
+					u.setAccountType(Constant.AccountType.Anonymous.getValue());
+					u.setIsLock(false);
 
-				session.save(u);
+					session.save(u);
 
-				// assign role guest
-				UserRole ur = new UserRole();
-				ur.setUser(u);
-				ur.setRole(rs.getRoleByCode(Constant.ROLE_CODE_GUEST));
+					// assign role guest
+					UserRole ur = new UserRole();
+					ur.setUser(u);
+					ur.setRole(rs.getRoleByCode(Constant.ROLE_CODE_GUEST));
 
-				session.save(ur);
-				// create user anomyus
+					session.save(ur);
+					// create user anomyus
+				}
+
 			} else {
 				// check user
 				u = ud.findById(req.getUserId());
@@ -323,9 +333,8 @@ public class OrderPaymentDAO {
 				ps.setOrderId(o.getOrderId());
 
 				// send mail
-				if (req.getUserId() == null && req.getLanguageCode() != null && !req.getLanguageCode().isEmpty()) {
+				if (req.getUserId() == null && !isExistUser && req.getLanguageCode() != null && !req.getLanguageCode().isEmpty()) {
 					try {
-						// String appUrl = request.getScheme() + "://" + request.getServerName();
 						String appUrl = environment.getProperty("fontend.url");
 						String emailFrom = environment.getProperty("email.from");
 						String siteTitle = environment.getProperty("site.title");
@@ -346,12 +355,6 @@ public class OrderPaymentDAO {
 							vars.put("siteName", siteTitle);
 
 							String body = matcher.replace(cm.getBody(), vars);
-
-							// // title
-							// TemplateMatcher title = new TemplateMatcher("${", "}");
-							// Map<String, String> t = new HashMap<String, String>();
-							// t.put("siteName", siteTitle);
-							// String trpc = title.replace(cm.getSubject(), t);
 
 							String trpc = cm.getSubject();
 							Executors.newSingleThreadExecutor().execute(new Runnable() {
