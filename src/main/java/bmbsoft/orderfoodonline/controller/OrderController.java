@@ -182,16 +182,16 @@ public class OrderController extends BaseController {
 
 			// TODO validate
 
-			if (req.getUserId() == null) {
-				boolean b = userService.checkExistEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
-						Constant.AccountType.Anonymous.getValue());
-				if (b) {
-					rs.setStatus(2);
-					rs.setMessage("Exist an email.");
-					rs.setErrorType(Constant.ErrorTypeCommon.EMAIL_EXISTS);
-					return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
-				}
-			}
+//			if (req.getUserId() == null) {
+//				boolean b = userService.checkExistEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
+//						Constant.AccountType.Anonymous.getValue());
+//				if (b) {
+//					rs.setStatus(2);
+//					rs.setMessage("Exist an email.");
+//					rs.setErrorType(Constant.ErrorTypeCommon.EMAIL_EXISTS);
+//					return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+//				}
+//			}
 
 			if(req.getAddressId() != null) {
 				AddressViewModel model = addressService.getById(req.getAddressId());
