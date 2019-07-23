@@ -1,22 +1,15 @@
 package bmbsoft.orderfoodonline.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import java.sql.Time;
-import javax.transaction.Transactional;
-
+import bmbsoft.orderfoodonline.dao.CurrencyDAO;
+import bmbsoft.orderfoodonline.dao.LanguageDAO;
+import bmbsoft.orderfoodonline.dao.RestaurantDAO;
+import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.*;
+import bmbsoft.orderfoodonline.model.shared.*;
+import bmbsoft.orderfoodonline.response.Data;
+import bmbsoft.orderfoodonline.response.ResponseGetPaging;
+import bmbsoft.orderfoodonline.util.CommonHelper;
+import bmbsoft.orderfoodonline.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,40 +17,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import bmbsoft.orderfoodonline.dao.CurrencyDAO;
-import bmbsoft.orderfoodonline.dao.LanguageDAO;
-import bmbsoft.orderfoodonline.dao.RestaurantDAO;
-import bmbsoft.orderfoodonline.entities.Category;
-import bmbsoft.orderfoodonline.entities.City;
-import bmbsoft.orderfoodonline.entities.District;
-import bmbsoft.orderfoodonline.entities.Favouries;
-import bmbsoft.orderfoodonline.entities.Language;
-import bmbsoft.orderfoodonline.entities.Promotion;
-import bmbsoft.orderfoodonline.entities.PromotionLineitem;
-import bmbsoft.orderfoodonline.entities.Rating;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.RestaurantAttribute;
-import bmbsoft.orderfoodonline.entities.RestaurantCategory;
-import bmbsoft.orderfoodonline.entities.RestaurantComment;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.model.AddressSearchModel;
-import bmbsoft.orderfoodonline.model.AttributeViewModel;
-import bmbsoft.orderfoodonline.model.CityViewModel;
-import bmbsoft.orderfoodonline.model.RestaurantCategoryViewModel;
-import bmbsoft.orderfoodonline.model.RestaurantViewModel;
-import bmbsoft.orderfoodonline.model.shared.CategoryLiteRequest;
-import bmbsoft.orderfoodonline.model.shared.CurrencyResponse;
-import bmbsoft.orderfoodonline.model.shared.PromotionLineitemResponse;
-import bmbsoft.orderfoodonline.model.shared.RestaurantLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.RestaurantLiteResponse2;
-import bmbsoft.orderfoodonline.model.shared.RestaurantLiteResponse3;
-import bmbsoft.orderfoodonline.model.shared.RestaurantRequest;
-import bmbsoft.orderfoodonline.model.shared.RestaurantResponse;
-import bmbsoft.orderfoodonline.model.shared.UserRequest;
-import bmbsoft.orderfoodonline.response.Data;
-import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
+import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantService {
@@ -513,7 +476,8 @@ public class RestaurantService {
 		c.setStatus(res.getStatus());
 		c.setEstTime(res.getEstimateDeliveryTime());
 		c.setRating(rating);
-
+		c.setLatitude(res.getLatitude());
+		c.setLongitude(res.getLongitude());
 		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(c.getOpenTime(), c.getCloseTime()));
 
 		if (res.getContentDefinition() != null) {
