@@ -109,7 +109,7 @@ public class RestaurantCommentService {
 			rating = rating / (comments.size() * 2);
 		}
 
-		return Math.round(rating * 100.0) / 100.0;
+		return Math.round(rating * 2.0) / 2.0;
 	}
 
 	private RestaurantComment castModelToEntityComment(RestaurantCommentRequest req, RestaurantComment rs) {
