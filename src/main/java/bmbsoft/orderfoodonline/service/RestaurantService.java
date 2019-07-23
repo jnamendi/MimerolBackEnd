@@ -71,6 +71,8 @@ public class RestaurantService {
 	private LanguageService languageService;
 	@Autowired
 	private CurrencyDAO currencyDAO;
+	@Autowired
+	private RestaurantCommentService restaurantCommentService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -504,6 +506,7 @@ public class RestaurantService {
 		RestaurantLiteResponse2 c = new RestaurantLiteResponse2();
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
+		Double rating = restaurantCommentService.getRatingForRestaurant(res.getRestaurantId());
 		if (cur == null) {
 			cur.setRate(1);
 		}
@@ -521,28 +524,13 @@ public class RestaurantService {
 		c.setDeliveryCost(res.getDeliveryCost());
 		c.setStatus(res.getStatus());
 		c.setEstTime(res.getEstimateDeliveryTime());
+		c.setRating(rating);
 
 		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(c.getOpenTime(), c.getCloseTime()));
 
 		if (res.getContentDefinition() != null) {
 			List<String> desc = languageService.hashMapTranslate(res.getContentDefinition(), lang);
 			c.setDescription(desc != null && desc.size() > 0 ? desc.get(0) : "");
-		}
-
-		// get rating
-		Set<Rating> rt = res.getRatings();
-		if (rt != null && rt.size() > 0) {
-
-			double delivery = rt.stream()
-					.filter(p -> p.getDelivery() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			double quanlity = rt.stream()
-					.filter(p -> p.getQuality() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			int count = (int) rt.stream().filter(p -> p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			double sum = delivery + quanlity;
-			double s = sum != 0 ? sum / (sum * count) : 0;
-
-			c.setRating(s);
-
 		}
 
 		// coment
