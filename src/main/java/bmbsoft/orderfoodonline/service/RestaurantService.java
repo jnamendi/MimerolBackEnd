@@ -233,22 +233,10 @@ public class RestaurantService {
 					});
 				}
 				vm.setCategoryIds(categories);
-				// get rating
-				Set<Rating> rt = r.getRatings();
-				if (rt != null && rt.size() > 0) {
 
-					double delivery = rt.stream()
-							.filter(p -> p.getDelivery() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue())
-							.count();
-					double quanlity = rt.stream()
-							.filter(p -> p.getQuality() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue())
-							.count();
-					int count = rt.size();
-					double sum = delivery + quanlity;
-
-					vm.setRating(sum / (sum * count));
-
-				}
+				// Set rating
+				Double rating = restaurantCommentService.getRatingForRestaurant(r.getRestaurantId());
+				vm.setRating(rating);
 
 				Set<RestaurantComment> srco = r.getRestaurantComments();
 				if (srco != null && srco.size() > 0) {
