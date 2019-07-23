@@ -1,10 +1,9 @@
 package bmbsoft.orderfoodonline.model.shared;
 
-import java.util.HashMap;
-import java.util.List;
-
 import bmbsoft.orderfoodonline.model.RestaurantCategoryViewModel;
 import bmbsoft.orderfoodonline.model.RestaurantViewModel;
+
+import java.util.List;
 
 public class RestaurantResponse {
 	private List<RestaurantViewModel> restaurants;
