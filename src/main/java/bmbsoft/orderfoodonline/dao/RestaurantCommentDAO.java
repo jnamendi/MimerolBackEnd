@@ -215,6 +215,30 @@ public class RestaurantCommentDAO {
 		}
 	}
 
+	public List<RestaurantCommentModel> getCommentByRestaurant(Long restaurantId) {
+		Session session = sessionFactory.getCurrentSession();
+		try {
+			CriteriaBuilder cb = session.getCriteriaBuilder();
+			CriteriaQuery<RestaurantComment> query = cb.createQuery(RestaurantComment.class);
+			Root<RestaurantComment> form = query.from(RestaurantComment.class);
+			Join<RestaurantComment, Restaurant> restaurant = form.join("restaurant");
+
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(cb.and(cb.equal(restaurant.<Long>get("restaurantId"), restaurantId)));
+			predicates.add(cb.and(cb.equal(form.<Integer>get("status"), Constant.Status.Publish.getValue())));
+			query.select(form).where(predicates.stream().toArray(Predicate[]::new));
+			List<RestaurantComment> c = session.createQuery(query).getResultList();
+			List<RestaurantCommentModel> listResCommentModel = new LinkedList<RestaurantCommentModel>();
+			for (RestaurantComment restaurantComment : c) {
+				listResCommentModel.add(convertToCommentModel(restaurantComment));
+			}
+			return listResCommentModel;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return null;
+		}
+	}
+
 	private RestaurantCommentModel convertToCommentModel(RestaurantComment res) {
 		RestaurantCommentModel vm = new RestaurantCommentModel();
 		vm.setResCommentId(res.getResCommentId());

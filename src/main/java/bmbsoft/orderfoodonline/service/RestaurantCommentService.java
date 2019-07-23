@@ -25,10 +25,6 @@ import bmbsoft.orderfoodonline.util.Constant;
 public class RestaurantCommentService {
 	@Autowired
 	private RestaurantCommentDAO restaurantCommentDAO;
-	@Autowired
-	private UserDAO userDAO;
-	@Autowired
-	private RestaurantDAO restauranDAO;
 
 	@Transactional
 	@Async
@@ -101,6 +97,19 @@ public class RestaurantCommentService {
 	
 	public List<RestaurantCommentModel> getCommentByOwner(Long userId) {
 		return restaurantCommentDAO.getCommentByOwner(userId);
+	}
+
+	public Double getRatingForRestaurant(Long restaurantId) {
+		List<RestaurantCommentModel> comments = restaurantCommentDAO.getCommentByRestaurant(restaurantId);
+		double rating = 0d;
+		if (!comments.isEmpty()) {
+			for (RestaurantCommentModel c : comments ) {
+				rating += c.getStarQuality() + c.getStarShip();
+			}
+			rating = rating / (comments.size() * 2);
+		}
+
+		return Math.round(rating * 2.0) / 2.0;
 	}
 
 	private RestaurantComment castModelToEntityComment(RestaurantCommentRequest req, RestaurantComment rs) {
