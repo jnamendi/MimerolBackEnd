@@ -365,7 +365,7 @@ public class UserDAO {
 	public User getUserByEmail(String email, int provider) {
 		Session session = this.sessionFactory.getCurrentSession();
 		List<User> users = session
-				.createNativeQuery("SELECT * FROM User u where u.email=:email and u.provider=:prov", User.class)
+				.createNativeQuery("SELECT * FROM user u where u.email=:email and u.provider=:prov", User.class)
 				.setParameter("email", email).setParameter("prov", provider).list();
 		if (users.size() > 0) {
 			return users.get(0);
@@ -377,7 +377,7 @@ public class UserDAO {
 	public User getUserByEmail(String email, int provider, int accountType) {
 		Session session = this.sessionFactory.getCurrentSession();
 		List<User> users = session.createNativeQuery(
-				"SELECT * FROM User u where u.email=:email and u.provider=:prov and u.account_type=:acType and u.status=:status",
+				"SELECT * FROM user u where u.email=:email and u.provider=:prov and u.account_type=:acType and u.status=:status",
 				User.class).setParameter("email", email).setParameter("prov", provider)
 				.setParameter("acType", accountType).setParameter("status", Constant.Status.Publish.getValue()).list();
 		if (users.size() > 0) {
@@ -390,7 +390,7 @@ public class UserDAO {
 	public User getLoginUserByEmail(String email, int provider) {
 		Session session = this.sessionFactory.getCurrentSession();
 		List<User> users = session
-				.createNativeQuery("SELECT * FROM User u where u.email=:email and u.provider=:prov and u.status=:sta",
+				.createNativeQuery("SELECT * FROM user u where u.email=:email and u.provider=:prov and u.status=:sta",
 						User.class)
 				.setParameter("email", email).setParameter("prov", provider)
 				.setParameter("sta", Constant.Status.Publish.getValue()).list();
@@ -403,7 +403,7 @@ public class UserDAO {
 
 	public User getUserByUserName(String userName) {
 		Session session = this.sessionFactory.getCurrentSession();
-		List<User> users = session.createNativeQuery("SELECT * FROM User u where u.user_name=:un", User.class)
+		List<User> users = session.createNativeQuery("SELECT * FROM user u where u.user_name=:un", User.class)
 				.setParameter("un", userName).list();
 		if (users.size() > 0) {
 			return users.get(0);
@@ -414,7 +414,7 @@ public class UserDAO {
 
 	public User getUserByToken(String token) {
 		Session session = this.sessionFactory.getCurrentSession();
-		List<User> users = session.createNativeQuery("SELECT * FROM User u where u.reset_token=:tk", User.class)
+		List<User> users = session.createNativeQuery("SELECT * FROM user u where u.reset_token=:tk", User.class)
 				.setParameter("tk", token).list();
 
 		if (users.size() > 0) {
