@@ -390,6 +390,8 @@ public class RestaurantDAO {
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return e.getMessage();
+		}finally {
+			session.close();
 		}
 	}
 
