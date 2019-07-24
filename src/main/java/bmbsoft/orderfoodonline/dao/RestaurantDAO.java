@@ -61,13 +61,7 @@ public class RestaurantDAO {
 	DistrictService ds;
 
 	@Autowired
-	private RoleDAO roleDAO;
-
-	@Autowired
-	private UserRoleDAO userRoleDao;
-
-	@Autowired
-	private UserRestaurantDAO userResDao;
+	private RestaurantWorkTimeService restaurantWorkTimeService;
 
 	@Autowired
 	private UserDAO userDao;
@@ -103,6 +97,7 @@ public class RestaurantDAO {
 				}
 
 				Restaurant res = this.modelToEntity(vm, model);
+				Long resId = res.getRestaurantId();
 
 				res.setDistrict(district);
 				res.setDistrictName(district.getName());
@@ -125,7 +120,7 @@ public class RestaurantDAO {
 				if (lvm != null && lvm.size() > 0) {
 					String q = "DELETE FROM content_entry WHERE content_dep_id=:cd";
 					Long cdId = cd.getContentDepId();
-					int d = session.createNativeQuery(q).setParameter("cd", cdId).executeUpdate();
+					session.createNativeQuery(q).setParameter("cd", cdId).executeUpdate();
 					for (LanguageViewModel l : lvm) {
 						Language lang = ls.getById(l.getLanguageId());
 						if (lang != null) {
@@ -152,10 +147,23 @@ public class RestaurantDAO {
 					}
 				}
 
+				List<RestaurantWorkTimeModel> rwt = vm.getRestaurantWorkTimeModels();
+				if (!rwt.isEmpty()) {
+					if(resId != null) restaurantWorkTimeService.deleteByRestaurantId(resId);
+					for (RestaurantWorkTimeModel r : rwt) {
+						RestaurantWorkTime reswt = new RestaurantWorkTime();
+						reswt.setWeekday(r.getWeekDay());
+						reswt.setStartTime(r.getOpenTime());
+						reswt.setEndTime(r.getCloseTime());
+						reswt.setRestaurant(res);
+						session.save(reswt);
+					}
+				}
+
 				// categories
 				if (vm.getCategoryIds() != null && vm.getCategoryIds().size() > 0) {
 					String qrc = "DELETE FROM restaurant_category WHERE restaurant_id=:resId";
-					int n = session.createNativeQuery(qrc).setParameter("resId", res.getRestaurantId()).executeUpdate();
+					session.createNativeQuery(qrc).setParameter("resId", resId).executeUpdate();
 
 					for (CategoryLiteRequest c : vm.getCategoryIds()) {
 						Category ctg = categoryServies.getById(c.getCategoryId());
@@ -176,7 +184,7 @@ public class RestaurantDAO {
 				// res-attribute
 				if (vm.getAttributeLst() != null && vm.getAttributeLst().size() > 0) {
 					String rat = "DELETE FROM restaurant_attribute WHERE restaurant_id=:resId";
-					int dra = session.createNativeQuery(rat).setParameter("resId", res.getRestaurantId())
+					session.createNativeQuery(rat).setParameter("resId", resId)
 							.executeUpdate();
 
 					for (AttributeViewModel atg : vm.getAttributeLst()) {
@@ -191,7 +199,7 @@ public class RestaurantDAO {
 
 				if (vm.getPaymentProviderLst() != null && vm.getPaymentProviderLst().size() > 0) {
 					String rppv = "DELETE FROM restaurant_payment_provider WHERE restaurant_id=:resId";
-					int ppve = session.createNativeQuery(rppv).setParameter("resId", res.getRestaurantId())
+					session.createNativeQuery(rppv).setParameter("resId", resId)
 							.executeUpdate();
 
 					for (PaymentProviderViewModel ppv : vm.getPaymentProviderLst()) {
@@ -210,7 +218,7 @@ public class RestaurantDAO {
 				// user_Restaurant
 				if (vm.getUserIds() != null && vm.getUserIds().size() > 0) {
 					String removeRoleOwner = "DELETE FROM user_restaurant WHERE restaurant_id=:resId";
-					int sss = session.createNativeQuery(removeRoleOwner).setParameter("resId", res.getRestaurantId())
+					session.createNativeQuery(removeRoleOwner).setParameter("resId", resId)
 							.executeUpdate();
 
 					for (UserRequest c : vm.getUserIds()) {
@@ -355,6 +363,19 @@ public class RestaurantDAO {
 							ur.setUser(user);
 							session.save(ur);
 						}
+					}
+				}
+
+				// set work time for restaurant
+				List<RestaurantWorkTimeModel> rwt = vm.getRestaurantWorkTimeModels();
+				if (!rwt.isEmpty()) {
+					for (RestaurantWorkTimeModel r : rwt) {
+						RestaurantWorkTime reswt = new RestaurantWorkTime();
+						reswt.setWeekday(r.getWeekDay());
+						reswt.setStartTime(r.getOpenTime());
+						reswt.setEndTime(r.getCloseTime());
+						reswt.setRestaurant(res);
+						session.save(reswt);
 					}
 				}
 

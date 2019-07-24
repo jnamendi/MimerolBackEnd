@@ -3,6 +3,7 @@ package bmbsoft.orderfoodonline.model.shared;
 import java.util.List;
 
 import bmbsoft.orderfoodonline.model.AttributeViewModel;
+import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
 
 public class RestaurantLiteResponse2 {
 	private Long restaurantId;
@@ -15,6 +16,7 @@ public class RestaurantLiteResponse2 {
 	private String description;
 	private String openTime;
 	private String closeTime;
+	private List<RestaurantWorkTimeModel> restaurantWorkTimeModels;
 	private String phone1;
 	private String urlSlug;
 	private String imageUrl;
@@ -231,4 +233,11 @@ public class RestaurantLiteResponse2 {
 		this.restaurantClosed = restaurantClosed;
 	}
 
+	public List<RestaurantWorkTimeModel> getRestaurantWorkTimeModels() {
+		return restaurantWorkTimeModels;
+	}
+
+	public void setRestaurantWorkTimeModels(List<RestaurantWorkTimeModel> restaurantWorkTimeModels) {
+		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
+	}
 }
