@@ -87,7 +87,7 @@ public class RestaurantController extends BaseController {
 		return new ResponseEntity<ResponseGetPaging>(rs, httpStatus);
 	}
 
-	@RequestMapping(value = "/api/restaurant/getById/{id}/{languageCode}", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/restaurant/getById/{id}/{languageCode}", method = RequestMethod.GET)
 	public ResponseEntity<?> getById(@PathVariable long id,
 			@PathVariable(value = "languageCode", required = false) String languageCode) {
 		ResponseGet rs = new ResponseGet();

@@ -280,6 +280,10 @@ public class RestaurantViewModel {
 		this.categoryIds = categoryIds;
 	}
 
+	public void setCategoryIdArray(List categoryIds) {
+		this.categoryIds = categoryIds;
+	}
+
 	public String getAddress() {
 		return address;
 	}

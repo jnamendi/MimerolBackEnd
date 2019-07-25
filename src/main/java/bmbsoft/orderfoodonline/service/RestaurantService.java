@@ -10,6 +10,7 @@ import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -370,7 +371,6 @@ public class RestaurantService {
 		}
 
 		Set<RestaurantCategory> src = res.getRestaurantCategories();
-		List<HashMap> categories = new ArrayList();
 
 		if (src != null && src.size() > 0) {
 			src = src.stream().filter(p -> p.getCategory().getStatus() == Constant.Status.Publish.getValue())
@@ -380,19 +380,13 @@ public class RestaurantService {
 				Category cg = cc.getCategory();
 				List<String> a = languageService.hashMapTranslate(cg.getContentDefinition(), lang);
 				HashMap hm = new HashMap();
-				hm.put("categoryId", cg.getCategoryId());
-				String cName = a != null && a.size() > 0 ? a.get(0) : "";
-				hm.put("categoryName", cName);
-
-				//
-				RestaurantCategoryViewModel rcv = new RestaurantCategoryViewModel();
-				rcv.setCategoryId(cg.getCategoryId());
-				rcv.setCategoryName(cName);
-
-				categories.add(hm);
+				List<Long> s = new ArrayList<>();
+				s.add(cg.getCategoryId());
+				c.setCategoryIdArray(s);
 			});
 		}
-		c.setCategoryIds(categories);
+
+
 		// c.setUrlSlug(slg.slugify(vm.getName()));
 		// c.setStatus(Constant.Status.Publish.hashCode());
 		return c;
