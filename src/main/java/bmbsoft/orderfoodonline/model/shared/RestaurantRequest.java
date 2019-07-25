@@ -55,7 +55,8 @@ public class RestaurantRequest {
 	private int status;
 	private int sortOrder;
 	@NotNull(message = "categoryIds is required")
-	private List<CategoryLiteRequest> categoryIds;
+//	private List<CategoryLiteRequest> categoryIds;
+	private List<Integer> categoryIds;
 
 	private List<UserRequest> userIds;
  
@@ -211,11 +212,19 @@ public class RestaurantRequest {
 		this.sortOrder = sortOrder;
 	}
 
-	public List<CategoryLiteRequest> getCategoryIds() {
+//	public List<CategoryLiteRequest> getCategoryIds() {
+//		return categoryIds;
+//	}
+//
+//	public void setCategoryIds(List<CategoryLiteRequest> categoryIds) {
+//		this.categoryIds = categoryIds;
+//	}
+
+	public List<Integer> getCategoryIds() {
 		return categoryIds;
 	}
 
-	public void setCategoryIds(List<CategoryLiteRequest> categoryIds) {
+	public void setCategoryIds(List<Integer> categoryIds) {
 		this.categoryIds = categoryIds;
 	}
 

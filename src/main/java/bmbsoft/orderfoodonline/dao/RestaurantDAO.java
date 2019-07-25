@@ -165,8 +165,8 @@ public class RestaurantDAO {
 					String qrc = "DELETE FROM restaurant_category WHERE restaurant_id=:resId";
 					session.createNativeQuery(qrc).setParameter("resId", resId).executeUpdate();
 
-					for (CategoryLiteRequest c : vm.getCategoryIds()) {
-						Category ctg = categoryServies.getById(c.getCategoryId());
+					for (Integer c : vm.getCategoryIds()) {
+						Category ctg = categoryServies.getById(c);
 						if (ctg == null) {
 							isF = true;
 							msg = "Could not found item. categoryId=" + c;
@@ -332,8 +332,8 @@ public class RestaurantDAO {
 
 				// category
 				if (vm.getCategoryIds() != null && vm.getCategoryIds().size() > 0) {
-					for (CategoryLiteRequest c : vm.getCategoryIds()) {
-						Category ctg = categoryServies.getById(c.getCategoryId());
+					for (Integer c : vm.getCategoryIds()) {
+						Category ctg = categoryServies.getById(c);
 						if (ctg == null) {
 							isF = true;
 							msg = "Could not found item. category_id=" + c;
