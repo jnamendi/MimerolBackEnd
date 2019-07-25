@@ -58,6 +58,9 @@ public class OrderController extends BaseController {
 	@Autowired
 	private ContentEmailService ce;
 
+	@Autowired
+	private UserRestaurantService userRestaurantService;
+
 	Gson mapper = new Gson();
 
 	@RequestMapping(value = "/api/order/getAll/{pageIndex}/{pageSize}", method = RequestMethod.GET)
@@ -193,10 +196,7 @@ public class OrderController extends BaseController {
 				// send email
 				try {
 					logger.info("------------Send mail -- payment");
-					// String appUrl = request.getScheme() + "://" + request.getServerName();
-					String appUrl = environment.getProperty("fontend.url");
 					String emailFrom = environment.getProperty("email.from");
-					String siteTitle = environment.getProperty("site.title");
 					String displayEmailName = environment.getProperty("display.email.name");
 
 					ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.Payment.getValue(),
@@ -257,6 +257,18 @@ public class OrderController extends BaseController {
 						t.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
 						t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
 						String trpc = title.replace(cm.getSubject(), t);
+
+						// set BCC
+						List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(req.getRestaurantId());
+						StringBuilder bcc = new StringBuilder();
+						bcc.append(emailFrom);
+						if(emailsOwner != null && !emailsOwner.isEmpty()) {
+							for(String email : emailsOwner) {
+								bcc.append(";");
+								bcc.append(email);
+							}
+						}
+						cm.setBcc(bcc.toString());
 
 						// receive voucher
 

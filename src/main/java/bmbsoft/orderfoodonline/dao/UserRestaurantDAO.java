@@ -1,7 +1,6 @@
 package bmbsoft.orderfoodonline.dao;
 
 import java.util.List;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -43,5 +42,15 @@ public class UserRestaurantDAO {
 		queryRole.select(form).where(criteriaBd.equal(form.join("user").get("userId"), userid));
 		List<UserRestaurant> listRole = session.createQuery(queryRole).getResultList();
 		return listRole;
+	}
+
+	public List<UserRestaurant> getOwnerIdByRestaurantId(long restaurantId) {
+		Session session = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder criteriaBd = session.getCriteriaBuilder();
+		CriteriaQuery<UserRestaurant> query = criteriaBd.createQuery(UserRestaurant.class);
+		Root<UserRestaurant> root = query.from(UserRestaurant.class);
+		query.select(root).where(criteriaBd.equal(root.get("restaurant"), restaurantId));
+		List<UserRestaurant> userRestaurantList = session.createQuery(query).getResultList();
+		return userRestaurantList;
 	}
 }

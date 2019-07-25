@@ -2,9 +2,11 @@ package bmbsoft.orderfoodonline.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import bmbsoft.orderfoodonline.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +39,15 @@ public class UserRestaurantService {
 		}
 
 		return r;
-	} 
+	}
+
+	@Transactional
+	public List<String> getEmailOwnersByRestaurant(Long resId) {
+		List<UserRestaurant> ur = urd.getOwnerIdByRestaurantId(resId);
+
+		return ur.stream().filter(u -> u.getUser().getStatus() != Constant.Status.Deleted.getValue())
+				.map(p -> p.getUser().getEmail()).collect(Collectors.toList());
+
+	}
 	
 }
