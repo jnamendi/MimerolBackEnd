@@ -487,6 +487,36 @@ public class OrderController extends BaseController {
 		}
 	}
 
+	@RequestMapping(value = "/api/order/get-all-order", method = RequestMethod.GET)
+	public ResponseEntity<?> getAllOrder(){
+		ResponseGet rs = new ResponseGet();
+		try {
+			// permission
+			if (!permission(Constant.Module.Order, Constant.Action.getByOwner)) {
+				rs.setStatus(7);
+				rs.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
+				rs.setMessage("Access Denied!");
+				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+			}
+			List<OrderResponse> c = this.orderService.getAllOrder();
+			if (c == null || c.isEmpty()) {
+				rs.setStatus(0);
+				rs.setMessage("Could not found item.");
+				rs.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
+				return new ResponseEntity<>(rs, HttpStatus.OK);
+			}
+			rs.setStatus(0);
+			rs.setContent(c);
+			return new ResponseEntity<>(rs, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			rs.setStatus(1);
+			rs.setMessage(e.toString());
+			rs.setContent(null);
+			return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+		}
+	}
+
 	@RequestMapping(value = "/api/order/get-order-payment/{orderId}/{orderCode}", method = RequestMethod.GET)
 	public ResponseEntity<?> getByOrderId(@PathVariable @Validated Long orderId,
 			@PathVariable @Validated String orderCode) {
