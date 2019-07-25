@@ -1,36 +1,8 @@
 package bmbsoft.orderfoodonline.controller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-
-import javax.mail.MessagingException;
-
-import bmbsoft.orderfoodonline.model.AddressViewModel;
-import bmbsoft.orderfoodonline.service.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-
 import bmbsoft.orderfoodonline.entities.Order;
 import bmbsoft.orderfoodonline.entities.OrderHistory;
+import bmbsoft.orderfoodonline.model.AddressViewModel;
 import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
 import bmbsoft.orderfoodonline.model.OrderResponse;
 import bmbsoft.orderfoodonline.model.OrderViewModel;
@@ -40,10 +12,28 @@ import bmbsoft.orderfoodonline.model.shared.PaymentRequest;
 import bmbsoft.orderfoodonline.model.shared.PaymentResponse;
 import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
+import bmbsoft.orderfoodonline.service.*;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
 import bmbsoft.orderfoodonline.util.Constant.PaymentMethod;
+import com.google.gson.Gson;
 import jlibs.core.util.regex.TemplateMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
 
 @RestController
 @CrossOrigin
@@ -67,9 +57,6 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private ContentEmailService ce;
-
-	@Autowired
-	private UserService userService;
 
 	Gson mapper = new Gson();
 
@@ -452,40 +439,39 @@ public class OrderController extends BaseController {
 		}
 	}
 
-	@RequestMapping(value = "/api/order/get-by-ower/{userId}", method = RequestMethod.GET)
-	public ResponseEntity<?> getByOwer(@PathVariable Long userId) {
+	@RequestMapping(value = "/api/order/get-by-owner/{ownerId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getByOwner(@PathVariable Long ownerId) {
 		ResponseGet rs = new ResponseGet();
-		List<OrderResponse> c = null;
 		try {
 			// permission
 			if (!permission(Constant.Module.Order, Constant.Action.getByOwner)) {
 				rs.setStatus(7);
 				rs.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				rs.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
-			if (userId == null) {
+			if (ownerId == null) {
 				rs.setStatus(7);
-				rs.setMessage("userId is field required.");
+				rs.setMessage("ownerId is field required.");
 				rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
-			c = this.orderService.getOderByUser(userId);
-			if (null == c || c.isEmpty()) {
+			List<OrderResponse> c = this.orderService.getOrderByOwner(ownerId);
+			if (c == null || c.isEmpty()) {
 				rs.setStatus(0);
 				rs.setMessage("Could not found item.");
 				rs.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
+				return new ResponseEntity<>(rs, HttpStatus.OK);
 			}
 			rs.setStatus(0);
 			rs.setContent(c);
-			return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
+			return new ResponseEntity<>(rs, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			rs.setStatus(1);
 			rs.setMessage(e.toString());
 			rs.setContent(null);
-			return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 		}
 	}
 

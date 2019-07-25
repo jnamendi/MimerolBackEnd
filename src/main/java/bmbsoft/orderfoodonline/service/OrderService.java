@@ -204,6 +204,27 @@ public class OrderService {
 	}
 
 	@Transactional
+	public List<OrderResponse> getOrderByOwner(Long ownerId) {
+
+		List<Order> ods = orderDAO.getOrderByOwner(ownerId);
+		List<OrderResponse> odrs = new LinkedList<>();
+
+		// currency
+		CurrencyResponse cur = currencyDAO.getByDefault();
+		if (cur == null) {
+			cur.setRate(1);
+		}
+
+		if (ods != null && ods.size() > 0) {
+			ods.forEach(o -> {
+				odrs.add(this.toModelResponse(o, cur.getSymbolLeft()));
+			});
+		}
+		return odrs;
+
+	}
+
+	@Transactional
 	public PaymentResponse getOderPaymentById(Long orderId, String orderCode) {
 		Order o = orderDAO.getById(orderId);
 		if (o == null)
