@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,9 +26,14 @@ public class RestaurantRequest {
 	private double latitude;
 	@NotNull(message = "longitude is required")
 	private double longitude;
-	@NotNull(message = "openTime is required")
+
+	// TODO: Delete redundant fields
 	private String openTime;
 	private String closeTime;
+
+	@NotNull(message = "Time is required")
+	private List<RestaurantWorkTimeModel> restaurantWorkTimeModels;
+
 	private String phone1;
 	private String phone2;
 	private String shipArea;
@@ -269,4 +275,11 @@ public class RestaurantRequest {
 		this.districtId = districtId;
 	}
 
+	public List<RestaurantWorkTimeModel> getRestaurantWorkTimeModels() {
+		return restaurantWorkTimeModels;
+	}
+
+	public void setRestaurantWorkTimeModels(List<RestaurantWorkTimeModel> restaurantWorkTimeModels) {
+		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
+	}
 }

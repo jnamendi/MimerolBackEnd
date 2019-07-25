@@ -37,6 +37,8 @@ public class RestaurantService {
 	private CurrencyDAO currencyDAO;
 	@Autowired
 	private RestaurantCommentService restaurantCommentService;
+	@Autowired
+	private RestaurantWorkTimeService restaurantWorkTimeService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -346,6 +348,8 @@ public class RestaurantService {
 
 		c.setAddressDesc(res.getAddressDesc());
 
+		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
+
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
 			List<HashMap> owners = new ArrayList<>();
 			res.getUserRestaurants().forEach(item -> {
@@ -392,61 +396,6 @@ public class RestaurantService {
 		return c;
 	}
 
-	private RestaurantLiteResponse entityToModelLite(Restaurant res, Language lang) {
-		RestaurantLiteResponse c = new RestaurantLiteResponse();
-		// currency
-		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
-			cur.setRate(1);
-		}
-		c.setRestaurantId(res.getRestaurantId());
-		c.setName(res.getName());
-		c.setSlogan(res.getSlogan());
-		c.setAddress(res.getAddressLine());
-		c.setOpenTime(res.getOpenTime());
-		c.setCloseTime(res.getCloseTime());
-		c.setPhone1(res.getPhone1());
-		c.setUrlSlug(res.getUrlSlug());
-		c.setImageUrl(res.getImageUrl());
-		c.setMinPrice(res.getMinPrice() * (long) cur.getRate());
-
-		c.setEstTime(res.getEstimateDeliveryTime());
-		c.setDeliveryCost(res.getDeliveryCost());
-
-		if (res.getContentDefinition() != null) {
-			List<String> desc = languageService.hashMapTranslate(res.getContentDefinition(), lang);
-			c.setDescription(desc != null && desc.size() > 0 ? desc.get(0) : "");
-		}
-
-		// get rating
-		Set<Rating> rt = res.getRatings();
-		if (rt != null && rt.size() > 0) {
-
-			double delivery = rt.stream()
-					.filter(p -> p.getDelivery() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			double quanlity = rt.stream()
-					.filter(p -> p.getQuality() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			int count = rt.size();
-			double sum = delivery + quanlity;
-
-			c.setRating(sum / (sum * count));
-		}
-
-		Set<RestaurantComment> srco = res.getRestaurantComments();
-		if (srco != null && srco.size() > 0) {
-			int cr = (int) srco.stream().filter(p -> p.getStatus() == Constant.Status.Publish.getValue()).count();
-			c.setNumOfReview(cr);
-		}
-
-		// favouries
-		Set<Favouries> sf = res.getFavourieses();
-		if (sf != null && sf.size() > 0) {
-			c.setNumOfFavouries(
-					(int) sf.stream().filter(p -> p.getIsStatus() == Constant.Status.Publish.getValue()).count());
-		}
-		return c;
-	}
-
 	private RestaurantLiteResponse2 entityToModelLite2(Restaurant res, Language lang) throws ParseException {
 		RestaurantLiteResponse2 c = new RestaurantLiteResponse2();
 		// currency
@@ -473,6 +422,8 @@ public class RestaurantService {
 		c.setLatitude(res.getLatitude());
 		c.setLongitude(res.getLongitude());
 		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(c.getOpenTime(), c.getCloseTime()));
+
+		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
 
 		if (res.getContentDefinition() != null) {
 			List<String> desc = languageService.hashMapTranslate(res.getContentDefinition(), lang);
