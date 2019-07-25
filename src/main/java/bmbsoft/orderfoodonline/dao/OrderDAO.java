@@ -199,7 +199,6 @@ public class OrderDAO {
 
 			List<Predicate> predicates = new LinkedList<>();
 			predicates.add(cb.and(exp.in(restaurantId)));
-			predicates.add(cb.and(cb.notEqual(root.<Integer>get("status"), Constant.Status.Deleted.getValue())));
 			query.select(root).where(predicates.stream().toArray(Predicate[]::new)).orderBy(cb.desc(root.get("orderId")));
 			List<Order> orders = session.createQuery(query).getResultList();
 

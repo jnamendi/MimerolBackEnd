@@ -79,6 +79,7 @@ public class RestaurantService {
 		return rs;
 	}
 
+	@Transactional
 	@Async
 	public String save(RestaurantRequest c, Restaurant model, MultipartFile file) {
 		return restaurantDAO.save(c, model, file);
