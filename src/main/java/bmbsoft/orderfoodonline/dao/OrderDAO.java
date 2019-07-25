@@ -209,6 +209,25 @@ public class OrderDAO {
 		}
 	}
 
+	@Transactional
+	public List<Order> getAllOrder() {
+		try {
+			Session session = this.sessionFactory.getCurrentSession();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
+			CriteriaQuery<Order> query = cb.createQuery(Order.class);
+			Root<Order> root = query.from(Order.class);
+			Expression<String> exp = root.get("restaurant");
+
+			query.select(root).orderBy(cb.desc(root.get("orderId")));
+			List<Order> orders = session.createQuery(query).getResultList();
+
+			return orders;
+		} catch (Exception e) {
+			logger.error(e.toString());
+			return null;
+		}
+	}
+
 	public List<Order> getOrderBy(int firstResult, int maxResult, Long restaurantId, Long status) {
 		try {
 			Session session = this.sessionFactory.getCurrentSession();
