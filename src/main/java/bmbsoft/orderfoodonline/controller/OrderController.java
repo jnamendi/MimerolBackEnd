@@ -647,103 +647,28 @@ public class OrderController extends BaseController {
 			oh.setOrderObj(obj);
 			oh.setCreatedDate(new Date());
 
-			boolean sh = orderService.saveHis(oh);
+			orderService.saveHis(oh);
 
-			if (so && sh) {
-				// send mail
-				if (req.getStatus() == Constant.Order.Deliveried.getValue() && !vm.getEmail().isEmpty()) {
-					try {
-						logger.info("------------Send mail -- coment");
-						// String appUrl = request.getScheme() + "://" + request.getServerName();
-						String appUrl = environment.getProperty("fontend.url");
-						String emailFrom = environment.getProperty("email.from");
-						String siteTitle = environment.getProperty("site.title");
-						String displayEmailName = environment.getProperty("display.email.name");
-
-						Executors.newSingleThreadExecutor().execute(new Runnable() {
-							public void run() {
-								try {
-									ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.Delivered.getValue(),
-											req.getLanguageCode());
-									if (cm != null) {
-										TemplateMatcher matcher = new TemplateMatcher("${", "}");
-										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
-										map.put("openTime", vm.getOpenTime() == null ? "" : vm.getOpenTime());
-										map.put("closeTime", vm.getCloseTime() == null ? "" : vm.getCloseTime());
-
-										String body = matcher.replace(cm.getBody(), map);
-
-										// title
-										TemplateMatcher title = new TemplateMatcher("${", "}");
-										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", vm.getOrderCode());
-										String trpc = title.replace(cm.getSubject(), t);
-
-										logger.info("------------send delivered to " + vm.getEmail());
-										emailService.sendMessage(emailFrom, vm.getEmail(), trpc, body,
-												displayEmailName);
-									}
-
-									// review
-
-									ContentEmaiLViewModel review = ce.getByType(Constant.EmailType.Review.getValue(),
-											req.getLanguageCode());
-									if (review != null) {
-										TemplateMatcher matcher = new TemplateMatcher("${", "}");
-										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
-										map.put("fullName", vm.getUserName() == null ? "" : vm.getUserName());
-
-										String body = matcher.replace(review.getBody(), map);
-
-										// title
-										TemplateMatcher title = new TemplateMatcher("${", "}");
-										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
-										t.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
-										String trpc = title.replace(review.getSubject(), t);
-
-										logger.info("------------send review to " + vm.getEmail());
-										emailService.sendMessage(emailFrom, vm.getEmail(), trpc, body,
-												displayEmailName);
-									}
-
-								} catch (MessagingException | IOException e) {
-									logger.error(e.toString());
-								}
-							}
-						});
-
-					} catch (Exception e) {
-						logger.error(e.toString());
-					}
-				}
 				// done
 
-				if (req.getStatus() == Constant.Order.Done.getValue() && !vm.getEmail().isEmpty()) {
+				if (req.getStatus() == Constant.Order.Complete.getValue()) {
 					try {
 						logger.info("------------Send mail -- coment");
-						// String appUrl = request.getScheme() + "://" + request.getServerName();
-						String appUrl = environment.getProperty("fontend.url");
 						String emailFrom = environment.getProperty("email.from");
-						String siteTitle = environment.getProperty("site.title");
 						String displayEmailName = environment.getProperty("display.email.name");
 
 						Executors.newSingleThreadExecutor().execute(new Runnable() {
 							public void run() {
 								try {
-									ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.Delivered.getValue(),
+									ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.OrderCompleted.getValue(),
 											req.getLanguageCode());
+									Order order = orderService.getBaseById(req.getOrderId());
 									if (cm != null) {
 										TemplateMatcher matcher = new TemplateMatcher("${", "}");
 										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
-										map.put("openTime", vm.getOpenTime() == null ? "" : vm.getOpenTime());
-										map.put("closeTime", vm.getCloseTime() == null ? "" : vm.getCloseTime());
+										map.put("orderCode", order.getOrderCode() == null ? "" : order.getOrderCode());
+										map.put("restaurantName", order.getRestaurantName() == null ? "" : order.getRestaurantName());
+//										map.put("paymentType", order.getPaymentWith() == null ? "" : PaymentMethod.valueOf(order.getPaymentWith().intValue()).toString());
 
 										String body = matcher.replace(cm.getBody(), map);
 
@@ -753,33 +678,21 @@ public class OrderController extends BaseController {
 										t.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
 										String trpc = title.replace(cm.getSubject(), t);
 
+										// set BCC
+
+										List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(order.getRestaurant().getRestaurantId());
+										StringBuilder bcc = new StringBuilder();
+										bcc.append(emailFrom);
+										if(emailsOwner != null && !emailsOwner.isEmpty()) {
+											for(String email : emailsOwner) {
+												bcc.append(";");
+												bcc.append(email);
+											}
+										}
+										cm.setBcc(bcc.toString());
+
 										logger.info("------------send delivered to " + vm.getEmail());
-										emailService.sendMessage(emailFrom, vm.getEmail(), trpc, body,
-												displayEmailName);
-									}
-
-									// review
-
-									ContentEmaiLViewModel review = ce.getByType(Constant.EmailType.Review.getValue(),
-											req.getLanguageCode());
-									if (review != null) {
-										TemplateMatcher matcher = new TemplateMatcher("${", "}");
-										Map<String, String> map = new HashMap<String, String>();
-										map.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
-										map.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
-										map.put("fullName", vm.getUserName() == null ? "" : vm.getUserName());
-
-										String body = matcher.replace(review.getBody(), map);
-
-										// title
-										TemplateMatcher title = new TemplateMatcher("${", "}");
-										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", vm.getOrderCode() == null ? "" : vm.getOrderCode());
-										t.put("restaurantName", vm.getRestaurantName() == null ? "" : vm.getRestaurantName());
-										String trpc = title.replace(review.getSubject(), t);
-
-										logger.info("------------send review to " + vm.getEmail());
-										emailService.sendMessage(emailFrom, vm.getEmail(), trpc, body,
+										emailService.sendBccMessage(emailFrom, vm.getEmail(),cm.getBcc(), trpc, body,
 												displayEmailName);
 									}
 
@@ -792,8 +705,6 @@ public class OrderController extends BaseController {
 					} catch (Exception e) {
 						logger.error(e.toString());
 					}
-				}
-
 				rs.setStatus(0);
 				rs.setContent("");
 				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
