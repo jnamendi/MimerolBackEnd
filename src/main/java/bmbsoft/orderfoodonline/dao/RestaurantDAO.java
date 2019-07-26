@@ -221,8 +221,8 @@ public class RestaurantDAO {
 					session.createNativeQuery(removeRoleOwner).setParameter("resId", resId)
 							.executeUpdate();
 
-					for (UserRequest c : vm.getUserIds()) {
-						User user = userDao.findById(c.getUserId());
+					for (Long c : vm.getUserIds()) {
+						User user = userDao.findById(c);
 						if (user == null) {
 							isF = true;
 							msg = "Could not found item. user_id= " + c;
@@ -351,8 +351,8 @@ public class RestaurantDAO {
 				// user_Restaurant
 				if (vm.getUserIds() != null && vm.getUserIds().size() > 0) {
 					// vm.getCategoryIds().forEach(userId -> {
-					for (UserRequest c : vm.getUserIds()) {
-						User user = userDao.findById(c.getUserId());
+					for (Long c : vm.getUserIds()) {
+						User user = userDao.findById(c);
 						if (user == null) {
 							isF = true;
 							msg = "Could not found item. user_id= " + c;

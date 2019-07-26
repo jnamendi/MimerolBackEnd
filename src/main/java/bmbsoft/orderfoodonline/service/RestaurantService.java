@@ -352,16 +352,12 @@ public class RestaurantService {
 		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
 
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
-			List<HashMap> owners = new ArrayList<>();
 			res.getUserRestaurants().forEach(item -> {
-				HashMap hm = new HashMap();
-				hm.put("userId", item.getUser().getUserId());
-				hm.put("userName", item.getUser().getUserName());
-				hm.put("fullName", item.getUser().getFullName());
-
-				owners.add(hm);
+				List<Long> s = new ArrayList<>();
+				s.add(item.getUserResId());
+				c.setUserIdArray(s);
 			});
-			c.setUserIds(owners);
+			//c.setUserIds(owners);
 		}
 		Set<RestaurantAttribute> items = res.getRestaurantAttributes();
 		List<AttributeViewModel> uvm = new ArrayList<>();

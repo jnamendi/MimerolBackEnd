@@ -285,6 +285,8 @@ public class RestaurantViewModel {
 		this.categoryIds = categoryIds;
 	}
 
+	public void setUserIdArray(List userIds){this.userIds = userIds;}
+
 	public String getAddress() {
 		return address;
 	}

@@ -58,15 +58,26 @@ public class RestaurantRequest {
 //	private List<CategoryLiteRequest> categoryIds;
 	private List<Integer> categoryIds;
 
-	private List<UserRequest> userIds;
- 
+//	private List<UserRequest> userIds;
+
+	private List<Long> userIds;
+
+
+
 	@NotNull(message = "estDeliveryTime is required")
 	private String estDeliveryTime;
 	@NotNull(message = "deliveryCost is required")
 	private Long deliveryCost;
  
 	private Long districtId;
-	
+
+	public List<Long> getUserIds() {
+		return userIds;
+	}
+
+	public void setUserIds(List<Long> userIds) {
+		this.userIds = userIds;
+	}
 	
 	public Long getRestaurantId() {
 		return restaurantId;
@@ -228,13 +239,13 @@ public class RestaurantRequest {
 		this.categoryIds = categoryIds;
 	}
 
-	public List<UserRequest> getUserIds() {
-		return userIds;
-	}
-
-	public void setUserIds(List<UserRequest> userIds) {
-		this.userIds = userIds;
-	}
+//	public List<UserRequest> getUserIds() {
+//		return userIds;
+//	}
+//
+//	public void setUserIds(List<UserRequest> userIds) {
+//		this.userIds = userIds;
+//	}
 
 	public Long getMinPrice() {
 		return minPrice;
