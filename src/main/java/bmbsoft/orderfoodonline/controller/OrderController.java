@@ -170,19 +170,6 @@ public class OrderController extends BaseController {
 				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
 			}
 
-			// TODO validate
-
-//			if (req.getUserId() == null) {
-//				boolean b = userService.checkExistEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
-//						Constant.AccountType.Anonymous.getValue());
-//				if (b) {
-//					rs.setStatus(2);
-//					rs.setMessage("Exist an email.");
-//					rs.setErrorType(Constant.ErrorTypeCommon.EMAIL_EXISTS);
-//					return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
-//				}
-//			}
-
 			if(req.getAddressId() != null) {
 				AddressViewModel model = addressService.getById(req.getAddressId());
 				req.setAddress(model.getAddress() == null ? "" : model.getAddress());
@@ -258,26 +245,28 @@ public class OrderController extends BaseController {
 						t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
 						String trpc = title.replace(cm.getSubject(), t);
 
-						// set BCC
-						List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(req.getRestaurantId());
-						StringBuilder bcc = new StringBuilder();
-						bcc.append(emailFrom);
-						if(emailsOwner != null && !emailsOwner.isEmpty()) {
-							for(String email : emailsOwner) {
-								bcc.append(";");
-								bcc.append(email);
-							}
-						}
-						cm.setBcc(bcc.toString());
-
 						// receive voucher
-
 						Executors.newSingleThreadExecutor().execute(new Runnable() {
 							public void run() {
 								try {
 									logger.info("------------send to " + req.getEmail());
 									emailService.sendBccMessage(emailFrom, req.getEmail(), cm.getBcc(), trpc, body,
 											displayEmailName);
+									String bodyAdmin = matcher.replace(cm.getBody(), vars);
+									ContentEmaiLViewModel padmin = ce.getByType(
+											Constant.EmailType.New_order_to_admin.getValue(), req.getLanguageCode());
+									if (padmin != null) {
+										// title
+										TemplateMatcher title = new TemplateMatcher("${", "}");
+										Map<String, String> t = new HashMap<String, String>();
+										t.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+										t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
+										String titleAdmin = title.replace(padmin.getSubject(), t);
+
+										logger.info("------------send notification to New_order_to_admin  " + emailFrom);
+										emailService.sendMessage(emailFrom, emailFrom, titleAdmin,
+												bodyAdmin, displayEmailName);
+									}
 
 									// email voucher
 									if (req.isReceiveVoucher()) {

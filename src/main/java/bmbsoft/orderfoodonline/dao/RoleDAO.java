@@ -102,7 +102,7 @@ public class RoleDAO {
 		if (null == id) {
 			role.setName(roleModel.getName());
 			role.setCode(roleModel.getCode());
-			// role.setCreatedBy("admin hasd code"); // miss create by
+			// role.setCreatedBy("New_order_to_admin hasd code"); // miss create by
 			role.setStatus(roleModel.getStatus());
 			role.setCreatedDate(new Date());
 		} else {
