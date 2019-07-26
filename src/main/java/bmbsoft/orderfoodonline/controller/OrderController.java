@@ -487,7 +487,7 @@ public class OrderController extends BaseController {
 		}
 	}
 
-	@RequestMapping(value = "/api/order/get-all-order", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/order/get-all-order", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllOrder(){
 		ResponseGet rs = new ResponseGet();
 		try {
