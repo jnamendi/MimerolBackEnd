@@ -135,6 +135,7 @@ public class RestaurantService {
 
 			for (Restaurant r : restaurants) {
 				RestaurantViewModel vm = new RestaurantViewModel();
+				List<RestaurantWorkTimeModel> rwt = restaurantWorkTimeService.getByRestaurantId(r.getRestaurantId());
 
 				// bind restaurant
 				vm.setRestaurantId(r.getRestaurantId());
@@ -168,7 +169,7 @@ public class RestaurantService {
 				vm.setDeliveryCost(r.getDeliveryCost());
 				vm.setEstDeliveryTime(r.getEstimateDeliveryTime());
 				vm.setCity(r.getCity());
-				vm.setRestaurantClosed(!CommonHelper.checkBetweenTime(r.getOpenTime(), r.getCloseTime()));
+				vm.setRestaurantClosed(!CommonHelper.checkBetweenTime(rwt));
 
 				String priceConvert = CommonHelper.formatDecimal(r.getMinPrice() * cur.getRate(), l.getCode(),
 						cur.getCode());
@@ -397,6 +398,7 @@ public class RestaurantService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		Double rating = restaurantCommentService.getRatingForRestaurant(res.getRestaurantId());
+		List<RestaurantWorkTimeModel> rwt = restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId());
 		if (cur == null) {
 			cur.setRate(1);
 		}
@@ -417,7 +419,7 @@ public class RestaurantService {
 		c.setRating(rating);
 		c.setLatitude(res.getLatitude());
 		c.setLongitude(res.getLongitude());
-		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(c.getOpenTime(), c.getCloseTime()));
+		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(rwt));
 
 		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
 

@@ -323,14 +323,33 @@ public class Constant {
 		public static final String getAllRegisteredCity = "getAllRegisteredCity";
 		public static final String getByIdAndlanguageCode = "getByIdAndlanguageCode"; 
 		
-		
-		
-		
-		
-		
-		
-		
-		
+	}
+
+	public enum Weekday{
+		SUN(0), MON(1), TUE(2), WED(3), THU(4), FRI(5), SAT(6);
+
+		private int value;
+
+		Weekday(int v) {
+			this.value = v;
+		}
+
+		private static Map map = new HashMap<>();
+
+		static {
+			for (Weekday day : Weekday.values()) {
+				map.put(day.value, day);
+			}
+		}
+
+		public static Weekday valueOf(int day) {
+			return (Weekday) map.get(day);
+		}
+
+		public int getValue() {
+			return value;
+		}
+
 	}
 
 }

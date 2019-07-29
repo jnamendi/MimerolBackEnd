@@ -188,33 +188,39 @@ public class CommonHelper {
 		return gson.toJson(obj);
 	}
 
-	public static boolean checkBetweenTime(String openTime, String closeTime) throws ParseException {
+	public static boolean checkBetweenTime(List<RestaurantWorkTimeModel> rwt) throws ParseException {
 		try {
-			if (openTime == null || openTime.isEmpty())
-				return false;
-			if (closeTime == null || closeTime.isEmpty())
+			if (rwt == null || rwt.isEmpty())
 				return false;
 			// check open time close time
-			String string1 = openTime;
-			Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
-			Calendar calendar1 = Calendar.getInstance();
-			calendar1.setTime(time1);
+			Date now = new Date();
+			boolean isOpened = false;
+			for (RestaurantWorkTimeModel model : rwt) {
+				if(model.getWeekDay().equals(Constant.Weekday.valueOf(now.getDay()).toString())) {
+					String openTime = model.getOpenTime();
+					Date open = new SimpleDateFormat("HH:mm").parse(openTime);
+					Calendar openCalendar = Calendar.getInstance();
+					openCalendar.setTime(open);
 
-			String string2 = closeTime;
-			Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
-			Calendar calendar2 = Calendar.getInstance();
-			calendar2.setTime(time2);
+					String closeTime = model.getOpenTime();
+					Date close = new SimpleDateFormat("HH:mm").parse(closeTime);
+					Calendar closeCalendar = Calendar.getInstance();
+					closeCalendar.setTime(close);
 
-			String someRandomTime = new Date().getHours() + ":" + new Date().getMinutes();
-			Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
-			Calendar calendar3 = Calendar.getInstance();
-			calendar3.setTime(d);
+					String someRandomTime = now.getHours() + ":" + now.getMinutes();
 
-			Date x = calendar3.getTime();
-			if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
-				return true;
+					Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
+					Calendar ca = Calendar.getInstance();
+					ca.setTime(d);
+
+					Date x = ca.getTime();
+					if (x.after(openCalendar.getTime()) && x.before(closeCalendar.getTime())) {
+						isOpened = true;
+					}
+				}
 			}
-			return false;
+			return isOpened;
+
 		} catch (Exception e) {
 			return false;
 		}
