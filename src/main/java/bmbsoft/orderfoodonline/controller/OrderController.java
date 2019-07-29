@@ -2,7 +2,6 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.entities.Order;
 import bmbsoft.orderfoodonline.entities.OrderHistory;
-import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.model.AddressViewModel;
 import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
 import bmbsoft.orderfoodonline.model.OrderResponse;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Executors;
 
@@ -251,20 +249,32 @@ public class OrderController extends BaseController {
 									logger.info("------------send to " + req.getEmail());
 									emailService.sendBccMessage(emailFrom, req.getEmail(), cm.getBcc(), trpc, body,
 											displayEmailName);
-									String bodyAdmin = matcher.replace(cm.getBody(), vars);
-									ContentEmaiLViewModel padmin = ce.getByType(
-											Constant.EmailType.New_order_to_admin.getValue(), req.getLanguageCode());
-									if (padmin != null) {
+									String bodyTemplateOwner = matcher.replace(cm.getBody(), vars);
+									ContentEmaiLViewModel emailToOwner = ce.getByType(
+											Constant.EmailType.NewOrderToOwner.getValue(), req.getLanguageCode());
+									if (emailToOwner != null) {
 										// title
 										TemplateMatcher title = new TemplateMatcher("${", "}");
 										Map<String, String> t = new HashMap<String, String>();
 										t.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
 										t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
-										String titleAdmin = title.replace(padmin.getSubject(), t);
+										String titleAdmin = title.replace(emailToOwner.getSubject(), t);
 
-										logger.info("------------send notification to New_order_to_admin  " + emailFrom);
-										emailService.sendMessage(emailFrom, emailFrom, titleAdmin,
-												bodyAdmin, displayEmailName);
+										// mail to
+
+                                        List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(req.getRestaurantId());
+                                        StringBuilder mailsTo = new StringBuilder();
+                                        mailsTo.append(emailFrom);
+                                        if(emailsOwner != null && !emailsOwner.isEmpty()) {
+                                            for(String email : emailsOwner) {
+                                                mailsTo.append(";");
+                                                mailsTo.append(email);
+                                            }
+                                        }
+
+										logger.info("------------send notification to NewOrderToOwner  " + mailsTo.toString());
+										emailService.sendMessage(emailFrom, mailsTo.toString(), titleAdmin,
+                                                bodyTemplateOwner, displayEmailName);
 									}
 
 									// email voucher
@@ -702,18 +712,6 @@ public class OrderController extends BaseController {
 									}
 									map.put("orderLineItems", sb.toString());
 
-									// set BCC
-									List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(or.getRestaurantId());
-									StringBuilder bcc = new StringBuilder();
-									bcc.append(emailFrom);
-									if(emailsOwner != null && !emailsOwner.isEmpty()) {
-										for(String email : emailsOwner) {
-											bcc.append(";");
-											bcc.append(email);
-										}
-									}
-									cm.setBcc(bcc.toString());
-
 									String body = matcher.replace(cm.getBody(), map);
 
 									// title
@@ -722,8 +720,8 @@ public class OrderController extends BaseController {
 									t.put("orderCode", req.getOrderCode());
 									String trpc = title.replace(cm.getSubject(), t);
 
-									logger.info("------------send to " + bcc.toString());
-									emailService.sendBccMessage(emailFrom, emailFrom, bcc.toString(), trpc, body,
+									logger.info("------------send to " + or.getEmail());
+									emailService.sendMessage(emailFrom, or.getEmail(), trpc, body,
 											displayEmailName);
 								}
 							} catch (MessagingException | IOException e) {
