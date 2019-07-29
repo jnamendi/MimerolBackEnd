@@ -188,7 +188,7 @@ public class OrderController extends BaseController {
 					if (cm != null) {
 						TemplateMatcher matcher = new TemplateMatcher("${", "}");
 						Map<String, String> vars = new HashMap<String, String>();
-						vars.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+						vars.put("orderCode", ps.getOrderCode() == null ? "" : ps.getOrderCode());
 						vars.put("restaurantName", ps.getName() == null ? "" : ps.getName());
 						vars.put("restaurantAddress", ps.getAddressLine() == null ? "" : ps.getAddressLine());
 						vars.put("restaurantPhone", ps.getPhone1() == null ? "" : ps.getPhone1());
@@ -238,7 +238,7 @@ public class OrderController extends BaseController {
 						// title
 						TemplateMatcher title = new TemplateMatcher("${", "}");
 						Map<String, String> t = new HashMap<String, String>();
-						t.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+						t.put("orderCode", ps.getOrderCode() == null ? "" : ps.getOrderCode());
 						t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
 						String trpc = title.replace(cm.getSubject(), t);
 
@@ -256,7 +256,7 @@ public class OrderController extends BaseController {
 										// title
 										TemplateMatcher title = new TemplateMatcher("${", "}");
 										Map<String, String> t = new HashMap<String, String>();
-										t.put("orderCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+										t.put("orderCode", ps.getOrderCode() == null ? "" : ps.getOrderCode());
 										t.put("restaurantName", ps.getName() == null ? "" : ps.getName());
 										String titleAdmin = title.replace(emailToOwner.getSubject(), t);
 
@@ -298,7 +298,7 @@ public class OrderController extends BaseController {
 					rs.setContent(new HashMap() {
 						{
 							put("orderId", ps.getOrderId() == null ? "" : ps.getOrderId());
-							put("invoiceCode", ps.getorderCode() == null ? "" : ps.getorderCode());
+							put("invoiceCode", ps.getOrderCode() == null ? "" : ps.getOrderCode());
 						}
 					});
 
