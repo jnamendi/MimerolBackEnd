@@ -87,7 +87,7 @@ public class RestaurantWorkTimeDAO {
         Session s = sessionFactory.openSession();
         Transaction t = s.beginTransaction();
         try {
-            String q = "DELETE FROM restaurant_work_time rwt WHERE rwt.restaurant_id=:resId";
+            String q = "DELETE FROM restaurant_work_time WHERE restaurant_id=:resId";
             int c = s.createNativeQuery(q).setParameter("resId", restaurantId).executeUpdate();
             t.commit();
             return c > 0;
