@@ -646,7 +646,7 @@ public class OrderController extends BaseController {
 			oh.setOrderObj(obj);
 			oh.setCreatedDate(new Date());
 
-			boolean sh = orderService.saveHis(oh);
+			orderService.saveHis(oh);
 
 			if(o != null  && o.getStatus() == Constant.Order.Complete.getValue() && !vm.getEmail().isEmpty()){
 				try {
@@ -723,16 +723,17 @@ public class OrderController extends BaseController {
 									logger.info("------------send to " + s);
 									emailService.sendMessage(emailFrom, s, trpc, body,
 											displayEmailName);
+				// done
+
 								}
 							} catch (MessagingException | IOException e) {
 								logger.error(e.toString());
 							}
 						}
 					});
-
-				} catch (Exception e) {
-					logger.error(e.toString());
-				}
+					} catch (Exception e) {
+						logger.error(e.toString());
+					}
 				rs.setStatus(0);
 				rs.setContent("");
 				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
