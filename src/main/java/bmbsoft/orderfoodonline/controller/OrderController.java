@@ -651,10 +651,7 @@ public class OrderController extends BaseController {
 			if(o != null  && o.getStatus() == Constant.Order.Complete.getValue() && !vm.getEmail().isEmpty()){
 				try {
 					logger.info("------------Send mail -- complete");
-					// String appUrl = request.getScheme() + "://" + request.getServerName();
-					String appUrl = environment.getProperty("fontend.url");
 					String emailFrom = environment.getProperty("email.from");
-					String siteTitle = environment.getProperty("site.title");
 					String displayEmailName = environment.getProperty("display.email.name");
 
 					Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -705,13 +702,18 @@ public class OrderController extends BaseController {
 									}
 									map.put("orderLineItems", sb.toString());
 
-									List<String> emailsOwner = userRestaurantService.getEmailOwnersByRestaurant(or.getRestaurantId());
-									String s ="" ;
-									if(emailsOwner != null && !emailsOwner.isEmpty()){
-										for(String email:emailsOwner){
-											s = email;
+									// set BCC
+									List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(or.getRestaurantId());
+									StringBuilder bcc = new StringBuilder();
+									bcc.append(emailFrom);
+									if(emailsOwner != null && !emailsOwner.isEmpty()) {
+										for(String email : emailsOwner) {
+											bcc.append(";");
+											bcc.append(email);
 										}
 									}
+									cm.setBcc(bcc.toString());
+
 									String body = matcher.replace(cm.getBody(), map);
 
 									// title
@@ -720,11 +722,9 @@ public class OrderController extends BaseController {
 									t.put("orderCode", req.getOrderCode());
 									String trpc = title.replace(cm.getSubject(), t);
 
-									logger.info("------------send to " + s);
-									emailService.sendMessage(emailFrom, s, trpc, body,
+									logger.info("------------send to " + bcc.toString());
+									emailService.sendBccMessage(emailFrom, emailFrom, bcc.toString(), trpc, body,
 											displayEmailName);
-				// done
-
 								}
 							} catch (MessagingException | IOException e) {
 								logger.error(e.toString());
