@@ -264,16 +264,16 @@ public class OrderController extends BaseController {
 
                                         List<String> emailsOwner =  userRestaurantService.getEmailOwnersByRestaurant(req.getRestaurantId());
                                         StringBuilder mailsTo = new StringBuilder();
-                                        mailsTo.append(emailFrom);
                                         if(emailsOwner != null && !emailsOwner.isEmpty()) {
                                             for(String email : emailsOwner) {
-                                                mailsTo.append(";");
                                                 mailsTo.append(email);
+                                                mailsTo.append(";");
                                             }
+											mailsTo.deleteCharAt(mailsTo.length() - 1);
                                         }
 
 										logger.info("------------send notification to NewOrderToOwner  " + mailsTo.toString());
-										emailService.sendMessage(emailFrom, mailsTo.toString(), titleAdmin,
+										emailService.sendMessage(emailFrom, mailsTo.toString().split(";"), titleAdmin,
                                                 bodyTemplateOwner, displayEmailName);
 									}
 
