@@ -354,7 +354,7 @@ public class RestaurantService {
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
 			res.getUserRestaurants().forEach(item -> {
 				List<Long> s = new ArrayList<>();
-				s.add(item.getUserResId());
+				s.add(item.getUser().getUserId());
 				c.setUserIdArray(s);
 			});
 			//c.setUserIds(owners);
