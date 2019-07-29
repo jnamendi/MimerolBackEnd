@@ -18,6 +18,15 @@ public class OrderResponse {
 	private Long restaurantId;
 	private String restaurantName;
 	private String imageUrl;
+	private Long userId;
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public List<OrderLineItemResponse> getOrderlineItems() {
+		return orderlineItems;
+	}
 
 	private String userName;
 	private String email;

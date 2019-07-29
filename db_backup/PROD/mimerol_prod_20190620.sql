@@ -873,7 +873,7 @@ CREATE TABLE `order_info` (
 
 LOCK TABLES `order_info` WRITE;
 /*!40000 ALTER TABLE `order_info` DISABLE KEYS */;
-INSERT INTO `order_info` VALUES (71,80,'Admin','qviet92@gmail.com','0363770922',NULL,'Marginal, Managua, Nicaragua',NULL,'Cau giay','13:00',NULL,'Turn left'),(72,81,'Admin','admin@orderfood.com','0363770922',NULL,'Marginal, Managua, Nicaragua','Ha Noi','Cau giay','15:00',NULL,NULL);
+INSERT INTO `order_info` VALUES (71,80,'Admin','qviet92@gmail.com','0363770922',NULL,'Marginal, Managua, Nicaragua',NULL,'Cau giay','13:00',NULL,'Turn left'),(72,81,'Admin','New_order_to_admin@orderfood.com','0363770922',NULL,'Marginal, Managua, Nicaragua','Ha Noi','Cau giay','15:00',NULL,NULL);
 /*!40000 ALTER TABLE `order_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1346,7 +1346,7 @@ CREATE TABLE `role` (
 
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role` DISABLE KEYS */;
-INSERT INTO `role` VALUES (1,'Guest','guest',1,'2018-05-08 22:50:59',NULL,NULL,NULL),(2,'Admin','admin',1,NULL,NULL,NULL,NULL),(6,'Owner','owner',1,NULL,NULL,NULL,NULL);
+INSERT INTO `role` VALUES (1,'Guest','guest',1,'2018-05-08 22:50:59',NULL,NULL,NULL),(2,'Admin','New_order_to_admin',1,NULL,NULL,NULL,NULL),(6,'Owner','owner',1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1467,7 +1467,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (65,'User','user@orderfood.com','01687625699','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','User','2018-05-10 10:05:03',1,'\0',3,'{\"email\":\"user@orderfood.com\",\"password\":\"xxxxxxxx\",\"provider\":\"NORMAL\",\"name\":\"User OFO\"}',NULL,NULL,'',1,'2018-05-15 10:29:38',NULL),(66,'Admin','admin@orderfood.com','0363770922','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','Admin','2018-05-10 11:03:52',1,'\0',3,'{\"email\":\"admin@orderfood.com\",\"password\":\"xxxxxxxx\",\"provider\":\"NORMAL\",\"fullName\":\"Admin\",\"name\":\"Admin\"}',NULL,NULL,'',2,'2018-05-16 23:19:06',NULL),(67,'Owner','owner@orderfood.com','0977724616','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','Owner','2018-05-10 11:05:48',1,'\0',3,'{\"email\":\"owner@orderfood.com\",\"password\":\"xxxxxxxx\",\"provider\":\"NORMAL\",\"fullName\":\"owner\",\"name\":\"owner\"}',NULL,NULL,'\0',1,'2018-05-16 23:41:07',NULL);
+INSERT INTO `user` VALUES (65,'User','user@orderfood.com','01687625699','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','User','2018-05-10 10:05:03',1,'\0',3,'{\"email\":\"user@orderfood.com\",\"password\":\"xxxxxxxx\",\"provider\":\"NORMAL\",\"name\":\"User OFO\"}',NULL,NULL,'',1,'2018-05-15 10:29:38',NULL),(66,'Admin','New_order_to_admin@orderfood.com','0363770922','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','Admin','2018-05-10 11:03:52',1,'\0',3,'{\"email\":\"New_order_to_admin@orderfood.com\",\"password\":\"xxxxxxxx\",\"provider\":\"NORMAL\",\"fullName\":\"Admin\",\"name\":\"Admin\"}',NULL,NULL,'',2,'2018-05-16 23:19:06',NULL),(67,'Owner','owner@orderfood.com','0977724616','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','$2a$04$NlbzqFhZgLMWVa9fdgbBNuhMiXLzPlOBnUWvZGZwyFJnYZt9A8HF2','Owner','2018-05-10 11:05:48',1,'\0',3,'{\"email\":\"owner@orderfood.com\",\"password\":\"xxxxxxxx\",\"provider\":\"NORMAL\",\"fullName\":\"owner\",\"name\":\"owner\"}',NULL,NULL,'\0',1,'2018-05-16 23:41:07',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

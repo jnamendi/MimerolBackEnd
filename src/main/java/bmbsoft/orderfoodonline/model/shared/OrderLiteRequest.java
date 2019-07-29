@@ -1,11 +1,24 @@
 package bmbsoft.orderfoodonline.model.shared;
 
+import bmbsoft.orderfoodonline.model.ListMenuItem;
+
+import java.util.List;
+
 public class OrderLiteRequest {
 	private Long orderId;
 	private String orderCode;
 	private int status;
 	private String languageCode;
-	
+	private List<ListMenuItem> orderLineItems;
+
+	public List<ListMenuItem> getOrderLineItems() {
+		return orderLineItems;
+	}
+
+	public void setOrderLineItems(List<ListMenuItem> orderLineItems) {
+		this.orderLineItems = orderLineItems;
+	}
+
 	public Long getOrderId() {
 		return orderId;
 	}
