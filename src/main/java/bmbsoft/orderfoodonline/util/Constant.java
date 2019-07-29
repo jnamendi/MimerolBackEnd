@@ -88,7 +88,7 @@ public class Constant {
 
 	public enum EmailType {
 		Verify(1), Resend(2), Register(3), ChangePass(4), Payment(5), Delivered(6), Promotion(7), Review(
-				8), CreateNewUser(9), New_order_to_admin(10),OrderCompleted(11);
+				8), CreateNewUser(9), NewOrderToOwner(10),OrderCompleted(11);
 
 		private int value;
 
