@@ -1,7 +1,11 @@
 package bmbsoft.orderfoodonline.model;
 
+import bmbsoft.orderfoodonline.entities.CloseOpen;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonSerialize
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -9,10 +13,22 @@ public class RestaurantWorkTimeModel {
 
     private Long restaurantWorkTimeId;
     private Long restaurantId;
-
     private String weekDay;
     private String openTime;
     private String closeTime;
+    private List<CloseOpen> list = new ArrayList<>();
+
+    public RestaurantWorkTimeModel(String weekDay) {
+        this.weekDay = weekDay;
+    }
+
+    public List<CloseOpen> getList() {
+        return list;
+    }
+
+    public void setList(List<CloseOpen> list) {
+        this.list = list;
+    }
 
     public Long getRestaurantWorkTimeId() {
         return restaurantWorkTimeId;

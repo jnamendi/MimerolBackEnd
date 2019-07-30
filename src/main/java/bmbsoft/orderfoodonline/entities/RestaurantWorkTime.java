@@ -22,6 +22,10 @@ public class RestaurantWorkTime {
     public RestaurantWorkTime() {
     }
 
+    public RestaurantWorkTime(String weekday) {
+        this.weekday = weekday;
+    }
+
     public RestaurantWorkTime(Long resWorkTimeId, Restaurant restaurant, String weekday, String startTime, String endTime, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy) {
         this.resWorkTimeId = resWorkTimeId;
         this.restaurant = restaurant;
