@@ -172,13 +172,13 @@ public class CommonHelper {
 		return gson.toJson(obj);
 	}
 
-	public static boolean checkBetweenTime(List<RestaurantWorkTimeModel> rwt) throws ParseException {
+	public static boolean checkBetweenTime(List<RestaurantWorkTimeModel> rwt) {
 		try {
 			if (rwt == null || rwt.isEmpty())
 				return false;
 			// check open time close time
 			Date now = new Date();
-			boolean isOpened = false;
+			boolean isOpen = false;
 			for (RestaurantWorkTimeModel model : rwt) {
 				if(model.getWeekDay().equals(Constant.Weekday.valueOf(now.getDay()).toString())) {
 					String openTime = model.getOpenTime();
@@ -186,7 +186,7 @@ public class CommonHelper {
 					Calendar openCalendar = Calendar.getInstance();
 					openCalendar.setTime(open);
 
-					String closeTime = model.getOpenTime();
+					String closeTime = model.getCloseTime();
 					Date close = new SimpleDateFormat("HH:mm").parse(closeTime);
 					Calendar closeCalendar = Calendar.getInstance();
 					closeCalendar.setTime(close);
@@ -199,11 +199,11 @@ public class CommonHelper {
 
 					Date x = ca.getTime();
 					if (x.after(openCalendar.getTime()) && x.before(closeCalendar.getTime())) {
-						isOpened = true;
+						isOpen = true;
 					}
 				}
 			}
-			return isOpened;
+			return isOpen;
 
 		} catch (Exception e) {
 			return false;
