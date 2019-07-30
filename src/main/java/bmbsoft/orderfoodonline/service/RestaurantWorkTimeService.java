@@ -4,15 +4,13 @@ import bmbsoft.orderfoodonline.dao.RestaurantWorkTimeDAO;
 import bmbsoft.orderfoodonline.entities.CloseOpen;
 import bmbsoft.orderfoodonline.entities.RestaurantWorkTime;
 import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
-import org.hibernate.Session;
+import bmbsoft.orderfoodonline.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -42,13 +40,13 @@ public class RestaurantWorkTimeService {
         List<RestaurantWorkTime> list = restaurantWorkTimeDAO.getWorkTimeByRestaurant(resId);
         ArrayList<RestaurantWorkTimeModel> wt = new ArrayList<>();
         if(!list.isEmpty()) {
-            wt.add( new RestaurantWorkTimeModel("MON"));
-            wt.add( new RestaurantWorkTimeModel("TUE"));
-            wt.add( new RestaurantWorkTimeModel("WED"));
-            wt.add( new RestaurantWorkTimeModel("THU"));
-            wt.add( new RestaurantWorkTimeModel("FRI"));
-            wt.add( new RestaurantWorkTimeModel("SAT"));
-            wt.add( new RestaurantWorkTimeModel("SUN"));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.MON.toString()));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.TUE.toString()));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.WED.toString()));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.THU.toString()));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.FRI.toString()));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.SAT.toString()));
+            wt.add( new RestaurantWorkTimeModel(Constant.Weekday.SUN.toString()));
             int size = list.size();
             for (int i = 0 ; i < size ; i++){
                 switch (list.get(i).getWeekday()){

@@ -1,5 +1,6 @@
 package bmbsoft.orderfoodonline.controller;
 
+import bmbsoft.orderfoodonline.entities.CloseOpen;
 import bmbsoft.orderfoodonline.entities.Language;
 import bmbsoft.orderfoodonline.entities.Restaurant;
 import bmbsoft.orderfoodonline.model.AddressSearchModel;
@@ -150,11 +151,15 @@ public class RestaurantController extends BaseController {
 			}
 			if(!req.getRestaurantWorkTimeModels().isEmpty()) {
 				for(RestaurantWorkTimeModel restaurantWorkTimeModel : req.getRestaurantWorkTimeModels()) {
-					if (CommonHelper.compareTime(restaurantWorkTimeModel.getOpenTime(), restaurantWorkTimeModel.getCloseTime())) {
-						rs.setStatus(7);
-						rs.setMessage("Opentime > CloseTime");
-						rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-						return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+					if(restaurantWorkTimeModel.getList() != null && !restaurantWorkTimeModel.getList().isEmpty()) {
+						for(CloseOpen co : restaurantWorkTimeModel.getList()) {
+							if (CommonHelper.compareTime(co.getOpenTime(), co.getCloseTime())) {
+								rs.setStatus(7);
+								rs.setMessage("Opentime > CloseTime");
+								rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
+								return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+							}
+						}
 					}
 				}
 			}
@@ -198,11 +203,15 @@ public class RestaurantController extends BaseController {
 			}
 			if(!req.getRestaurantWorkTimeModels().isEmpty()) {
 				for(RestaurantWorkTimeModel restaurantWorkTimeModel : req.getRestaurantWorkTimeModels()) {
-					if (CommonHelper.compareTime(restaurantWorkTimeModel.getOpenTime(), restaurantWorkTimeModel.getCloseTime())) {
-						rs.setStatus(7);
-						rs.setMessage("Opentime > CloseTime");
-						rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-						return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+					if(restaurantWorkTimeModel.getList() != null && !restaurantWorkTimeModel.getList().isEmpty()) {
+						for(CloseOpen co : restaurantWorkTimeModel.getList()) {
+							if (CommonHelper.compareTime(co.getOpenTime(), co.getCloseTime())) {
+								rs.setStatus(7);
+								rs.setMessage("Opentime > CloseTime");
+								rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
+								return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+							}
+						}
 					}
 				}
 			}
@@ -251,11 +260,15 @@ public class RestaurantController extends BaseController {
 			}
 			if(!req.getRestaurantWorkTimeModels().isEmpty()) {
 				for(RestaurantWorkTimeModel restaurantWorkTimeModel : req.getRestaurantWorkTimeModels()) {
-					if (CommonHelper.compareTime(restaurantWorkTimeModel.getOpenTime(), restaurantWorkTimeModel.getCloseTime())) {
-						rs.setStatus(7);
-						rs.setMessage("Opentime > CloseTime");
-						rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-						return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+					if(restaurantWorkTimeModel.getList() != null && !restaurantWorkTimeModel.getList().isEmpty()) {
+						for(CloseOpen co : restaurantWorkTimeModel.getList()) {
+							if (CommonHelper.compareTime(co.getOpenTime(), co.getCloseTime())) {
+								rs.setStatus(7);
+								rs.setMessage("Opentime > CloseTime");
+								rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
+								return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+							}
+						}
 					}
 				}
 			}
@@ -324,11 +337,15 @@ public class RestaurantController extends BaseController {
 
 			if(!req.getRestaurantWorkTimeModels().isEmpty()) {
 				for(RestaurantWorkTimeModel restaurantWorkTimeModel : req.getRestaurantWorkTimeModels()) {
-					if (CommonHelper.compareTime(restaurantWorkTimeModel.getOpenTime(), restaurantWorkTimeModel.getCloseTime())) {
-						rs.setStatus(7);
-						rs.setMessage("Opentime > CloseTime");
-						rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-						return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+					if(restaurantWorkTimeModel.getList() != null && !restaurantWorkTimeModel.getList().isEmpty()) {
+						for(CloseOpen co : restaurantWorkTimeModel.getList()) {
+							if (CommonHelper.compareTime(co.getOpenTime(), co.getCloseTime())) {
+								rs.setStatus(7);
+								rs.setMessage("Opentime > CloseTime");
+								rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
+								return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
+							}
+						}
 					}
 				}
 			}

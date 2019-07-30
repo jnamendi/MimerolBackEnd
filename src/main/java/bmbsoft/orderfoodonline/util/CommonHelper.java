@@ -1,5 +1,6 @@
 package bmbsoft.orderfoodonline.util;
 
+import bmbsoft.orderfoodonline.entities.CloseOpen;
 import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
 import bmbsoft.orderfoodonline.model.sModel;
 import com.google.gson.Gson;
@@ -181,25 +182,29 @@ public class CommonHelper {
 			boolean isOpen = false;
 			for (RestaurantWorkTimeModel model : rwt) {
 				if(model.getWeekDay().equals(Constant.Weekday.valueOf(now.getDay()).toString())) {
-					String openTime = model.getOpenTime();
-					Date open = new SimpleDateFormat("HH:mm").parse(openTime);
-					Calendar openCalendar = Calendar.getInstance();
-					openCalendar.setTime(open);
+					if (model.getList() != null && !model.getList().isEmpty()) {
+						for(CloseOpen co : model.getList()) {
+							String openTime = co.getOpenTime();
+							Date open = new SimpleDateFormat("HH:mm").parse(openTime);
+							Calendar openCalendar = Calendar.getInstance();
+							openCalendar.setTime(open);
 
-					String closeTime = model.getCloseTime();
-					Date close = new SimpleDateFormat("HH:mm").parse(closeTime);
-					Calendar closeCalendar = Calendar.getInstance();
-					closeCalendar.setTime(close);
+							String closeTime = co.getCloseTime();
+							Date close = new SimpleDateFormat("HH:mm").parse(closeTime);
+							Calendar closeCalendar = Calendar.getInstance();
+							closeCalendar.setTime(close);
 
-					String someRandomTime = now.getHours() + ":" + now.getMinutes();
+							String someRandomTime = now.getHours() + ":" + now.getMinutes();
 
-					Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
-					Calendar ca = Calendar.getInstance();
-					ca.setTime(d);
+							Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
+							Calendar ca = Calendar.getInstance();
+							ca.setTime(d);
 
-					Date x = ca.getTime();
-					if (x.after(openCalendar.getTime()) && x.before(closeCalendar.getTime())) {
-						isOpen = true;
+							Date x = ca.getTime();
+							if (x.after(openCalendar.getTime()) && x.before(closeCalendar.getTime())) {
+								isOpen = true;
+							}
+						}
 					}
 				}
 			}
@@ -210,7 +215,7 @@ public class CommonHelper {
 		}
 	}
 
-	public static boolean compareTime(String openTime, String closeTime) throws ParseException {
+	public static boolean compareTime(String openTime, String closeTime) {
 		try {
 			if (openTime == null || openTime.isEmpty())
 				return false;

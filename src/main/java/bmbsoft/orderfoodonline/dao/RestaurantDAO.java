@@ -151,12 +151,16 @@ public class RestaurantDAO {
 				if (!rwt.isEmpty()) {
 					if(resId != null) restaurantWorkTimeService.deleteByRestaurantId(resId);
 					for (RestaurantWorkTimeModel r : rwt) {
-						RestaurantWorkTime reswt = new RestaurantWorkTime();
-						reswt.setWeekday(r.getWeekDay());
-						reswt.setStartTime(r.getOpenTime());
-						reswt.setEndTime(r.getCloseTime());
-						reswt.setRestaurant(res);
-						session.save(reswt);
+						if (r.getList() != null && !r.getList().isEmpty()) {
+							for(CloseOpen time : r.getList()) {
+								RestaurantWorkTime reswt = new RestaurantWorkTime();
+								reswt.setWeekday(r.getWeekDay());
+								reswt.setStartTime(time.getOpenTime());
+								reswt.setEndTime(time.getCloseTime());
+								reswt.setRestaurant(res);
+								session.save(reswt);
+							}
+						}
 					}
 				}
 
@@ -370,12 +374,16 @@ public class RestaurantDAO {
 				List<RestaurantWorkTimeModel> rwt = vm.getRestaurantWorkTimeModels();
 				if (!rwt.isEmpty()) {
 					for (RestaurantWorkTimeModel r : rwt) {
-						RestaurantWorkTime reswt = new RestaurantWorkTime();
-						reswt.setWeekday(r.getWeekDay());
-						reswt.setStartTime(r.getOpenTime());
-						reswt.setEndTime(r.getCloseTime());
-						reswt.setRestaurant(res);
-						session.save(reswt);
+						if (r.getList() != null && !r.getList().isEmpty()) {
+							for(CloseOpen time : r.getList()) {
+								RestaurantWorkTime reswt = new RestaurantWorkTime();
+								reswt.setWeekday(r.getWeekDay());
+								reswt.setStartTime(time.getOpenTime());
+								reswt.setEndTime(time.getCloseTime());
+								reswt.setRestaurant(res);
+								session.save(reswt);
+							}
+						}
 					}
 				}
 

@@ -2,12 +2,12 @@ package bmbsoft.orderfoodonline.entities;
 
 public class CloseOpen {
     private String closeTime;
-    private String opewnTime;
+    private String openTime;
     private Long idRestaurantWork;
 
-    public CloseOpen(String closeTime, String opewnTime, Long idRestaurantWork) {
+    public CloseOpen(String closeTime, String openTime, Long idRestaurantWork) {
         this.closeTime = closeTime;
-        this.opewnTime = opewnTime;
+        this.openTime = openTime;
         this.idRestaurantWork = idRestaurantWork;
     }
 
@@ -15,8 +15,8 @@ public class CloseOpen {
         this.closeTime = closeTime;
     }
 
-    public void setOpewnTime(String opewnTime) {
-        this.opewnTime = opewnTime;
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
     }
 
     public Long getIdRestaurantWork() {
@@ -31,7 +31,7 @@ public class CloseOpen {
         return closeTime;
     }
 
-    public String getOpewnTime() {
-        return opewnTime;
+    public String getOpenTime() {
+        return openTime;
     }
 }
