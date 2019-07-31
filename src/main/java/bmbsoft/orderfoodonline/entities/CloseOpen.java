@@ -5,7 +5,7 @@ public class CloseOpen {
     private String openTime;
     private Long idRestaurantWork;
 
-    public CloseOpen(String closeTime, String openTime, Long idRestaurantWork) {
+    public CloseOpen( String openTime, String closeTime, Long idRestaurantWork) {
         this.closeTime = closeTime;
         this.openTime = openTime;
         this.idRestaurantWork = idRestaurantWork;
