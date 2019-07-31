@@ -1,38 +1,23 @@
 package bmbsoft.orderfoodonline.util;
 
+import bmbsoft.orderfoodonline.entities.CloseOpen;
+import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
+import bmbsoft.orderfoodonline.model.sModel;
+import com.google.gson.Gson;
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.Normalizer;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.text.Normalizer.Form;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Currency;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.servlet.http.HttpServletRequest;
-
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.google.gson.Gson;
-
-import bmbsoft.orderfoodonline.entities.Media;
-import bmbsoft.orderfoodonline.model.UploadModel;
-import bmbsoft.orderfoodonline.model.sModel;
+import java.util.*;
 
 public class CommonHelper {
 	public static String HasPw(String password) {
@@ -188,39 +173,49 @@ public class CommonHelper {
 		return gson.toJson(obj);
 	}
 
-	public static boolean checkBetweenTime(String openTime, String closeTime) throws ParseException {
+	public static boolean checkBetweenTime(List<RestaurantWorkTimeModel> rwt) {
 		try {
-			if (openTime == null || openTime.isEmpty())
-				return false;
-			if (closeTime == null || closeTime.isEmpty())
+			if (rwt == null || rwt.isEmpty())
 				return false;
 			// check open time close time
-			String string1 = openTime;
-			Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
-			Calendar calendar1 = Calendar.getInstance();
-			calendar1.setTime(time1);
+			Date now = new Date();
+			boolean isOpen = false;
+			for (RestaurantWorkTimeModel model : rwt) {
+				if(model.getWeekDay().equals(Constant.Weekday.valueOf(now.getDay()).toString())) {
+					if (model.getList() != null && !model.getList().isEmpty()) {
+						for(CloseOpen co : model.getList()) {
+							String openTime = co.getOpenTime();
+							Date open = new SimpleDateFormat("HH:mm").parse(openTime);
+							Calendar openCalendar = Calendar.getInstance();
+							openCalendar.setTime(open);
 
-			String string2 = closeTime;
-			Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
-			Calendar calendar2 = Calendar.getInstance();
-			calendar2.setTime(time2);
+							String closeTime = co.getCloseTime();
+							Date close = new SimpleDateFormat("HH:mm").parse(closeTime);
+							Calendar closeCalendar = Calendar.getInstance();
+							closeCalendar.setTime(close);
 
-			String someRandomTime = new Date().getHours() + ":" + new Date().getMinutes();
-			Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
-			Calendar calendar3 = Calendar.getInstance();
-			calendar3.setTime(d);
+							String someRandomTime = now.getHours() + ":" + now.getMinutes();
 
-			Date x = calendar3.getTime();
-			if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
-				return true;
+							Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
+							Calendar ca = Calendar.getInstance();
+							ca.setTime(d);
+
+							Date x = ca.getTime();
+							if (x.after(openCalendar.getTime()) && x.before(closeCalendar.getTime())) {
+								isOpen = true;
+							}
+						}
+					}
+				}
 			}
-			return false;
+			return isOpen;
+
 		} catch (Exception e) {
 			return false;
 		}
 	}
 
-	public static boolean compareTime(String openTime, String closeTime) throws ParseException {
+	public static boolean compareTime(String openTime, String closeTime) {
 		try {
 			if (openTime == null || openTime.isEmpty())
 				return false;

@@ -1,47 +1,26 @@
 package bmbsoft.orderfoodonline.dao;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-
+import bmbsoft.orderfoodonline.entities.Order;
+import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.OrderViewModel;
+import bmbsoft.orderfoodonline.response.Data;
+import bmbsoft.orderfoodonline.response.ResponseGetPaging;
+import bmbsoft.orderfoodonline.service.UserRestaurantService;
+import bmbsoft.orderfoodonline.util.Constant;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import bmbsoft.orderfoodonline.entities.ExtraItem;
-import bmbsoft.orderfoodonline.entities.MenuItem;
-import bmbsoft.orderfoodonline.entities.Order;
-import bmbsoft.orderfoodonline.entities.OrderExtraItem;
-import bmbsoft.orderfoodonline.entities.OrderHistory;
-import bmbsoft.orderfoodonline.entities.OrderLineItem;
-import bmbsoft.orderfoodonline.entities.Rating;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.model.OrderViewModel;
-import bmbsoft.orderfoodonline.model.RatingViewModel;
-import bmbsoft.orderfoodonline.model.shared.OrderLiteRequest;
-import bmbsoft.orderfoodonline.model.shared.OrderRequest;
-import bmbsoft.orderfoodonline.response.Data;
-import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository(value = "orderDAO")
 @Transactional(rollbackOn = Exception.class)
@@ -52,21 +31,7 @@ public class OrderDAO {
 	private SessionFactory sessionFactory;
 
 	@Autowired
-	private RestaurantDAO rd;
-
-	@Autowired
-	private UserDAO ud;
-
-	@Autowired
-	private MenuItemDAO mid;
-
-	@Autowired
-	private ExtraItemDAO eid;
-
-	ObjectMapper mapper = new ObjectMapper();
-
-	boolean isOk = true;
-	String msg = "";
+	private UserRestaurantService userRestaurantService;
 
 	public boolean update(final Order Order) {
 		Session session = this.sessionFactory.getCurrentSession();
@@ -218,6 +183,49 @@ public class OrderDAO {
 		List<Order> menus = session.createQuery(query).getResultList();
 
 		return menus;
+	}
+
+	@Transactional
+	public List<Order> getOrderByOwner(Long ownerId) {
+		try {
+			List<UserRestaurant> userRestaurantList = userRestaurantService.getByUser(ownerId);
+			List<Long> restaurantId = userRestaurantList.stream().map(p -> p.getRestaurant().getRestaurantId()).collect(Collectors.toList());
+
+			Session session = this.sessionFactory.getCurrentSession();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
+			CriteriaQuery<Order> query = cb.createQuery(Order.class);
+			Root<Order> root = query.from(Order.class);
+			Expression<String> exp = root.get("restaurant");
+
+			List<Predicate> predicates = new LinkedList<>();
+			predicates.add(cb.and(exp.in(restaurantId)));
+			query.select(root).where(predicates.stream().toArray(Predicate[]::new)).orderBy(cb.desc(root.get("orderId")));
+			List<Order> orders = session.createQuery(query).getResultList();
+
+			return orders;
+		} catch (Exception e) {
+			logger.error(e.toString());
+			return null;
+		}
+	}
+
+	@Transactional
+	public List<Order> getAllOrder() {
+		try {
+			Session session = this.sessionFactory.getCurrentSession();
+			CriteriaBuilder cb = session.getCriteriaBuilder();
+			CriteriaQuery<Order> query = cb.createQuery(Order.class);
+			Root<Order> root = query.from(Order.class);
+			Expression<String> exp = root.get("restaurant");
+
+			query.select(root).orderBy(cb.desc(root.get("orderId")));
+			List<Order> orders = session.createQuery(query).getResultList();
+
+			return orders;
+		} catch (Exception e) {
+			logger.error(e.toString());
+			return null;
+		}
 	}
 
 	public List<Order> getOrderBy(int firstResult, int maxResult, Long restaurantId, Long status) {

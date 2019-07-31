@@ -1,15 +1,11 @@
 package bmbsoft.orderfoodonline.dao;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
+import bmbsoft.orderfoodonline.entities.Restaurant;
+import bmbsoft.orderfoodonline.entities.RestaurantComment;
+import bmbsoft.orderfoodonline.entities.User;
+import bmbsoft.orderfoodonline.entities.UserRestaurant;
+import bmbsoft.orderfoodonline.model.RestaurantCommentModel;
+import bmbsoft.orderfoodonline.util.Constant;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -21,13 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import bmbsoft.orderfoodonline.entities.Order;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.RestaurantComment;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.model.RestaurantCommentModel;
-import bmbsoft.orderfoodonline.util.Constant;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Repository(value = "restaurantCommentDAO")
 @Transactional(rollbackFor = Exception.class)

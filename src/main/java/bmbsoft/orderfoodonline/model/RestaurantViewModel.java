@@ -22,6 +22,7 @@ public class RestaurantViewModel {
 	private double longitude;
 	private String openTime;
 	private String closeTime;
+	private List<RestaurantWorkTimeModel> restaurantWorkTimeModels;
 	private String phone1;
 	private String phone2;
 	private String shipArea;
@@ -280,6 +281,12 @@ public class RestaurantViewModel {
 		this.categoryIds = categoryIds;
 	}
 
+	public void setCategoryIdArray(List categoryIds) {
+		this.categoryIds = categoryIds;
+	}
+
+	public void setUserIdArray(List userIds){this.userIds = userIds;}
+
 	public String getAddress() {
 		return address;
 	}
@@ -385,6 +392,12 @@ public class RestaurantViewModel {
 	public void setCityId(Long cityId) {
 		this.cityId = cityId;
 	}
-	
 
+	public List<RestaurantWorkTimeModel> getRestaurantWorkTimeModels() {
+		return restaurantWorkTimeModels;
+	}
+
+	public void setRestaurantWorkTimeModels(List<RestaurantWorkTimeModel> restaurantWorkTimeModels) {
+		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
+	}
 }

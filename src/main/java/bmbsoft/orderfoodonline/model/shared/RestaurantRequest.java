@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,9 +26,14 @@ public class RestaurantRequest {
 	private double latitude;
 	@NotNull(message = "longitude is required")
 	private double longitude;
-	@NotNull(message = "openTime is required")
+
+	// TODO: Delete redundant fields
 	private String openTime;
 	private String closeTime;
+
+	@NotNull(message = "Time is required")
+	private List<RestaurantWorkTimeModel> restaurantWorkTimeModels;
+
 	private String phone1;
 	private String phone2;
 	private String shipArea;
@@ -49,17 +55,29 @@ public class RestaurantRequest {
 	private int status;
 	private int sortOrder;
 	@NotNull(message = "categoryIds is required")
-	private List<CategoryLiteRequest> categoryIds;
+//	private List<CategoryLiteRequest> categoryIds;
+	private List<Integer> categoryIds;
 
-	private List<UserRequest> userIds;
- 
+//	private List<UserRequest> userIds;
+
+	private List<Long> userIds;
+
+
+
 	@NotNull(message = "estDeliveryTime is required")
 	private String estDeliveryTime;
 	@NotNull(message = "deliveryCost is required")
 	private Long deliveryCost;
  
 	private Long districtId;
-	
+
+	public List<Long> getUserIds() {
+		return userIds;
+	}
+
+	public void setUserIds(List<Long> userIds) {
+		this.userIds = userIds;
+	}
 	
 	public Long getRestaurantId() {
 		return restaurantId;
@@ -205,21 +223,29 @@ public class RestaurantRequest {
 		this.sortOrder = sortOrder;
 	}
 
-	public List<CategoryLiteRequest> getCategoryIds() {
+//	public List<CategoryLiteRequest> getCategoryIds() {
+//		return categoryIds;
+//	}
+//
+//	public void setCategoryIds(List<CategoryLiteRequest> categoryIds) {
+//		this.categoryIds = categoryIds;
+//	}
+
+	public List<Integer> getCategoryIds() {
 		return categoryIds;
 	}
 
-	public void setCategoryIds(List<CategoryLiteRequest> categoryIds) {
+	public void setCategoryIds(List<Integer> categoryIds) {
 		this.categoryIds = categoryIds;
 	}
 
-	public List<UserRequest> getUserIds() {
-		return userIds;
-	}
-
-	public void setUserIds(List<UserRequest> userIds) {
-		this.userIds = userIds;
-	}
+//	public List<UserRequest> getUserIds() {
+//		return userIds;
+//	}
+//
+//	public void setUserIds(List<UserRequest> userIds) {
+//		this.userIds = userIds;
+//	}
 
 	public Long getMinPrice() {
 		return minPrice;
@@ -269,4 +295,11 @@ public class RestaurantRequest {
 		this.districtId = districtId;
 	}
 
+	public List<RestaurantWorkTimeModel> getRestaurantWorkTimeModels() {
+		return restaurantWorkTimeModels;
+	}
+
+	public void setRestaurantWorkTimeModels(List<RestaurantWorkTimeModel> restaurantWorkTimeModels) {
+		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
+	}
 }

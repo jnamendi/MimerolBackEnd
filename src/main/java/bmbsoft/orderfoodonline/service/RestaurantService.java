@@ -36,6 +36,8 @@ public class RestaurantService {
 	private CurrencyDAO currencyDAO;
 	@Autowired
 	private RestaurantCommentService restaurantCommentService;
+	@Autowired
+	private RestaurantWorkTimeService restaurantWorkTimeService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -76,6 +78,7 @@ public class RestaurantService {
 		return rs;
 	}
 
+	@Transactional
 	@Async
 	public String save(RestaurantRequest c, Restaurant model, MultipartFile file) {
 		return restaurantDAO.save(c, model, file);
@@ -132,6 +135,7 @@ public class RestaurantService {
 
 			for (Restaurant r : restaurants) {
 				RestaurantViewModel vm = new RestaurantViewModel();
+				List<RestaurantWorkTimeModel> rwt = restaurantWorkTimeService.getByRestaurantId(r.getRestaurantId());
 
 				// bind restaurant
 				vm.setRestaurantId(r.getRestaurantId());
@@ -165,7 +169,7 @@ public class RestaurantService {
 				vm.setDeliveryCost(r.getDeliveryCost());
 				vm.setEstDeliveryTime(r.getEstimateDeliveryTime());
 				vm.setCity(r.getCity());
-				vm.setRestaurantClosed(!CommonHelper.checkBetweenTime(r.getOpenTime(), r.getCloseTime()));
+				vm.setRestaurantClosed(!CommonHelper.checkBetweenTime(rwt));
 
 				String priceConvert = CommonHelper.formatDecimal(r.getMinPrice() * cur.getRate(), l.getCode(),
 						cur.getCode());
@@ -345,17 +349,15 @@ public class RestaurantService {
 
 		c.setAddressDesc(res.getAddressDesc());
 
-		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
-			List<HashMap> owners = new ArrayList<>();
-			res.getUserRestaurants().forEach(item -> {
-				HashMap hm = new HashMap();
-				hm.put("userId", item.getUser().getUserId());
-				hm.put("userName", item.getUser().getUserName());
-				hm.put("fullName", item.getUser().getFullName());
+		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
 
-				owners.add(hm);
+		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
+			res.getUserRestaurants().forEach(item -> {
+				List<Long> s = new ArrayList<>();
+				s.add(item.getUser().getUserId());
+				c.setUserIdArray(s);
 			});
-			c.setUserIds(owners);
+			//c.setUserIds(owners);
 		}
 		Set<RestaurantAttribute> items = res.getRestaurantAttributes();
 		List<AttributeViewModel> uvm = new ArrayList<>();
@@ -370,7 +372,6 @@ public class RestaurantService {
 		}
 
 		Set<RestaurantCategory> src = res.getRestaurantCategories();
-		List<HashMap> categories = new ArrayList();
 
 		if (src != null && src.size() > 0) {
 			src = src.stream().filter(p -> p.getCategory().getStatus() == Constant.Status.Publish.getValue())
@@ -380,76 +381,15 @@ public class RestaurantService {
 				Category cg = cc.getCategory();
 				List<String> a = languageService.hashMapTranslate(cg.getContentDefinition(), lang);
 				HashMap hm = new HashMap();
-				hm.put("categoryId", cg.getCategoryId());
-				String cName = a != null && a.size() > 0 ? a.get(0) : "";
-				hm.put("categoryName", cName);
-
-				//
-				RestaurantCategoryViewModel rcv = new RestaurantCategoryViewModel();
-				rcv.setCategoryId(cg.getCategoryId());
-				rcv.setCategoryName(cName);
-
-				categories.add(hm);
+				List<Long> s = new ArrayList<>();
+				s.add(cg.getCategoryId());
+				c.setCategoryIdArray(s);
 			});
 		}
-		c.setCategoryIds(categories);
+
+
 		// c.setUrlSlug(slg.slugify(vm.getName()));
 		// c.setStatus(Constant.Status.Publish.hashCode());
-		return c;
-	}
-
-	private RestaurantLiteResponse entityToModelLite(Restaurant res, Language lang) {
-		RestaurantLiteResponse c = new RestaurantLiteResponse();
-		// currency
-		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
-			cur.setRate(1);
-		}
-		c.setRestaurantId(res.getRestaurantId());
-		c.setName(res.getName());
-		c.setSlogan(res.getSlogan());
-		c.setAddress(res.getAddressLine());
-		c.setOpenTime(res.getOpenTime());
-		c.setCloseTime(res.getCloseTime());
-		c.setPhone1(res.getPhone1());
-		c.setUrlSlug(res.getUrlSlug());
-		c.setImageUrl(res.getImageUrl());
-		c.setMinPrice(res.getMinPrice() * (long) cur.getRate());
-
-		c.setEstTime(res.getEstimateDeliveryTime());
-		c.setDeliveryCost(res.getDeliveryCost());
-
-		if (res.getContentDefinition() != null) {
-			List<String> desc = languageService.hashMapTranslate(res.getContentDefinition(), lang);
-			c.setDescription(desc != null && desc.size() > 0 ? desc.get(0) : "");
-		}
-
-		// get rating
-		Set<Rating> rt = res.getRatings();
-		if (rt != null && rt.size() > 0) {
-
-			double delivery = rt.stream()
-					.filter(p -> p.getDelivery() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			double quanlity = rt.stream()
-					.filter(p -> p.getQuality() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue()).count();
-			int count = rt.size();
-			double sum = delivery + quanlity;
-
-			c.setRating(sum / (sum * count));
-		}
-
-		Set<RestaurantComment> srco = res.getRestaurantComments();
-		if (srco != null && srco.size() > 0) {
-			int cr = (int) srco.stream().filter(p -> p.getStatus() == Constant.Status.Publish.getValue()).count();
-			c.setNumOfReview(cr);
-		}
-
-		// favouries
-		Set<Favouries> sf = res.getFavourieses();
-		if (sf != null && sf.size() > 0) {
-			c.setNumOfFavouries(
-					(int) sf.stream().filter(p -> p.getIsStatus() == Constant.Status.Publish.getValue()).count());
-		}
 		return c;
 	}
 
@@ -458,6 +398,7 @@ public class RestaurantService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		Double rating = restaurantCommentService.getRatingForRestaurant(res.getRestaurantId());
+		List<RestaurantWorkTimeModel> rwt = restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId());
 		if (cur == null) {
 			cur.setRate(1);
 		}
@@ -478,7 +419,9 @@ public class RestaurantService {
 		c.setRating(rating);
 		c.setLatitude(res.getLatitude());
 		c.setLongitude(res.getLongitude());
-		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(c.getOpenTime(), c.getCloseTime()));
+		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(rwt));
+
+		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
 
 		if (res.getContentDefinition() != null) {
 			List<String> desc = languageService.hashMapTranslate(res.getContentDefinition(), lang);
