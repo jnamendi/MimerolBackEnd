@@ -52,31 +52,31 @@ public class RestaurantWorkTimeService {
                 switch (list.get(i).getWeekday()){
                     case "MON":
                         wt.get(0).setRestaurantId(resId);
-                        wt.get(0).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(0).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                     case "TUE":
                         wt.get(1).setRestaurantId(resId);
-                        wt.get(1).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(1).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                     case "WED":
                         wt.get(2).setRestaurantId(resId);
-                        wt.get(2).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(2).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                     case "THU":
                         wt.get(3).setRestaurantId(resId);
-                        wt.get(3).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(3).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                     case "FRI":
                         wt.get(4).setRestaurantId(resId);
-                        wt.get(4).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(4).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                     case "SAT":
                         wt.get(5).setRestaurantId(resId);
-                        wt.get(5).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(5).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                     case "SUN":
                         wt.get(6).setRestaurantId(resId);
-                        wt.get(6).getList().add(new CloseOpen(list.get(i).getStartTime(),list.get(i).getEndTime(),list.get(i).getResWorkTimeId()));
+                        wt.get(6).getList().add(new CloseOpen(list.get(i).getEndTime(),list.get(i).getStartTime(),list.get(i).getResWorkTimeId()));
                         break;
                 }
             }
