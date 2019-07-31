@@ -656,7 +656,7 @@ public class OrderController extends BaseController {
 			oh.setOrderObj(obj);
 			oh.setCreatedDate(new Date());
 
-			orderService.saveHis(oh);
+			boolean checkSaveHis = orderService.saveHis(oh);
 
 			if(o != null  && o.getStatus() == Constant.Order.Complete.getValue() && !vm.getEmail().isEmpty()){
 				try {
@@ -737,11 +737,16 @@ public class OrderController extends BaseController {
 				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
 			}
 
-			rs.setStatus(5);
-			rs.setMessage("Error when process the data");
-			rs.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
-			return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
-
+			if (checkSaveHis){
+				rs.setStatus(0);
+				rs.setMessage("Update success");
+				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
+			}else{
+				rs.setStatus(5);
+				rs.setMessage("Error when process the data");
+				rs.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
+				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			rs.setStatus(1);

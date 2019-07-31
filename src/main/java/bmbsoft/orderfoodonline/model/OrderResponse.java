@@ -23,11 +23,6 @@ public class OrderResponse {
 	public Long getUserId() {
 		return userId;
 	}
-
-	public List<OrderLineItemResponse> getOrderlineItems() {
-		return orderlineItems;
-	}
-
 	private String userName;
 	private String email;
 	private String phone;
