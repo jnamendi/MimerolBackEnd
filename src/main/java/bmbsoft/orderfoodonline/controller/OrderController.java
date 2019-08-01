@@ -2,10 +2,7 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.entities.Order;
 import bmbsoft.orderfoodonline.entities.OrderHistory;
-import bmbsoft.orderfoodonline.model.AddressViewModel;
-import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
-import bmbsoft.orderfoodonline.model.OrderResponse;
-import bmbsoft.orderfoodonline.model.OrderViewModel;
+import bmbsoft.orderfoodonline.model.*;
 import bmbsoft.orderfoodonline.model.shared.*;
 import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
@@ -57,6 +54,9 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private UserRestaurantService userRestaurantService;
+
+	@Autowired
+	private DistrictService districtService;
 
 	Gson mapper = new Gson();
 
@@ -173,6 +173,12 @@ public class OrderController extends BaseController {
 				req.setDistrict(model.getDistrict() == null ? "" : model.getDistrict());
 				req.setCity(model.getCity() == null ? "" : model.getCity());
 				req.setAddressDesc(model.getAddressDesc() == null ? "" : model.getCity());
+			}
+
+			if(req.getDistrictId() != null) {
+				DistrictViewModel model = districtService.getById(req.getDistrictId());
+				req.setDistrict(model.getName() == null ? "" : model.getName());
+				req.setCity(model.getCity() == null ? "" : model.getCity().getName());
 			}
 
 			PaymentResponse ps = ops.create(req);
