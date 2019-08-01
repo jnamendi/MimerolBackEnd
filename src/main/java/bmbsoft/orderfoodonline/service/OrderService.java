@@ -333,7 +333,7 @@ public class OrderService {
 				loli.add(orl);
 			});
 
-			or.setOrderLineitems(loli);
+			or.setOrderLineItems(loli);
 		}
 
 		Set<OrderPayment> sop = o.getOrderPayments();
