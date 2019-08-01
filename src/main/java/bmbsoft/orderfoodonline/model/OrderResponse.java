@@ -7,7 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import bmbsoft.orderfoodonline.entities.OrderLineItem;
 import bmbsoft.orderfoodonline.model.shared.OrderLineItemResponse;
 
 @JsonInclude(value = Include.NON_NULL)
@@ -38,7 +37,7 @@ public class OrderResponse {
 
 	private List<OrderInfoResponse> orderInfos = new LinkedList<>();
 
-	private List<OrderLineItemResponse> orderlineItems = new LinkedList<>();
+	private List<OrderLineItemResponse> orderLineItems = new LinkedList<>();
 
 	public Long getOrderId() {
 		return orderId;
@@ -137,12 +136,12 @@ public class OrderResponse {
 		this.orderInfos = orderInfos;
 	}
 
-	public List<OrderLineItemResponse> getOrderLineitems() {
-		return orderlineItems;
+	public List<OrderLineItemResponse> getOrderLineItems() {
+		return orderLineItems;
 	}
 
-	public void setOrderLineitems(List<OrderLineItemResponse> orderLineItems) {
-		this.orderlineItems = orderLineItems;
+	public void setOrderLineItems(List<OrderLineItemResponse> orderLineItems) {
+		this.orderLineItems = orderLineItems;
 	}
 
 	public String getImageUrl() {
