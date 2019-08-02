@@ -709,7 +709,7 @@ public class OrderController extends BaseController {
 											sb.append("</td>");
 											sb.append(
 													"<td style='width:70px;text-align:right;font-family:Arial;font-size:13px' valign='top'>");
-											sb.append("<span style='font-family:Arial;font-size:13px'>"  + " "+o.getUnitPrice()
+											sb.append("<span style='font-family:Arial;font-size:13px'>"  + " "+ o.getUnitPrice() * o.getUnitPrice()
 													+ or.getSymbolLeft() + "</span>");
 											sb.append("</td>");
 											sb.append("</tr>");
