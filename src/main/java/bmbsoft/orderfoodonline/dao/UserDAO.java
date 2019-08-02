@@ -1,36 +1,5 @@
 package bmbsoft.orderfoodonline.dao;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.mail.MessagingException;
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import bmbsoft.orderfoodonline.entities.Role;
 import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.entities.UserInfo;
@@ -40,11 +9,27 @@ import bmbsoft.orderfoodonline.model.UserInfoResponse;
 import bmbsoft.orderfoodonline.model.UserViewModel;
 import bmbsoft.orderfoodonline.service.ContentEmailService;
 import bmbsoft.orderfoodonline.service.EmailService;
-import bmbsoft.orderfoodonline.service.RoleService;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
 import bmbsoft.orderfoodonline.util.RandomStringHelper;
 import jlibs.core.util.regex.TemplateMatcher;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.mail.MessagingException;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.*;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Repository(value = "userDAO")
 @Transactional(rollbackFor = Exception.class)
@@ -385,6 +370,24 @@ public class UserDAO {
 		} else {
 			return null;
 		}
+	}
+
+	public User getUserByEmailAndStatus(String email, Integer status) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		CriteriaBuilder cb = session.getCriteriaBuilder();
+		CriteriaQuery<User> cq = cb.createQuery(User.class);
+		Root<User> root = cq.from(User.class);
+		List<Predicate> pre = new ArrayList<>();
+
+		if (status != null) {
+			pre.add(cb.equal(root.get("status"), status));
+		}
+		pre.add(cb.equal(root.get("email"), email));
+		cq.select(root).where(pre.stream().toArray(Predicate[]::new));
+
+		List<User> listUser = session.createQuery(cq).getResultList();
+		return listUser.isEmpty() ? null : listUser.get(0);
 	}
 
 	public User getLoginUserByEmail(String email, int provider) {
