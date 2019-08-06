@@ -172,7 +172,7 @@ public class OrderController extends BaseController {
 				req.setAddress(model.getAddress() == null ? "" : model.getAddress());
 				req.setDistrict(model.getDistrict() == null ? "" : model.getDistrict());
 				req.setCity(model.getCity() == null ? "" : model.getCity());
-				req.setAddressDesc(model.getAddressDesc() == null ? "" : model.getCity());
+				req.setAddressDesc(model.getAddressDesc() == null ? "" : model.getAddressDesc());
 			}
 
 			if(req.getDistrictId() != null) {
