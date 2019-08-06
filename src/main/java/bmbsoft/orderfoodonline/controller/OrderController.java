@@ -214,8 +214,9 @@ public class OrderController extends BaseController {
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
 						vars.put("discount", req.getDiscount() == null ? "" : req.getDiscount().toString());
-						vars.put("guestPay", req.getGuestPay() == null ? "" : req.getGuestPay().toString());
-						vars.put("refund", req.getRefund() == null ? "" : req.getRefund().toString());
+						vars.put("guestPay", req.getPaymentWith() == null ? "" : req.getPaymentWith().toString());
+						vars.put("refund", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
+                                String.valueOf(req.getPaymentWith() - req.getOrderItem().getTotalPrice()) : "");
 
 						StringBuilder sb = new StringBuilder();
 						if (req.getOrderItem().getOrderItemsRequest() != null
