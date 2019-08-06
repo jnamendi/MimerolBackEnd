@@ -188,6 +188,7 @@ public class OrderController extends BaseController {
 					logger.info("------------Send mail -- payment");
 					String emailFrom = environment.getProperty("email.from");
 					String displayEmailName = environment.getProperty("display.email.name");
+					String frontendURL = environment.getProperty("frontend.url");
 
 					ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.Payment.getValue(),
 							req.getLanguageCode());
@@ -213,10 +214,11 @@ public class OrderController extends BaseController {
 						vars.put("symbolLeft", req.getSymbolLeft() == null && req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
-						vars.put("discount", req.getDiscount() == null ? "" : req.getDiscount().toString());
+						vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");
 						vars.put("guestPay", req.getPaymentWith() == null ? "" : req.getPaymentWith().toString());
-						vars.put("refund", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
+						vars.put("refunds", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
                                 String.valueOf(req.getPaymentWith() - req.getOrderItem().getTotalPrice()) : "");
+						vars.put("frontendUrl", frontendURL);
 
 						StringBuilder sb = new StringBuilder();
 						if (req.getOrderItem().getOrderItemsRequest() != null
