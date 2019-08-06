@@ -241,6 +241,13 @@ public class OrderController extends BaseController {
 								sb.append("<span style='font-family:Arial;font-size:13px'>" + o.getTotalPrice() + " "
 										+ req.getSymbolLeft() + "</span>");
 								sb.append("</td>");
+								if(o.getMenuExraItems() != null && o.getMenuExraItems().size() > 0){
+									o.getMenuExraItems().forEach(item ->{
+										sb.append("<tr><td></td><td style='padding-left:15px;'>+ "+item.getName()+"("+item.getExtraitems().get(0).getPrice()+")"+"</td></tr>");
+									});
+								}
+								sb.append("</tr>");
+								sb.append("</td>");
 								sb.append("</tr>");
 							});
 
