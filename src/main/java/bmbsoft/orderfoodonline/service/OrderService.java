@@ -270,6 +270,7 @@ public class OrderService {
 			ps.setCity(orderInfo.getCity());
 			ps.setAddress(orderInfo.getAddress());
 			ps.setAddressDesc(orderInfo.getAddressDesc());
+			ps.setCompanyName(orderInfo.getCompanyName());
 		}
 
 		Restaurant r = o.getRestaurant();

@@ -42,6 +42,8 @@ public class PaymentResponse {
 	private Long paymentWith;
 	private String addressDesc;
 
+	private String companyName;
+
 	public String getOrderCode() {
 		return orderCode;
 	}
@@ -296,5 +298,13 @@ public class PaymentResponse {
 
 	public void setAddressDesc(String addressDesc) {
 		this.addressDesc = addressDesc;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 }

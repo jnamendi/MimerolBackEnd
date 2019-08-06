@@ -201,10 +201,11 @@ public class OrderController extends BaseController {
 						vars.put("deliveryCost", req.getDeliveryCost() == null ? "" : req.getDeliveryCost().toString());
 						vars.put("totalPrice", req.getOrderItem().getTotalPrice() == null ? "" : req.getOrderItem().getTotalPrice().toString());
 						vars.put("userName", req.getName() == null ? "" : req.getName());
+						vars.put("userCompanyName", req.getCompanyName() == null ? "" : req.getCompanyName());
 						vars.put("userAddress", req.getAddress() == null ? "" : req.getAddress());
 						vars.put("userDistrict", req.getDistrict() == null ? "" : req.getDistrict());
 						vars.put("userCity", req.getCity() == null ? "" : req.getCity());
-						vars.put("addressDesc", req.getAddressDesc() == null ? "" : req.getAddressDesc());
+						vars.put("userAddressDesc", req.getAddressDesc() == null ? "" : req.getAddressDesc());
 						vars.put("userNumber",
 								req.getNumber() != null && !req.getNumber().isEmpty() ? req.getNumber() : "");
 						vars.put("deliveryTime", req.getTime() == null ? "" : req.getTime());
@@ -212,6 +213,9 @@ public class OrderController extends BaseController {
 						vars.put("symbolLeft", req.getSymbolLeft() == null && req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
+						vars.put("discount", req.getDiscount() == null ? "" : req.getDiscount().toString());
+						vars.put("guestPay", req.getGuestPay() == null ? "" : req.getGuestPay().toString());
+						vars.put("refund", req.getRefund() == null ? "" : req.getRefund().toString());
 
 						StringBuilder sb = new StringBuilder();
 						if (req.getOrderItem().getOrderItemsRequest() != null
@@ -693,7 +697,8 @@ public class OrderController extends BaseController {
 									map.put("userAddress", sp.getAddress() == null ? "" :sp.getAddress());
 									map.put("userDistrict", sp.getDistrict() == null ? "" : sp.getDistrict());
 									map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
-									map.put("addressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
+									map.put("userAddressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
+									map.put("userCompanyName", sp.getCompanyName() == null ? "" : sp.getCompanyName());
 									StringBuilder sb = new StringBuilder();
 									if (req.getOrderLineItems() != null
 											&& req.getOrderLineItems().size() > 0) {

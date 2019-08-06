@@ -1,6 +1,5 @@
 package bmbsoft.orderfoodonline.model.shared;
 
-import java.util.List;
 import javax.validation.constraints.NotNull;
 
 public class PaymentRequest {
@@ -34,7 +33,10 @@ public class PaymentRequest {
 	private Long paymentWith;
 	private String addressDesc;
 	
-	
+	private Long discount;
+	private Long guestPay;
+	private Long refund;
+
 	public Long getPromotionId() {
 		return promotionId;
 	}
@@ -246,4 +248,28 @@ public class PaymentRequest {
 	}
 
 	private String remarks;
+
+	public Long getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Long discount) {
+		this.discount = discount;
+	}
+
+	public Long getGuestPay() {
+		return guestPay;
+	}
+
+	public void setGuestPay(Long guestPay) {
+		this.guestPay = guestPay;
+	}
+
+	public Long getRefund() {
+		return refund;
+	}
+
+	public void setRefund(Long refund) {
+		this.refund = refund;
+	}
 }
