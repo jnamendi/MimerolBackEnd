@@ -204,6 +204,7 @@ public class OrderController extends BaseController {
 						vars.put("userAddress", req.getAddress() == null ? "" : req.getAddress());
 						vars.put("userDistrict", req.getDistrict() == null ? "" : req.getDistrict());
 						vars.put("userCity", req.getCity() == null ? "" : req.getCity());
+						vars.put("addressDesc", req.getAddressDesc() == null ? "" : req.getAddressDesc());
 						vars.put("userNumber",
 								req.getNumber() != null && !req.getNumber().isEmpty() ? req.getNumber() : "");
 						vars.put("deliveryTime", req.getTime() == null ? "" : req.getTime());
@@ -692,6 +693,7 @@ public class OrderController extends BaseController {
 									map.put("userAddress", sp.getAddress() == null ? "" :sp.getAddress());
 									map.put("userDistrict", sp.getDistrict() == null ? "" : sp.getDistrict());
 									map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
+									map.put("addressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
 									StringBuilder sb = new StringBuilder();
 									if (req.getOrderLineItems() != null
 											&& req.getOrderLineItems().size() > 0) {
