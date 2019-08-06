@@ -334,7 +334,7 @@ public class OrderPaymentDAO {
 				// send mail
 				if (req.getUserId() == null && !isExistUser && req.getLanguageCode() != null && !req.getLanguageCode().isEmpty()) {
 					try {
-						String appUrl = environment.getProperty("fontend.url");
+						String appUrl = environment.getProperty("frontend.url");
 						String emailFrom = environment.getProperty("email.from");
 						String siteTitle = environment.getProperty("site.title");
 						String displayEmailName = environment.getProperty("display.email.name");

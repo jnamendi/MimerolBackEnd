@@ -675,6 +675,7 @@ public class OrderController extends BaseController {
 					logger.info("------------Send mail -- complete");
 					String emailFrom = environment.getProperty("email.from");
 					String displayEmailName = environment.getProperty("display.email.name");
+					String frontendURL = environment.getProperty("frontend.url");
 
 					Executors.newSingleThreadExecutor().execute(new Runnable() {
 						public void run() {
@@ -700,6 +701,7 @@ public class OrderController extends BaseController {
 									map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
 									map.put("userAddressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
 									map.put("userCompanyName", sp.getCompanyName() == null ? "" : sp.getCompanyName());
+									map.put("frontendUrl", frontendURL);
 									StringBuilder sb = new StringBuilder();
 									if (req.getOrderLineItems() != null
 											&& req.getOrderLineItems().size() > 0) {
