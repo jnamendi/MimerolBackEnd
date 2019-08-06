@@ -327,6 +327,7 @@ public class OrderService {
 				oir.setDistrict(oi.getDistrict());
 				oir.setTime(oi.getTime());
 				oir.setRemark(oi.getRemark());
+				oir.setAddressDescription(oi.getAddressDesc());
 				oirs.add(oir);
 			}
 		}
