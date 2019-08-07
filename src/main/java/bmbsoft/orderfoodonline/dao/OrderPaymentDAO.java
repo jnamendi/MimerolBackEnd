@@ -118,11 +118,10 @@ public class OrderPaymentDAO {
 			String hpw = CommonHelper.HasPw(token);
 			if (req.getUserId() == null) {
 				//check email
-				isExistUser = ud.getUserByEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
-						Constant.AccountType.Anonymous.getValue()) != null;
+				User user = ud.getUserByEmailAndStatus(req.getEmail(), Constant.Status.Publish.getValue());
+				isExistUser = user != null;
 				if(isExistUser) {
-					u = ud.getUserByEmail(req.getEmail(), Constant.Provider.NORMAL.getValue(),
-							Constant.AccountType.Anonymous.getValue());
+					u = user;
 				} else {
 					u = new User();
 
@@ -335,7 +334,7 @@ public class OrderPaymentDAO {
 				// send mail
 				if (req.getUserId() == null && !isExistUser && req.getLanguageCode() != null && !req.getLanguageCode().isEmpty()) {
 					try {
-						String appUrl = environment.getProperty("fontend.url");
+						String appUrl = environment.getProperty("frontend.url");
 						String emailFrom = environment.getProperty("email.from");
 						String siteTitle = environment.getProperty("site.title");
 						String displayEmailName = environment.getProperty("display.email.name");

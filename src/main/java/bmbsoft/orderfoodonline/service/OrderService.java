@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import bmbsoft.orderfoodonline.dao.OrderInfoDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class OrderService {
 	private OrderDAO orderDAO;
 	@Autowired
 	private CurrencyDAO currencyDAO;
+
+	@Autowired
+	private OrderInfoDAO orderInfoDAO;
 
 	@Transactional
 	public ResponseGetPaging getAll(int pageIndex, int pageSize, String orderCode, String restaurantName,
@@ -259,6 +263,16 @@ public class OrderService {
 
 		PaymentResponse ps = new PaymentResponse();
 
+		OrderInfo orderInfo = orderInfoDAO.getByOrderId(orderId);
+
+		if(orderInfo != null) {
+			ps.setDistrict(orderInfo.getDistrict());
+			ps.setCity(orderInfo.getCity());
+			ps.setAddress(orderInfo.getAddress());
+			ps.setAddressDesc(orderInfo.getAddressDesc());
+			ps.setCompanyName(orderInfo.getCompanyName());
+		}
+
 		Restaurant r = o.getRestaurant();
 		if (r != null) {
 			ps.setName(r.getName());
@@ -313,6 +327,7 @@ public class OrderService {
 				oir.setDistrict(oi.getDistrict());
 				oir.setTime(oi.getTime());
 				oir.setRemark(oi.getRemark());
+				oir.setAddressDescription(oi.getAddressDesc());
 				oirs.add(oir);
 			}
 		}

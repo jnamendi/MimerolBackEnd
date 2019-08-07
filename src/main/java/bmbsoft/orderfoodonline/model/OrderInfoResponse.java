@@ -11,6 +11,7 @@ public class OrderInfoResponse {
 	private String district;
 	private String time;
 	private String remark;
+	private String addressDescription;
 
 	public String getInfoName() {
 		return infoName;
@@ -82,5 +83,13 @@ public class OrderInfoResponse {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getAddressDescription() {
+		return addressDescription;
+	}
+
+	public void setAddressDescription(String addressDescription) {
+		this.addressDescription = addressDescription;
 	}
 }

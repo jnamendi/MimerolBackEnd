@@ -696,7 +696,7 @@ public class UserController extends BaseController {
 				try {
 					logger.info("------------Send mail");
 					// String appUrl = request.getScheme() + "://" + request.getServerName();
-					String appUrl = environment.getProperty("fontend.url");
+					String appUrl = environment.getProperty("frontend.url");
 					String emailFrom = environment.getProperty("email.from");
 					String siteTitle = environment.getProperty("site.title");
 					String displayEmailName = environment.getProperty("display.email.name");
@@ -836,7 +836,7 @@ public class UserController extends BaseController {
 				if (s) {
 					try {
 						// String appUrl = request.getScheme() + "://" + request.getServerName();
-						String appUrl = environment.getProperty("fontend.url");
+						String appUrl = environment.getProperty("frontend.url");
 						String emailFrom = environment.getProperty("email.from");
 						String siteTitle = environment.getProperty("site.title");
 						String displayEmailName = environment.getProperty("display.email.name");
@@ -908,7 +908,7 @@ public class UserController extends BaseController {
 		try {
 
 			// String appUrl = request.getScheme() + "://" + request.getServerName();
-			String appUrl = environment.getProperty("fontend.url");
+			String appUrl = environment.getProperty("frontend.url");
 			String emailFrom = environment.getProperty("email.from");
 			String dn = environment.getProperty("display.email.name");
 			RandomStringHelper gen = new RandomStringHelper(8, ThreadLocalRandom.current());
@@ -1176,7 +1176,7 @@ public class UserController extends BaseController {
 
 			// resend pass
 			try {
-				String appUrl = environment.getProperty("fontend.url");
+				String appUrl = environment.getProperty("frontend.url");
 				String emailFrom = environment.getProperty("email.from");
 				String siteTitle = environment.getProperty("site.title");
 				String displayEmailName = environment.getProperty("display.email.name");

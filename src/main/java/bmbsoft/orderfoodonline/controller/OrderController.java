@@ -2,10 +2,7 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.entities.Order;
 import bmbsoft.orderfoodonline.entities.OrderHistory;
-import bmbsoft.orderfoodonline.model.AddressViewModel;
-import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
-import bmbsoft.orderfoodonline.model.OrderResponse;
-import bmbsoft.orderfoodonline.model.OrderViewModel;
+import bmbsoft.orderfoodonline.model.*;
 import bmbsoft.orderfoodonline.model.shared.*;
 import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
@@ -57,6 +54,9 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private UserRestaurantService userRestaurantService;
+
+	@Autowired
+	private DistrictService districtService;
 
 	Gson mapper = new Gson();
 
@@ -172,7 +172,13 @@ public class OrderController extends BaseController {
 				req.setAddress(model.getAddress() == null ? "" : model.getAddress());
 				req.setDistrict(model.getDistrict() == null ? "" : model.getDistrict());
 				req.setCity(model.getCity() == null ? "" : model.getCity());
-				req.setAddressDesc(model.getAddressDesc() == null ? "" : model.getCity());
+				req.setAddressDesc(model.getAddressDesc() == null ? "" : model.getAddressDesc());
+			}
+
+			if(req.getDistrictId() != null) {
+				DistrictViewModel model = districtService.getById(req.getDistrictId());
+				req.setDistrict(model.getName() == null ? "" : model.getName());
+				req.setCity(model.getCity() == null ? "" : model.getCity().getName());
 			}
 
 			PaymentResponse ps = ops.create(req);
@@ -182,6 +188,7 @@ public class OrderController extends BaseController {
 					logger.info("------------Send mail -- payment");
 					String emailFrom = environment.getProperty("email.from");
 					String displayEmailName = environment.getProperty("display.email.name");
+					String frontendURL = environment.getProperty("frontend.url");
 
 					ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.Payment.getValue(),
 							req.getLanguageCode());
@@ -195,9 +202,11 @@ public class OrderController extends BaseController {
 						vars.put("deliveryCost", req.getDeliveryCost() == null ? "" : req.getDeliveryCost().toString());
 						vars.put("totalPrice", req.getOrderItem().getTotalPrice() == null ? "" : req.getOrderItem().getTotalPrice().toString());
 						vars.put("userName", req.getName() == null ? "" : req.getName());
+						vars.put("userCompanyName", req.getCompanyName() == null ? "" : req.getCompanyName());
 						vars.put("userAddress", req.getAddress() == null ? "" : req.getAddress());
 						vars.put("userDistrict", req.getDistrict() == null ? "" : req.getDistrict());
 						vars.put("userCity", req.getCity() == null ? "" : req.getCity());
+						vars.put("userAddressDesc", req.getAddressDesc() == null ? "" : req.getAddressDesc());
 						vars.put("userNumber",
 								req.getNumber() != null && !req.getNumber().isEmpty() ? req.getNumber() : "");
 						vars.put("deliveryTime", req.getTime() == null ? "" : req.getTime());
@@ -205,6 +214,11 @@ public class OrderController extends BaseController {
 						vars.put("symbolLeft", req.getSymbolLeft() == null && req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
+						vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");
+						vars.put("guestPay", req.getPaymentWith() == null ? "" : req.getPaymentWith().toString());
+						vars.put("refunds", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
+                                String.valueOf(req.getPaymentWith() - req.getOrderItem().getTotalPrice()) : "");
+						vars.put("frontendUrl", frontendURL);
 
 						StringBuilder sb = new StringBuilder();
 						if (req.getOrderItem().getOrderItemsRequest() != null
@@ -226,6 +240,15 @@ public class OrderController extends BaseController {
 										"<td style='width:70px;text-align:right;font-family:Arial;font-size:13px' valign='top'>");
 								sb.append("<span style='font-family:Arial;font-size:13px'>" + o.getTotalPrice() + " "
 										+ req.getSymbolLeft() + "</span>");
+								sb.append("</td>");
+								if(o.getMenuExraItems() != null && o.getMenuExraItems().size() > 0){
+									o.getMenuExraItems().forEach(item ->{
+										if(item.getExtraitems() != null && !item.getExtraitems().isEmpty()){
+											sb.append("<tr><td></td><td style='padding-left:15px;'>+ "+item.getName()+"("+item.getExtraitems().get(0).getPrice()+")"+"</td></tr>");
+										}
+									});
+								}
+								sb.append("</tr>");
 								sb.append("</td>");
 								sb.append("</tr>");
 							});
@@ -663,6 +686,7 @@ public class OrderController extends BaseController {
 					logger.info("------------Send mail -- complete");
 					String emailFrom = environment.getProperty("email.from");
 					String displayEmailName = environment.getProperty("display.email.name");
+					String frontendURL = environment.getProperty("frontend.url");
 
 					Executors.newSingleThreadExecutor().execute(new Runnable() {
 						public void run() {
@@ -686,6 +710,9 @@ public class OrderController extends BaseController {
 									map.put("userAddress", sp.getAddress() == null ? "" :sp.getAddress());
 									map.put("userDistrict", sp.getDistrict() == null ? "" : sp.getDistrict());
 									map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
+									map.put("userAddressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
+									map.put("userCompanyName", sp.getCompanyName() == null ? "" : sp.getCompanyName());
+									map.put("frontendUrl", frontendURL);
 									StringBuilder sb = new StringBuilder();
 									if (req.getOrderLineItems() != null
 											&& req.getOrderLineItems().size() > 0) {
@@ -703,7 +730,7 @@ public class OrderController extends BaseController {
 											sb.append("</td>");
 											sb.append(
 													"<td style='width:70px;text-align:right;font-family:Arial;font-size:13px' valign='top'>");
-											sb.append("<span style='font-family:Arial;font-size:13px'>"  + " "+o.getUnitPrice()
+											sb.append("<span style='font-family:Arial;font-size:13px'>"  + " "+ o.getUnitPrice() * o.getQuantity()
 													+ or.getSymbolLeft() + "</span>");
 											sb.append("</td>");
 											sb.append("</tr>");

@@ -33,6 +33,9 @@ public class FavouriesService {
 	@Autowired
 	private FavouriesDAO fda;
 
+	@Autowired
+	private RestaurantCommentService restaurantCommentService;
+
 	@Transactional
 	@Async
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -138,21 +141,7 @@ public class FavouriesService {
 			fv.setImageUrl(r.getImageUrl());
 			fv.setUrlSlug(CommonHelper.toPrettyURL(r.getName()));
 
-			Set<Rating> rt = r.getRatings();
-			if (rt != null && rt.size() > 0) {
-
-				double delivery = rt.stream()
-						.filter(p -> p.getDelivery() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue())
-						.count();
-				double quanlity = rt.stream()
-						.filter(p -> p.getQuality() > 0 && p.getIsStatus() == Constant.Status.Publish.getValue())
-						.count();
-				int count = rt.size();
-				double sum = delivery + quanlity;
-
-				fv.setRating(sum / (sum * count));
-
-			}
+			fv.setRating(restaurantCommentService.getRatingForRestaurant(r.getRestaurantId()));
 
 			Set<RestaurantComment> srco = r.getRestaurantComments();
 			if (srco != null && srco.size() > 0) {
