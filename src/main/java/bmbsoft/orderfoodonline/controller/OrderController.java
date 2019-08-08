@@ -244,7 +244,7 @@ public class OrderController extends BaseController {
 								if(o.getMenuExraItems() != null && o.getMenuExraItems().size() > 0){
 									o.getMenuExraItems().forEach(item ->{
 										if(item.getExtraitems() != null && !item.getExtraitems().isEmpty()){
-											sb.append("<tr><td></td><td style='padding-left:15px;'>+ "+item.getName()+"("+item.getExtraitems().get(0).getPrice()+")"+"</td></tr>");
+											sb.append("<tr><td></td><td style='padding-left:15px;'>+ "+item.getExtraitems().get(0).getName()+"("+item.getExtraitems().get(0).getPrice()+")"+"</td></tr>");
 										}
 									});
 								}
