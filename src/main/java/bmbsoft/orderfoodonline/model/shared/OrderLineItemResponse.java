@@ -1,7 +1,10 @@
 package bmbsoft.orderfoodonline.model.shared;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import bmbsoft.orderfoodonline.entities.MenuExtraItem;
 import bmbsoft.orderfoodonline.entities.MenuItem;
 import bmbsoft.orderfoodonline.entities.Order;
 
@@ -10,6 +13,14 @@ public class OrderLineItemResponse {
 	private Long unitPrice;
 	private Integer quantity;  
 	private String menuItemName;
+//	private List<MenuExtraItemLiteResponse> menuExraItems = new ArrayList<>();
+//
+//	public List<MenuExtraItemLiteResponse> getMenuExraItems() {
+//		return menuExraItems;
+//	}
+//	public void setMenuExraItems(List<MenuExtraItemLiteResponse> menuExraItems) {
+//		this.menuExraItems = menuExraItems;
+//	}
 	public Long getOrderLineItemId() {
 		return orderLineItemId;
 	}

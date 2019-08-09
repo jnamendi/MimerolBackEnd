@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import bmbsoft.orderfoodonline.model.shared.MenuExtraItemLiteResponse;
+import bmbsoft.orderfoodonline.model.shared.MenuItemLiteResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -37,7 +39,17 @@ public class OrderResponse {
 
 	private List<OrderInfoResponse> orderInfos = new LinkedList<>();
 
-	private List<OrderLineItemResponse> orderLineItems = new LinkedList<>();
+//	private List<OrderLineItemResponse> orderLineItems = new LinkedList<>();
+
+	public List<MenuItemLiteResponse> getOrderLineItems() {
+		return orderLineItems;
+	}
+
+	public void setOrderLineItems(List<MenuItemLiteResponse> orderLineItems) {
+		this.orderLineItems = orderLineItems;
+	}
+
+	private List<MenuItemLiteResponse> orderLineItems = new LinkedList<>();
 
 	public Long getOrderId() {
 		return orderId;
@@ -136,13 +148,13 @@ public class OrderResponse {
 		this.orderInfos = orderInfos;
 	}
 
-	public List<OrderLineItemResponse> getOrderLineItems() {
-		return orderLineItems;
-	}
-
-	public void setOrderLineItems(List<OrderLineItemResponse> orderLineItems) {
-		this.orderLineItems = orderLineItems;
-	}
+//	public List<OrderLineItemResponse> getOrderLineItems() {
+//		return orderLineItems;
+//	}
+//
+//	public void setOrderLineItems(List<OrderLineItemResponse> orderLineItems) {
+//		this.orderLineItems = orderLineItems;
+//	}
 
 	public String getImageUrl() {
 		return imageUrl;
