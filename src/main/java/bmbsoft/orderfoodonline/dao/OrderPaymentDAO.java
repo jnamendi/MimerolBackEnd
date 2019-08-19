@@ -239,11 +239,11 @@ public class OrderPaymentDAO {
 
 									});
 								}
-							} else {
-								isOk = false;
-								msg = "Menu extra item is not exist.";
 							}
-
+//							else {
+//								isOk = false;
+//								msg = "Menu extra item is not exist.";
+//							}
 						});
 					}
 				});

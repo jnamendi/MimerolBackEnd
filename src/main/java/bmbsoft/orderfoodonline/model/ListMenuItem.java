@@ -8,6 +8,15 @@ public class ListMenuItem {
     private String discountTotal;
     private float total;
     private String createdDate;
+    private float totalPrice;
+
+    public float getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public int getOrderLineItemId() {
         return orderLineItemId;

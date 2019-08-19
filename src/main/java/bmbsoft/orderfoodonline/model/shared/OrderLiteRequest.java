@@ -9,16 +9,14 @@ public class OrderLiteRequest {
 	private String orderCode;
 	private int status;
 	private String languageCode;
-	private List<ListMenuItem> orderLineItems;
+	private List<MenuItemLiteResponse> orderLineItems;
 
-	public List<ListMenuItem> getOrderLineItems() {
+	public List<MenuItemLiteResponse> getOrderLineItems() {
 		return orderLineItems;
 	}
-
-	public void setOrderLineItems(List<ListMenuItem> orderLineItems) {
+	public void setOrderLineItems(List<MenuItemLiteResponse> orderLineItems) {
 		this.orderLineItems = orderLineItems;
 	}
-
 	public Long getOrderId() {
 		return orderId;
 	}

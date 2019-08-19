@@ -229,7 +229,7 @@ public class OrderController extends BaseController {
 								sb.append("<p>");
 								sb.append("<span>" + o.getMenuItemName() + "</span><br>");
 								sb.append("<span style='font-style: italic;'>");
-								if(o.getMenuExraItems() != null && o.getMenuExraItems().size() > 0){
+								if(o.getMenuExraItems() != null && !o.getMenuExraItems().isEmpty() && o.getMenuExraItems().size() > 0){
 									int sizeMenu = o.getMenuExraItems().size();
 									for (int i= 0 ;i < sizeMenu; i++){
 										MenuExtraItemLiteResponse item = o.getMenuExraItems().get(i);
@@ -717,23 +717,33 @@ public class OrderController extends BaseController {
 									if (req.getOrderLineItems() != null
 											&& req.getOrderLineItems().size() > 0) {
 										req.getOrderLineItems().forEach(o -> {
-											sb.append("<tr style='width:100%;font-family:Arial;font-size:13px'>");
-											sb.append("<td style='width:62px;font-family:Arial;font-size:13px' valign='top'>");
-											sb.append("<span style='font-family:Arial;font-size:13px'>"+o.getQuantity()
-													+ "</span>");
+											sb.append("<tr><td style='font-family:Arial;text-align:left;font-size:13px; width: 10%;'>"+o.getQuantity()+"</td>");
+											sb.append("<td style='font-family:Arial;text-align:left;font-size:13px;width: 60%;'>");
+											sb.append("<p>");
+											sb.append("<span>" + o.getMenuItemName() + "</span><br>");
+											sb.append("<span style='font-style: italic;'>");
+											if(o.getMenuExraItems() != null && !o.getMenuExraItems().isEmpty() && o.getMenuExraItems().size() > 0){
+												int sizeMenu = o.getMenuExraItems().size();
+												for (int i= 0 ;i < sizeMenu; i++){
+													MenuExtraItemLiteResponse item = o.getMenuExraItems().get(i);
+													if(item.getExtraitems() != null && !item.getExtraitems().isEmpty()){
+														int size = item.getExtraitems().size();
+														for (int j =0 ; j <size ; j++){
+															if (i == sizeMenu-1 && j == size-1){
+																sb.append(" " +item.getExtraitems().get(j).getName()+" ("+item.getExtraitems().get(j).getPrice()+")"+".");
+															}else {
+																sb.append(" " +item.getExtraitems().get(j).getName()+" ("+item.getExtraitems().get(j).getPrice()+")"+",");
+															}
+														}
+													}
+												}
+											}
+											sb.append("</span><br>");
+											sb.append("</p>");
 											sb.append("</td>");
-											sb.append("<td style='font-family:Arial;font-size:13px'>");
-											sb.append("<span style='font-family:Arial;font-size:13px'>"+ o.getMenuItemName()
-													+ "</span>");
-											sb.append("<br>");
-											sb.append("<span style='font-family:Arial;font-size:11px;font-style:italic'></span>");
-											sb.append("</td>");
-											sb.append(
-													"<td style='width:70px;text-align:right;font-family:Arial;font-size:13px' valign='top'>");
-											sb.append("<span style='font-family:Arial;font-size:13px'>"  + " "+ o.getUnitPrice() * o.getQuantity()
-													+ or.getSymbolLeft() + "</span>");
-											sb.append("</td>");
-											sb.append("</tr>");
+											sb.append("<td style='width: 20%;'></td>");
+											sb.append("<td style='font-family:Arial;text-align:right;font-size:13px;width: 10%;'>"  + o.getTotalPrice() + " "
+													+ o.getSymbolLeft() + "</td></tr>");
 										});
 
 									}
