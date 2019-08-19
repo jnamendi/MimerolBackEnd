@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.transaction.Transactional;
 
 import bmbsoft.orderfoodonline.dao.OrderInfoDAO;
+import bmbsoft.orderfoodonline.model.shared.*;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,6 @@ import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.model.OrderInfoResponse;
 import bmbsoft.orderfoodonline.model.OrderResponse;
 import bmbsoft.orderfoodonline.model.OrderViewModel;
-import bmbsoft.orderfoodonline.model.shared.CurrencyResponse;
-import bmbsoft.orderfoodonline.model.shared.OrderLineItemResponse;
-import bmbsoft.orderfoodonline.model.shared.OrderRequest;
-import bmbsoft.orderfoodonline.model.shared.PaymentResponse;
 import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.CommonHelper;
@@ -333,23 +331,26 @@ public class OrderService {
 		}
 		or.setOrderInfos(oirs);
 
-		Set<OrderLineItem> sol = o.getOrderLineItems();
-		List<OrderLineItemResponse> loli = new ArrayList<>();
-		if (sol != null && sol.size() > 0) {
-			sol.forEach(ol -> {
-				OrderLineItemResponse orl = new OrderLineItemResponse();
-				orl.setDiscountTotal(ol.getDiscountTotal());
-				orl.setMenuItemName(ol.getMenuItemName());
-				orl.setQuantity(ol.getQuantity());
-				orl.setTotal(ol.getTotal());
-				orl.setOrderLineItemId(ol.getOrderLineItemId());
-				orl.setUnitPrice(ol.getUnitPrice());
-				orl.setCreatedDate(ol.getCreatedDate());
-				loli.add(orl);
-			});
+//		Set<OrderLineItem> sol = o.getOrderLineItems();
+//		List<OrderLineItemResponse> loli = new ArrayList<>();
+//		if (sol != null && sol.size() > 0) {
+//			sol.forEach(ol -> {
+//				OrderLineItemResponse orl = new OrderLineItemResponse();
+//				orl.setDiscountTotal(ol.getDiscountTotal());
+//				orl.setMenuItemName(ol.getMenuItemName());
+//				orl.setQuantity(ol.getQuantity());
+//				orl.setTotal(ol.getTotal());
+//				orl.setOrderLineItemId(ol.getOrderLineItemId());
+//				orl.setUnitPrice(ol.getUnitPrice());
+//				orl.setCreatedDate(ol.getCreatedDate());
+//				loli.add(orl);
+//			});
+//
+//			or.setOrderLineItems(loli);
+//		}
+		List<MenuItemLiteResponse> addlist = getDataMenuExtra(o.getOrderReq());
+		or.setOrderLineItems(addlist);
 
-			or.setOrderLineItems(loli);
-		}
 
 		Set<OrderPayment> sop = o.getOrderPayments();
 		if (sop != null && sop.size() > 0) {
@@ -359,6 +360,17 @@ public class OrderService {
 
 		}
 		return or;
+	}
+	public static List<MenuItemLiteResponse> getDataMenuExtra(String jsonString){
+		List<MenuItemLiteResponse> list = new ArrayList<>();
+		Gson s = new Gson();
+		PaymentRequest req = s.fromJson(jsonString, PaymentRequest.class);
+		if (req != null && !req.getOrderItem().getOrderItemsRequest().isEmpty()) {
+				list.addAll(req.getOrderItem().getOrderItemsRequest());
+			return  list.size() != 0 ? list : null;
+		}else{
+			return null;
+		}
 	}
 
 	@Transactional
