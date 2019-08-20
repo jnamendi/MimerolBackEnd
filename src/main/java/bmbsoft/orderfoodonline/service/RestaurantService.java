@@ -157,6 +157,7 @@ public class RestaurantService {
 				vm.setSymbolLeft(cur.getSymbolLeft());
 				vm.setSymbolRight(cur.getSymbolRight());
 				vm.setDistrict(r.getDistrictName());
+				vm.setTypeReceive(r.getTypeReceive());
 				District dt = r.getDistrict();
 				if (dt != null) {
 					vm.setDistrictId(dt.getDistrictId());

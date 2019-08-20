@@ -44,6 +44,16 @@ public class RestaurantViewModel {
 	private String city; 
 	private boolean restaurantClosed;
 	private Long cityId;
+	private int typeReceive;
+
+	public int getTypeReceive() {
+		return typeReceive;
+	}
+
+	public void setTypeReceive(int typeReceive) {
+		this.typeReceive = typeReceive;
+	}
+
 	public String getCity() {
 		return city;
 	}

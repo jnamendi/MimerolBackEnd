@@ -52,6 +52,7 @@ public class Restaurant implements java.io.Serializable {
 	private Long deliveryCost;
 	private String estimateDeliveryTime;
 	private String addressDesc;
+	private int typeReceive;
 	private Set<Rating> ratings = new HashSet<Rating>(0);
 	private Set<Favouries> favourieses = new HashSet<Favouries>(0);
 	private Set<RestaurantComment> restaurantComments = new HashSet<RestaurantComment>(0);
@@ -474,4 +475,12 @@ public class Restaurant implements java.io.Serializable {
 		this.restaurantInfos = restaurantInfos;
 	}
 
+	@Column(name = "type_receive")
+	public int getTypeReceive() {
+		return typeReceive;
+	}
+
+	public void setTypeReceive(int typeReceive) {
+		this.typeReceive = typeReceive;
+	}
 }
