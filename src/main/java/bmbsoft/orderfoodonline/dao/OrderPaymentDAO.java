@@ -99,6 +99,7 @@ public class OrderPaymentDAO {
 			ps.setName(r.getName());
 			ps.setPhone1(r.getPhone1());
 			ps.setPhone2(r.getPhone2());
+			ps.setDileverTime(r.getEstimateDeliveryTime());
 			ps.setAddressLine(r.getAddressLine());
 			ps.setImageUrl(r.getImageUrl());
 			ps.setLatitude(r.getLatitude());
