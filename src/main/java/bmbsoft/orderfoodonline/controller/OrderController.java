@@ -2,7 +2,6 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.entities.Order;
 import bmbsoft.orderfoodonline.entities.OrderHistory;
-import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.model.*;
 import bmbsoft.orderfoodonline.model.shared.*;
 import bmbsoft.orderfoodonline.response.ResponseGet;
@@ -192,8 +191,7 @@ public class OrderController extends BaseController {
 				try {
 					logger.info("------------Send sms -- payment");
 					if (ps != null && req != null && ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
-//						smsService.sendSmsToClient(ps.getOrderCode(),req.getNumber(),ps.getDileverTime(),req.getLanguageCode());
-						smsService.sendSmsToOWner(ps.getOrderCode(),ps.getPhone2(),req.getLanguageCode());
+						smsService.sendSms(ps.getOrderCode(),ps.getPhone2(),req.getLanguageCode(), null, false);
 					}
 				}catch (Exception e){
 					logger.error(e.toString());
