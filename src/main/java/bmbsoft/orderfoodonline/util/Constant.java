@@ -2,6 +2,11 @@ package bmbsoft.orderfoodonline.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.MessageAttributeValue;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 
 public class Constant {
 	public static int PageNumber = 20;
@@ -352,4 +357,18 @@ public class Constant {
 
 	}
 
+	public static class ContentSmsClient{
+		public static final String EN = "The restaurant has confirmed your order %1$s. It will be delivered in about %2$s mins. Enjoy your food.";
+		public static final String ES = "El restaurante ha confirmado su orden %s. Se entregará en unos %s minutos. Disfrute su comida.";
+
+	}
+
+	public static class ContentSmsRestaurant{
+		public static final String EN = "You have a new order %s. Please go to your admin console to review it and confirm or reject it.";
+		public static final String ES = "Tienes una nueva order 123345XYZ. Vaya a su consola de administración para revisarla y confirmarla o rechazarla.";
+	}
+	public static class AmazonKey{
+		public static final String ACCESS_KEY = "AKIAJGD754THPWKUSX6A";
+		public static final String SECRET_KEY = "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";
+	}
 }
