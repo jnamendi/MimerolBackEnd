@@ -42,11 +42,20 @@ public class PaymentResponse {
 	private Long paymentWith;
 	private String addressDesc;
 	private String phone2;
+	private String dileverTime;
 
 	private String companyName;
 
 	public String getOrderCode() {
 		return orderCode;
+	}
+
+	public String getDileverTime() {
+		return dileverTime;
+	}
+
+	public void setDileverTime(String dileverTime) {
+		this.dileverTime = dileverTime;
 	}
 
 	public String getPhone2() {

@@ -192,7 +192,7 @@ public class OrderController extends BaseController {
 				try {
 					logger.info("------------Send sms -- payment");
 					if (ps != null && req != null && ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
-						smsService.sendSmsToClient(ps.getOrderCode(),req.getNumber(),req.getTime(),req.getLanguageCode());
+//						smsService.sendSmsToClient(ps.getOrderCode(),req.getNumber(),ps.getDileverTime(),req.getLanguageCode());
 						smsService.sendSmsToOWner(ps.getOrderCode(),ps.getPhone2(),req.getLanguageCode());
 					}
 				}catch (Exception e){

@@ -365,7 +365,7 @@ public class Constant {
 
 	public static class ContentSmsRestaurant{
 		public static final String EN = "You have a new order %s. Please go to your admin console to review it and confirm or reject it.";
-		public static final String ES = "Tienes una nueva order 123345XYZ. Vaya a su consola de administración para revisarla y confirmarla o rechazarla.";
+		public static final String ES = "Tiene una nueva orden %s. Vaya a su consola de administración para revisarla y confirmarla o rechazarla.";
 	}
 	public static class AmazonKey{
 		public static final String ACCESS_KEY = "AKIAJGD754THPWKUSX6A";
