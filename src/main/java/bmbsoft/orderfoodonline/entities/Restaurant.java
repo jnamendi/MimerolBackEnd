@@ -52,7 +52,7 @@ public class Restaurant implements java.io.Serializable {
 	private Long deliveryCost;
 	private String estimateDeliveryTime;
 	private String addressDesc;
-	private int typeReceive;
+	private Integer typeReceive;
 	private Set<Rating> ratings = new HashSet<Rating>(0);
 	private Set<Favouries> favourieses = new HashSet<Favouries>(0);
 	private Set<RestaurantComment> restaurantComments = new HashSet<RestaurantComment>(0);
@@ -476,11 +476,11 @@ public class Restaurant implements java.io.Serializable {
 	}
 
 	@Column(name = "type_receive")
-	public int getTypeReceive() {
+	public Integer getTypeReceive() {
 		return typeReceive;
 	}
 
-	public void setTypeReceive(int typeReceive) {
+	public void setTypeReceive(Integer typeReceive) {
 		this.typeReceive = typeReceive;
 	}
 }

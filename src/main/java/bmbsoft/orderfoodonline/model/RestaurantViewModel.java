@@ -1,15 +1,12 @@
 package bmbsoft.orderfoodonline.model;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import bmbsoft.orderfoodonline.model.shared.PromotionLineitemResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import bmbsoft.orderfoodonline.entities.PromotionLineitem;
-import bmbsoft.orderfoodonline.model.shared.PromotionLineitemResponse;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 @JsonInclude(value = Include.NON_NULL)
 public class RestaurantViewModel {
@@ -44,13 +41,13 @@ public class RestaurantViewModel {
 	private String city; 
 	private boolean restaurantClosed;
 	private Long cityId;
-	private int typeReceive;
+	private Integer typeReceive;
 
-	public int getTypeReceive() {
+	public Integer getTypeReceive() {
 		return typeReceive;
 	}
 
-	public void setTypeReceive(int typeReceive) {
+	public void setTypeReceive(Integer typeReceive) {
 		this.typeReceive = typeReceive;
 	}
 
