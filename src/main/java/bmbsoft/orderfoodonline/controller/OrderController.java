@@ -2,6 +2,7 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.entities.Order;
 import bmbsoft.orderfoodonline.entities.OrderHistory;
+import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.model.*;
 import bmbsoft.orderfoodonline.model.shared.*;
 import bmbsoft.orderfoodonline.response.ResponseGet;
@@ -57,6 +58,9 @@ public class OrderController extends BaseController {
 
 	@Autowired
 	private DistrictService districtService;
+
+	@Autowired
+	private SmsService smsService;
 
 	Gson mapper = new Gson();
 
@@ -183,6 +187,18 @@ public class OrderController extends BaseController {
 
 			PaymentResponse ps = ops.create(req);
 			if (ps != null && ps.getErrMsg().isEmpty()) {
+
+				//send sms
+				try {
+					logger.info("------------Send sms -- payment");
+					if (ps != null && req != null && ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
+						smsService.sendSmsToClient(ps.getOrderCode(),req.getNumber(),req.getTime(),req.getLanguageCode());
+						smsService.sendSmsToOWner(ps.getOrderCode(),ps.getPhone2(),req.getLanguageCode());
+					}
+				}catch (Exception e){
+					logger.error(e.toString());
+				}
+
 				// send email
 				try {
 					logger.info("------------Send mail -- payment");

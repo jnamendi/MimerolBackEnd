@@ -41,11 +41,20 @@ public class PaymentResponse {
 	private String promotionCode;
 	private Long paymentWith;
 	private String addressDesc;
+	private String phone2;
 
 	private String companyName;
 
 	public String getOrderCode() {
 		return orderCode;
+	}
+
+	public String getPhone2() {
+		return phone2;
+	}
+
+	public void setPhone2(String phone) {
+		this.phone2 = phone;
 	}
 
 	public void setOrderCode(String orderCode) {
