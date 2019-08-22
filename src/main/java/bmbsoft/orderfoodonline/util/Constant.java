@@ -368,7 +368,7 @@ public class Constant {
 		public static final String ES = "Tiene una nueva orden %s. Vaya a su consola de administración para revisarla y confirmarla o rechazarla.";
 	}
 	public static class AmazonKey{
-		public static final String ACCESS_KEY = "AKIAVZD3RCWIZABOOUHQ";
-		public static final String SECRET_KEY = "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";
+		public static final String ACCESS_KEY = "AKIAVZD3RCWISLZD5VKN";
+		public static final String SECRET_KEY = "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";
 	}
 }
