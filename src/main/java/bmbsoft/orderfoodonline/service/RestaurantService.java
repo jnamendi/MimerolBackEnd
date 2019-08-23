@@ -351,13 +351,12 @@ public class RestaurantService {
 		c.setAddressDesc(res.getAddressDesc());
 
 		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
-
+		List<Long> ownerId = new ArrayList<>();
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
 			res.getUserRestaurants().forEach(item -> {
-				List<Long> s = new ArrayList<>();
-				s.add(item.getUser().getUserId());
-				c.setUserIdArray(s);
+				ownerId.add(item.getUser().getUserId());
 			});
+			c.setUserIdArray(ownerId);
 			//c.setUserIds(owners);
 		}
 		Set<RestaurantAttribute> items = res.getRestaurantAttributes();
