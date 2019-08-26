@@ -37,6 +37,8 @@ public class Order implements java.io.Serializable {
 	private String checkSum;
 	private String orderCode;
 	private Long paymentWith;
+	private String reasonReject;
+	private String reasonCancel;
 	private Set<OrderInfo> orderInfos = new HashSet<OrderInfo>(0);
 	private Set<OrderPayment> orderPayments = new HashSet<OrderPayment>(0);
 	private Set<OrderLineItem> orderLineItems = new HashSet<OrderLineItem>(0);
@@ -48,10 +50,8 @@ public class Order implements java.io.Serializable {
 		this.restaurant = restaurant;
 	}
 
-	public Order(Restaurant restaurant, User user, String restaurantName, Date orderDate, Long totalPrice,
-			Integer status, String currencyCode, Long taxTotal, String orderReq, String checkSum, String orderCode,
-			Long paymentWith, Set<OrderInfo> orderInfos, Set<OrderPayment> orderPayments,
-			Set<OrderLineItem> orderLineItems) {
+	public Order(Long orderId, Restaurant restaurant, User user, String restaurantName, Date orderDate, Long totalPrice, Integer status, String currencyCode, Long taxTotal, String orderReq, String checkSum, String orderCode, Long paymentWith, String reasonReject, String reasonCancel, Set<OrderInfo> orderInfos, Set<OrderPayment> orderPayments, Set<OrderLineItem> orderLineItems) {
+		this.orderId = orderId;
 		this.restaurant = restaurant;
 		this.user = user;
 		this.restaurantName = restaurantName;
@@ -64,6 +64,8 @@ public class Order implements java.io.Serializable {
 		this.checkSum = checkSum;
 		this.orderCode = orderCode;
 		this.paymentWith = paymentWith;
+		this.reasonReject = reasonReject;
+		this.reasonCancel = reasonCancel;
 		this.orderInfos = orderInfos;
 		this.orderPayments = orderPayments;
 		this.orderLineItems = orderLineItems;
@@ -219,4 +221,21 @@ public class Order implements java.io.Serializable {
 		this.orderLineItems = orderLineItems;
 	}
 
+	@Column(name = "reason_reject")
+	public String getReasonReject() {
+		return reasonReject;
+	}
+
+	public void setReasonReject(String reasonReject) {
+		this.reasonReject = reasonReject;
+	}
+
+	@Column(name = "reason_cancel")
+	public String getReasonCancel() {
+		return reasonCancel;
+	}
+
+	public void setReasonCancel(String reasonCancel) {
+		this.reasonCancel = reasonCancel;
+	}
 }

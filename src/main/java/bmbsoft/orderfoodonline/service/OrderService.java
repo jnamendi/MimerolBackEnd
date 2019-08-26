@@ -310,7 +310,9 @@ public class OrderService {
 		or.setOrderCode(o.getOrderCode());
 		or.setSymbolLeft(symbo);
 		or.setPaymentWith(o.getPaymentWith());
-		
+		or.setReasonCancel(o.getReasonCancel());
+		or.setReasonReject(o.getReasonReject());
+
 		List<OrderInfoResponse> oirs = new LinkedList<>();
 		Set<OrderInfo> ois = o.getOrderInfos();
 		if (ois != null && ois.size() > 0) {
