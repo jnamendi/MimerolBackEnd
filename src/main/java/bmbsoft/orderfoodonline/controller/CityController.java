@@ -1,22 +1,7 @@
 package bmbsoft.orderfoodonline.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import bmbsoft.orderfoodonline.entities.Address;
 import bmbsoft.orderfoodonline.entities.City;
+import bmbsoft.orderfoodonline.entities.RestaurantArea;
 import bmbsoft.orderfoodonline.model.CityViewModel;
 import bmbsoft.orderfoodonline.model.shared.DeleteManyRequest;
 import bmbsoft.orderfoodonline.response.Data;
@@ -24,7 +9,16 @@ import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.service.CityService;
 import bmbsoft.orderfoodonline.service.CountryService;
+import bmbsoft.orderfoodonline.service.RestaurantAreaService;
 import bmbsoft.orderfoodonline.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -35,6 +29,8 @@ public class CityController extends BaseController {
 	CityService cityService;
 	@Autowired
 	CountryService countryService;
+	@Autowired
+	RestaurantAreaService restaurantAreaService;
 
 	@RequestMapping(value = "/api/city/getAll", method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
@@ -62,6 +58,29 @@ public class CityController extends BaseController {
 			responseGetPaging.setMessage(e.toString());
 			responseGetPaging.setContent(null);
 			return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/api/city/getByRestaurantId/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getByRestaurantId(@PathVariable long id) {
+		ResponseGet responseGet = new ResponseGet();
+		try {
+			List<CityViewModel> c = restaurantAreaService.getCityByRestaurant(id);
+
+			if (c == null) {
+				responseGet.setStatus(0);
+				responseGet.setMessage("city not exists");
+				responseGet.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
+				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.OK);
+			}
+			responseGet.setStatus(0);
+			responseGet.setContent(c);
+			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			responseGet.setStatus(1);
+			responseGet.setMessage(e.toString());
+			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
 		}
 	}
 

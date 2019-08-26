@@ -3,6 +3,8 @@ package bmbsoft.orderfoodonline.controller;
 import java.util.Date;
 import java.util.List;
 
+import bmbsoft.orderfoodonline.entities.RestaurantArea;
+import bmbsoft.orderfoodonline.service.RestaurantAreaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class DistrictController {
 	DistrictService districtService;
 	@Autowired
 	CityService cityService;
+	@Autowired
+	RestaurantAreaService restaurantAreaService;
 
 	@RequestMapping(value = "/api/district/getAll", method = RequestMethod.GET)
 	public ResponseEntity<?> getAll() {
@@ -86,6 +90,29 @@ public class DistrictController {
 			responseGet.setStatus(1);
 			responseGet.setMessage(e.toString());
 			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/api/district/get-district-by-restaurant-city/{restaurantId}/{cityId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getDistrictByRestaurant(@PathVariable long restaurantId, @PathVariable long cityId) {
+		ResponseGet responseGet = new ResponseGet();
+		List<DistrictViewModel> c = null;
+		try {
+			c = restaurantAreaService.getDistrictByRestaurantAndCity(restaurantId, cityId);
+			if (c == null) {
+				responseGet.setStatus(7);
+				responseGet.setMessage("district not exists");
+				responseGet.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
+				return new ResponseEntity<>(responseGet, HttpStatus.OK);
+			}
+			responseGet.setStatus(0);
+			responseGet.setContent(c);
+			return new ResponseEntity<>(responseGet, HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			responseGet.setStatus(1);
+			responseGet.setMessage(e.toString());
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		}
 	}
 

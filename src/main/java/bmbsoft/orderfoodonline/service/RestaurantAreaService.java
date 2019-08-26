@@ -3,11 +3,14 @@ package bmbsoft.orderfoodonline.service;
 import bmbsoft.orderfoodonline.dao.RestaurantAreaDAO;
 import bmbsoft.orderfoodonline.entities.District;
 import bmbsoft.orderfoodonline.entities.RestaurantArea;
+import bmbsoft.orderfoodonline.model.CityViewModel;
+import bmbsoft.orderfoodonline.model.DistrictViewModel;
 import bmbsoft.orderfoodonline.model.RestaurantDeliveryAreaModel;
 import bmbsoft.orderfoodonline.model.RestaurantDeliveryDistrictModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +21,13 @@ public class RestaurantAreaService {
     @Autowired
     private RestaurantAreaDAO areaDAO;
 
+    @Autowired
+    private CountryService countryService;
+
+    @Autowired
+    private CityService cityService;
+
+    @Transactional
     public List<RestaurantDeliveryAreaModel> getDistrictByRestaurant(long restaurantId) {
         List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
         List<RestaurantDeliveryAreaModel> deliveryAreaModelsList = new ArrayList<>();
@@ -25,7 +35,7 @@ public class RestaurantAreaService {
         Set<Long> cityList = new HashSet<>();
 
         // extract items
-        if(!ra.isEmpty()) {
+        if(ra != null && !ra.isEmpty()) {
             for (RestaurantArea r: ra) {
                 RestaurantDeliveryAreaModel model = new RestaurantDeliveryAreaModel();
                 cityList.add(r.getDistrict().getCity().getCityId());
@@ -70,5 +80,70 @@ public class RestaurantAreaService {
 
         }
         return result;
+    }
+
+    @Transactional
+    public List<CityViewModel> getCityByRestaurant(long restaurantId) {
+        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<CityViewModel> cityViewModelList = new ArrayList<>();
+        Set<Long> cityList = new HashSet<>();
+
+        if(ra != null && !ra.isEmpty()) {
+            for(RestaurantArea r : ra) {
+                cityList.add(r.getDistrict().getCity().getCityId());
+            }
+
+            if(!cityList.isEmpty()) {
+                for (Long city: cityList) {
+                    for (RestaurantArea r: ra) {
+                        if(r.getDistrict().getCity().getCityId().equals(city)) {
+                            CityViewModel model = new CityViewModel();
+                            model.setCityId(r.getDistrict().getCity().getCityId());
+                            model.setCountry(countryService.convertEntityToModel(r.getDistrict().getCity().getCountry()));
+                            model.setName(r.getDistrict().getCity().getCityName());
+                            model.setCode(r.getDistrict().getCity().getCityCode());
+                            model.setCreatedBy(r.getDistrict().getCity().getCreatedBy());
+                            model.setCreateDate(r.getDistrict().getCity().getCreatedDate());
+                            model.setStatus(r.getDistrict().getCity().getStatus());
+
+                            cityViewModelList.add(model);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return cityViewModelList;
+    }
+
+    @Transactional
+    public List<DistrictViewModel> getDistrictByRestaurantAndCity(long restaurantId, long cityId) {
+        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<DistrictViewModel> districtViewModels = new ArrayList<>();
+        if(ra != null && !ra.isEmpty()) {
+            for (RestaurantArea r: ra) {
+
+                if(r.getDistrict().getCity().getCityId().equals(cityId)) {
+                    DistrictViewModel model = convertEntityToModel(r.getDistrict());
+                    districtViewModels.add(model);
+                }
+            }
+        }
+
+        return districtViewModels;
+    }
+
+    private DistrictViewModel convertEntityToModel(final District district) {
+        if (null == district)
+            return null;
+        DistrictViewModel model = new DistrictViewModel();
+        model.setDistrictId(district.getDistrictId());
+        model.setCity(cityService.convertEntityToModel(district.getCity()));
+        model.setName(district.getName());
+        model.setCode(district.getCode());
+        model.setCreatedBy(district.getCreatedBy());
+        model.setStatus(district.getStatus());
+        return model;
     }
 }

@@ -19,15 +19,15 @@ import java.util.List;
 @Repository(value = "restaurantAreaDAO")
 @Transactional(rollbackFor = Exception.class)
 public class RestaurantAreaDAO {
-    public static final Logger logger = LoggerFactory.getLogger(UserRestaurantDAO.class);
+    public static final Logger logger = LoggerFactory.getLogger(RestaurantAreaDAO.class);
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    public boolean save(final UserRestaurant userRes) {
+    public boolean save(final RestaurantAreaDAO resArea) {
         Session session = this.sessionFactory.getCurrentSession();
         try {
-            session.saveOrUpdate(userRes);
+            session.saveOrUpdate(resArea);
             return true;
         } catch (Exception e) {
             logger.error(e.getMessage());
