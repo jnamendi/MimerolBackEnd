@@ -61,7 +61,7 @@ public class CityDAO {
 	public List<City> getAll() {
 		Session s = this.sessionFactory.getCurrentSession();
 		try {
-			List<City> cs = s.createQuery("FROM City", City.class).getResultList();
+			List<City> cs = s.createQuery("FROM City order by city_name", City.class).getResultList();
 			return cs;
 		} catch (Exception e) {
 			logger.error(e.getMessage());

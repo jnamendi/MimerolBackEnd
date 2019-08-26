@@ -2,9 +2,7 @@ package bmbsoft.orderfoodonline.dao;
 
 import bmbsoft.orderfoodonline.entities.*;
 import bmbsoft.orderfoodonline.model.*;
-import bmbsoft.orderfoodonline.model.shared.CategoryLiteRequest;
 import bmbsoft.orderfoodonline.model.shared.RestaurantRequest;
-import bmbsoft.orderfoodonline.model.shared.UserRequest;
 import bmbsoft.orderfoodonline.service.*;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
@@ -241,6 +239,23 @@ public class RestaurantDAO {
 					}
 				}
 
+				// restaurant_area
+				if(vm.getWorkArea() != null && !vm.getWorkArea().isEmpty()) {
+					// remove old data
+					String removeDeliveryArea = "DELETE FROM restaurant_area WHERE restaurant_id=:resId";
+					session.createNativeQuery(removeDeliveryArea).setParameter("resId", resId)
+							.executeUpdate();
+
+					// save data
+					for (Long c : vm.getWorkArea()) {
+						RestaurantArea ra = new RestaurantArea();
+						ra.setRestaurant(res);
+						District d = ds.getBaseById(c);
+						ra.setDistrict(d);
+						session.save(ra);
+					}
+				}
+
 				if (!isF) {
 
 					t.commit();
@@ -367,6 +382,18 @@ public class RestaurantDAO {
 							ur.setUser(user);
 							session.save(ur);
 						}
+					}
+				}
+
+				// restaurant_area
+				if(vm.getWorkArea() != null && !vm.getWorkArea().isEmpty()) {
+					// save data
+					for (Long c : vm.getWorkArea()) {
+						RestaurantArea ra = new RestaurantArea();
+						ra.setRestaurant(res);
+						District d = ds.getBaseById(c);
+						ra.setDistrict(d);
+						session.save(ra);
 					}
 				}
 

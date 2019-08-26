@@ -38,6 +38,8 @@ public class RestaurantService {
 	private RestaurantCommentService restaurantCommentService;
 	@Autowired
 	private RestaurantWorkTimeService restaurantWorkTimeService;
+	@Autowired
+	private RestaurantAreaService restaurantAreaService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -351,6 +353,9 @@ public class RestaurantService {
 		c.setAddressDesc(res.getAddressDesc());
 
 		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
+
+		c.setWorkArea(restaurantAreaService.getDistrictByRestaurant(res.getRestaurantId()));
+
 		List<Long> ownerId = new ArrayList<>();
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
 			res.getUserRestaurants().forEach(item -> {
@@ -421,7 +426,7 @@ public class RestaurantService {
 		c.setLongitude(res.getLongitude());
 		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(rwt));
 
-		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
+		c.setRestaurantWorkTimeModels(rwt);
 
 		if (res.getContentDefinition() != null) {
 			List<String> desc = languageService.hashMapTranslate(res.getContentDefinition(), lang);
