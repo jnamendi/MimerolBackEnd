@@ -41,7 +41,7 @@ public class RestaurantAreaService {
 
                 districtModelList.add(districtModel);
 
-                model.setRestaurantDeliveryDistrictModel(districtModelList);
+                model.setDistricts(districtModelList);
                 model.setCityId(r.getDistrict().getCity().getCityId());
                 model.setCityCode(r.getDistrict().getCity().getCityCode());
                 model.setStatus(r.getDistrict().getCity().getStatus());
@@ -52,7 +52,23 @@ public class RestaurantAreaService {
         }
 
         // merge item
+        if (!cityList.isEmpty()) {
+            for (Long c : cityList) {
+                RestaurantDeliveryAreaModel rs = new RestaurantDeliveryAreaModel();
+                List<RestaurantDeliveryDistrictModel> districtModelList = new ArrayList<>();
+                for (RestaurantDeliveryAreaModel md : deliveryAreaModelsList) {
+                    if(md.getCityId().equals(c)) {
+                        rs.setCityId(md.getCityId());
+                        rs.setCityCode(md.getCityCode());
+                        rs.setStatus(md.getStatus());
+                    }
+                    districtModelList.add(md.getDistricts().get(0));
+                }
+                rs.setDistricts(districtModelList);
+                result.add(rs);
+            }
 
-        return deliveryAreaModelsList;
+        }
+        return result;
     }
 }

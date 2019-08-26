@@ -11,16 +11,16 @@ public class RestaurantDeliveryAreaModel {
     private Long cityId;
     private String cityCode;
     private Integer status;
-    private List<RestaurantDeliveryDistrictModel> restaurantDeliveryDistrictModel;
+    private List<RestaurantDeliveryDistrictModel> districts;
 
     public RestaurantDeliveryAreaModel() {
     }
 
-    public RestaurantDeliveryAreaModel(Long cityId, String cityCode, Integer status, List<RestaurantDeliveryDistrictModel> restaurantDeliveryDistrictModel) {
+    public RestaurantDeliveryAreaModel(Long cityId, String cityCode, Integer status, List<RestaurantDeliveryDistrictModel> districts) {
         this.cityId = cityId;
         this.cityCode = cityCode;
         this.status = status;
-        this.restaurantDeliveryDistrictModel = restaurantDeliveryDistrictModel;
+        this.districts = districts;
     }
 
     public Long getCityId() {
@@ -47,11 +47,11 @@ public class RestaurantDeliveryAreaModel {
         this.status = status;
     }
 
-    public List<RestaurantDeliveryDistrictModel> getRestaurantDeliveryDistrictModel() {
-        return restaurantDeliveryDistrictModel;
+    public List<RestaurantDeliveryDistrictModel> getDistricts() {
+        return districts;
     }
 
-    public void setRestaurantDeliveryDistrictModel(List<RestaurantDeliveryDistrictModel> restaurantDeliveryDistrictModel) {
-        this.restaurantDeliveryDistrictModel = restaurantDeliveryDistrictModel;
+    public void setDistricts(List<RestaurantDeliveryDistrictModel> districts) {
+        this.districts = districts;
     }
 }

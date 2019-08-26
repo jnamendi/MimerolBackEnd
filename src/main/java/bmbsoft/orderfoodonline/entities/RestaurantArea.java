@@ -5,7 +5,7 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "user_restaurant")
+@Table(name = "restaurant_area")
 public class RestaurantArea implements java.io.Serializable {
     private Long restaurantAreaId;
     private Restaurant restaurant;
@@ -22,7 +22,6 @@ public class RestaurantArea implements java.io.Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-
     @Column(name = "restaurant_area_id", unique = true, nullable = false)
     public Long getRestaurantAreaId() {
         return restaurantAreaId;
