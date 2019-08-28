@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RestaurantAreaService {
@@ -132,6 +129,19 @@ public class RestaurantAreaService {
         }
 
         return districtViewModels;
+    }
+
+    @Transactional
+    public List<Long> getDistrictDeliveryListByRestaurant(long restaurantId) {
+        Set<Long> districts = new HashSet<>();
+        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        if(ra != null && !ra.isEmpty()) {
+            for (RestaurantArea r: ra) {
+                districts.add(r.getDistrict().getDistrictId());
+            }
+        }
+
+        return new ArrayList(districts);
     }
 
     private DistrictViewModel convertEntityToModel(final District district) {

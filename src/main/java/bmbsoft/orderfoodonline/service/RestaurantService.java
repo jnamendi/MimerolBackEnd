@@ -354,7 +354,7 @@ public class RestaurantService {
 
 		c.setRestaurantWorkTimeModels(restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId()));
 
-		c.setWorkArea(restaurantAreaService.getDistrictByRestaurant(res.getRestaurantId()));
+		c.setWorkArea(restaurantAreaService.getDistrictDeliveryListByRestaurant(res.getRestaurantId()));
 
 		List<Long> ownerId = new ArrayList<>();
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
