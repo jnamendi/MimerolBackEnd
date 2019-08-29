@@ -36,6 +36,8 @@ public class OrderResponse {
 	private Long deliveryCost;
 	private String symbolLeft;
 	private Long paymentWith;
+	private String reasonReject;
+	private String reasonCancel;
 
 	private List<OrderInfoResponse> orderInfos = new LinkedList<>();
 
@@ -204,4 +206,19 @@ public class OrderResponse {
 		this.paymentWith = paymentWith;
 	}
 
+	public String getReasonReject() {
+		return reasonReject;
+	}
+
+	public void setReasonReject(String reasonReject) {
+		this.reasonReject = reasonReject;
+	}
+
+	public String getReasonCancel() {
+		return reasonCancel;
+	}
+
+	public void setReasonCancel(String reasonCancel) {
+		this.reasonCancel = reasonCancel;
+	}
 }

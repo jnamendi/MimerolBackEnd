@@ -1,7 +1,5 @@
 package bmbsoft.orderfoodonline.model.shared;
 
-import bmbsoft.orderfoodonline.model.ListMenuItem;
-
 import java.util.List;
 
 public class OrderLiteRequest {
@@ -9,6 +7,8 @@ public class OrderLiteRequest {
 	private String orderCode;
 	private int status;
 	private String languageCode;
+	private String reasonReject;
+	private String reasonCancel;
 	private List<MenuItemLiteResponse> orderLineItems;
 
 	public List<MenuItemLiteResponse> getOrderLineItems() {
@@ -41,5 +41,20 @@ public class OrderLiteRequest {
 	public void setLanguageCode(String languageCode) {
 		this.languageCode = languageCode;
 	}
-	
+
+	public String getReasonReject() {
+		return reasonReject;
+	}
+
+	public void setReasonReject(String reasonReject) {
+		this.reasonReject = reasonReject;
+	}
+
+	public String getReasonCancel() {
+		return reasonCancel;
+	}
+
+	public void setReasonCancel(String reasonCancel) {
+		this.reasonCancel = reasonCancel;
+	}
 }

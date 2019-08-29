@@ -684,6 +684,14 @@ public class OrderController extends BaseController {
 				o.setStatus(req.getStatus());
 			}
 
+			if(req.getReasonCancel() != null) {
+				o.setReasonCancel(req.getReasonCancel());
+			}
+
+			if(req.getReasonReject() != null) {
+				o.setReasonReject(req.getReasonReject());
+			}
+
 			boolean so = orderService.updateBase(o);
 			// create history
 

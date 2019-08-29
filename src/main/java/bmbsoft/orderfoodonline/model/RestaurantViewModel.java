@@ -42,6 +42,7 @@ public class RestaurantViewModel {
 	private boolean restaurantClosed;
 	private Long cityId;
 	private Integer typeReceive;
+	private List<Long> workArea;
 
 	public Integer getTypeReceive() {
 		return typeReceive;
@@ -406,5 +407,13 @@ public class RestaurantViewModel {
 
 	public void setRestaurantWorkTimeModels(List<RestaurantWorkTimeModel> restaurantWorkTimeModels) {
 		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
+	}
+
+	public List<Long> getWorkArea() {
+		return workArea;
+	}
+
+	public void setWorkArea(List<Long> workArea) {
+		this.workArea = workArea;
 	}
 }

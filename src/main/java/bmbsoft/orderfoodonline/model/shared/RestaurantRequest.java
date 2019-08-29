@@ -55,14 +55,11 @@ public class RestaurantRequest {
 	private int status;
 	private int sortOrder;
 	@NotNull(message = "categoryIds is required")
-//	private List<CategoryLiteRequest> categoryIds;
 	private List<Integer> categoryIds;
-
-//	private List<UserRequest> userIds;
 
 	private List<Long> userIds;
 
-
+	private List<Long> workArea;
 
 	@NotNull(message = "estDeliveryTime is required")
 	private String estDeliveryTime;
@@ -223,14 +220,6 @@ public class RestaurantRequest {
 		this.sortOrder = sortOrder;
 	}
 
-//	public List<CategoryLiteRequest> getCategoryIds() {
-//		return categoryIds;
-//	}
-//
-//	public void setCategoryIds(List<CategoryLiteRequest> categoryIds) {
-//		this.categoryIds = categoryIds;
-//	}
-
 	public List<Integer> getCategoryIds() {
 		return categoryIds;
 	}
@@ -238,14 +227,6 @@ public class RestaurantRequest {
 	public void setCategoryIds(List<Integer> categoryIds) {
 		this.categoryIds = categoryIds;
 	}
-
-//	public List<UserRequest> getUserIds() {
-//		return userIds;
-//	}
-//
-//	public void setUserIds(List<UserRequest> userIds) {
-//		this.userIds = userIds;
-//	}
 
 	public Long getMinPrice() {
 		return minPrice;
@@ -301,5 +282,13 @@ public class RestaurantRequest {
 
 	public void setRestaurantWorkTimeModels(List<RestaurantWorkTimeModel> restaurantWorkTimeModels) {
 		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
+	}
+
+	public List<Long> getWorkArea() {
+		return workArea;
+	}
+
+	public void setWorkArea(List<Long> workArea) {
+		this.workArea = workArea;
 	}
 }
