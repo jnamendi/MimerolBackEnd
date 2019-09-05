@@ -269,6 +269,7 @@ public class OrderService {
 			ps.setAddress(orderInfo.getAddress());
 			ps.setAddressDesc(orderInfo.getAddressDesc());
 			ps.setCompanyName(orderInfo.getCompanyName());
+			ps.setDileverTime(orderInfo.getTime());
 		}
 
 		Restaurant r = o.getRestaurant();

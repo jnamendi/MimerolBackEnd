@@ -703,115 +703,34 @@ public class OrderController extends BaseController {
 
 			boolean checkSaveHis = orderService.saveHis(oh);
 
-			if(o != null  && o.getStatus() == Constant.Order.Complete.getValue() && !vm.getEmail().isEmpty()){
-				try {
-					logger.info("------------Send mail -- complete");
-					String emailFrom = environment.getProperty("email.from");
-					String displayEmailName = environment.getProperty("display.email.name");
-					String frontendURL = environment.getProperty("frontend.url");
-
-					Executors.newSingleThreadExecutor().execute(new Runnable() {
-						public void run() {
-							try {
-								ContentEmaiLViewModel cm = ce.getByType(Constant.EmailType.OrderCompleted.getValue(),req.getLanguageCode());
-								OrderResponse  or = orderService.getFullById(req.getOrderId(),req.getOrderCode());
-								PaymentResponse sp = orderService.getOderPaymentById(req.getOrderId(),req.getOrderCode());
-								if (cm != null) {
-									TemplateMatcher matcher = new TemplateMatcher("${", "}");
-									Map<String, String> map = new HashMap<String, String>();
-									map.put("orderCode", or.getOrderCode() == null ? "" : or.getOrderCode());
-									map.put("restaurantName", or.getRestaurantName() == null ? "" : or.getRestaurantName());
-									map.put("paymentType",PaymentMethod.valueOf(or.getPaymentType()).toString());
-									map.put("deliveryCost", or.getDeliveryCost() == null ? "" : or.getDeliveryCost().toString());
-									map.put("symbolLeft", or.getSymbolLeft() == null ? "" : or.getSymbolLeft());
-									map.put("totalPrice", or.getTotalPrice() == null ? "" : or.getTotalPrice().toString());
-									map.put("userName", or.getUserName() == null ? "" : or.getUserName());
-									map.put("userNumber", or.getPhone() == null ? "" : or.getPhone());
-								  	map.put("deliveryTime",or.getOrderDate() == null ? "" : or.getOrderDate().toString());
-									map.put("remarks", sp.getRemarks() == null ? "" : sp.getRemarks());
-									map.put("userAddress", sp.getAddress() == null ? "" :sp.getAddress());
-									map.put("userDistrict", sp.getDistrict() == null ? "" : sp.getDistrict());
-									map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
-									map.put("userAddressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
-									map.put("userCompanyName", sp.getCompanyName() == null ? "" : sp.getCompanyName());
-									map.put("frontendUrl", frontendURL);
-									StringBuilder sb = new StringBuilder();
-									if (req.getOrderLineItems() != null
-											&& req.getOrderLineItems().size() > 0) {
-										req.getOrderLineItems().forEach(o -> {
-											sb.append("<tr><td style='font-family:Arial;text-align:left;font-size:13px; width: 10%;'>"+o.getQuantity()+"</td>");
-											sb.append("<td style='font-family:Arial;text-align:left;font-size:13px;width: 60%;'>");
-											sb.append("<p>");
-											sb.append("<span>" + o.getMenuItemName() + "</span><br>");
-											sb.append("<span style='font-style: italic;'>");
-											if(o.getMenuExraItems() != null && !o.getMenuExraItems().isEmpty() && o.getMenuExraItems().size() > 0){
-												int sizeMenu = o.getMenuExraItems().size();
-												for (int i= 0 ;i < sizeMenu; i++){
-													MenuExtraItemLiteResponse item = o.getMenuExraItems().get(i);
-													if(item.getExtraitems() != null && !item.getExtraitems().isEmpty()){
-														int size = item.getExtraitems().size();
-														for (int j =0 ; j <size ; j++){
-															if (i == sizeMenu-1 && j == size-1){
-																sb.append(" " +item.getExtraitems().get(j).getName()+" ("+item.getExtraitems().get(j).getPrice()+")"+".");
-															}else {
-																sb.append(" " +item.getExtraitems().get(j).getName()+" ("+item.getExtraitems().get(j).getPrice()+")"+",");
-															}
-														}
-													}
-												}
-											}
-											sb.append("</span><br>");
-											sb.append("</p>");
-											sb.append("</td>");
-											sb.append("<td style='width: 20%;'></td>");
-											sb.append("<td style='font-family:Arial;text-align:right;font-size:13px;width: 10%;'>"  + o.getTotalPrice() + " "
-													+ o.getSymbolLeft() + "</td></tr>");
-										});
-
-									}
-									map.put("orderLineItems", sb.toString());
-
-									String body = matcher.replace(cm.getBody(), map);
-
-									// title
-									TemplateMatcher title = new TemplateMatcher("${", "}");
-									Map<String, String> t = new HashMap<String, String>();
-									t.put("orderCode", req.getOrderCode());
-									String trpc = title.replace(cm.getSubject(), t);
-
-									logger.info("------------send to " + or.getEmail());
-									emailService.sendMessage(emailFrom, or.getEmail(), trpc, body,
-											displayEmailName);
-								}
-							} catch (MessagingException | IOException e) {
-								logger.error(e.toString());
-							}
-						}
-					});
-					} catch (Exception e) {
-						logger.error(e.toString());
-					}
-				rs.setStatus(0);
-				rs.setContent("");
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
+			if(o != null  && o.getStatus() != Constant.Order.Delivered.getValue() && !vm.getEmail().isEmpty()){
+				if(o.getStatus().equals(Constant.Order.Confirmed.getValue())) {
+					sendUpdateOrderEmail(Constant.EmailType.OrderConfirmed.getValue(), req);
+				} else if (o.getStatus().equals(Constant.Order.Canceled.getValue())) {
+					sendUpdateOrderEmail(Constant.EmailType.OrderCanceled.getValue(), req);
+				} else if (o.getStatus().equals(Constant.Order.Rejected.getValue())) {
+					sendUpdateOrderEmail(Constant.EmailType.OrderRejected.getValue(), req);
+				} else if (o.getStatus().equals(Constant.Order.Complete.getValue())) {
+					sendUpdateOrderEmail(Constant.EmailType.OrderCompleted.getValue(), req);
+				}
 			}
 
 			if (checkSaveHis){
 				rs.setStatus(0);
 				rs.setMessage("Update success");
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.OK);
+				return new ResponseEntity<>(rs, HttpStatus.OK);
 			}else{
 				rs.setStatus(5);
 				rs.setMessage("Error when process the data");
 				rs.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			rs.setStatus(1);
 			rs.setMessage(e.toString());
 			rs.setContent(null);
-			return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -841,4 +760,103 @@ public class OrderController extends BaseController {
 		}
 	}
 
+	private void sendUpdateOrderEmail(int typeOfMail, OrderLiteRequest req) {
+		try {
+			logger.info("------------Send mail -- update order");
+			String emailFrom = environment.getProperty("email.from");
+			String displayEmailName = environment.getProperty("display.email.name");
+			String frontendURL = environment.getProperty("frontend.url");
+
+			Executors.newSingleThreadExecutor().execute(() -> {
+				try {
+					ContentEmaiLViewModel cm = ce.getByType(typeOfMail,req.getLanguageCode());
+					OrderResponse  or = orderService.getFullById(req.getOrderId(),req.getOrderCode());
+					PaymentResponse sp = orderService.getOderPaymentById(req.getOrderId(),req.getOrderCode());
+					if (cm != null) {
+						TemplateMatcher matcher = new TemplateMatcher("${", "}");
+						Map<String, String> map = new HashMap<>();
+						map.put("orderCode", or.getOrderCode() == null ? "" : or.getOrderCode());
+						map.put("frontendUrl", frontendURL);
+						if(typeOfMail == Constant.EmailType.OrderConfirmed.getValue()) {
+							if(req.getLanguageCode().equals("es") && !sp.getDileverTime().toLowerCase().startsWith("tan") ) {
+								map.put("time", sp.getDileverTime() == null ? "" : "alrededor de las " + sp.getDileverTime());
+							} else if (req.getLanguageCode().equals("en") && !sp.getDileverTime().toLowerCase().startsWith("as") )
+							{
+								map.put("time", sp.getDileverTime() == null ? "" : "at around " + sp.getDileverTime());
+							} else {
+								map.put("time", sp.getDileverTime() == null ? "" :  sp.getDileverTime());
+							}
+						} else if(typeOfMail == Constant.EmailType.OrderCompleted.getValue()) {
+							map.put("restaurantName", or.getRestaurantName() == null ? "" : or.getRestaurantName());
+							map.put("paymentType",PaymentMethod.valueOf(or.getPaymentType()).toString());
+							map.put("deliveryCost", or.getDeliveryCost() == null ? "" : or.getDeliveryCost().toString());
+							map.put("symbolLeft", or.getSymbolLeft() == null ? "" : or.getSymbolLeft());
+							map.put("totalPrice", or.getTotalPrice() == null ? "" : or.getTotalPrice().toString());
+							map.put("userName", or.getUserName() == null ? "" : or.getUserName());
+							map.put("userNumber", or.getPhone() == null ? "" : or.getPhone());
+							map.put("deliveryTime",or.getOrderDate() == null ? "" : or.getOrderDate().toString());
+							map.put("remarks", sp.getRemarks() == null ? "" : sp.getRemarks());
+							map.put("userAddress", sp.getAddress() == null ? "" :sp.getAddress());
+							map.put("userDistrict", sp.getDistrict() == null ? "" : sp.getDistrict());
+							map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
+							map.put("userAddressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
+							map.put("userCompanyName", sp.getCompanyName() == null ? "" : sp.getCompanyName());
+							StringBuilder sb = new StringBuilder();
+							if (req.getOrderLineItems() != null
+									&& req.getOrderLineItems().size() > 0) {
+								req.getOrderLineItems().forEach(o -> {
+									sb.append("<tr><td style='font-family:Arial;text-align:left;font-size:13px; width: 10%;'>"+o.getQuantity()+"</td>");
+									sb.append("<td style='font-family:Arial;text-align:left;font-size:13px;width: 60%;'>");
+									sb.append("<p>");
+									sb.append("<span>" + o.getMenuItemName() + "</span><br>");
+									sb.append("<span style='font-style: italic;'>");
+									if(o.getMenuExraItems() != null && !o.getMenuExraItems().isEmpty() && o.getMenuExraItems().size() > 0){
+										int sizeMenu = o.getMenuExraItems().size();
+										for (int i= 0 ;i < sizeMenu; i++){
+											MenuExtraItemLiteResponse item = o.getMenuExraItems().get(i);
+											if(item.getExtraitems() != null && !item.getExtraitems().isEmpty()){
+												int size = item.getExtraitems().size();
+												for (int j =0 ; j <size ; j++){
+													if (i == sizeMenu-1 && j == size-1){
+														sb.append(" " +item.getExtraitems().get(j).getName()+" ("+item.getExtraitems().get(j).getPrice()+")"+".");
+													}else {
+														sb.append(" " +item.getExtraitems().get(j).getName()+" ("+item.getExtraitems().get(j).getPrice()+")"+",");
+													}
+												}
+											}
+										}
+									}
+									sb.append("</span><br>");
+									sb.append("</p>");
+									sb.append("</td>");
+									sb.append("<td style='width: 20%;'></td>");
+									sb.append("<td style='font-family:Arial;text-align:right;font-size:13px;width: 10%;'>"  + o.getTotalPrice() + " "
+											+ o.getSymbolLeft() + "</td></tr>");
+								});
+
+							}
+							map.put("orderLineItems", sb.toString());
+						}
+
+
+						String body = matcher.replace(cm.getBody(), map);
+
+						// title
+						TemplateMatcher title = new TemplateMatcher("${", "}");
+						Map<String, String> t = new HashMap<>();
+						t.put("orderCode", req.getOrderCode());
+						String trpc = title.replace(cm.getSubject(), t);
+
+						logger.info("------------send to " + or.getEmail());
+						emailService.sendMessage(emailFrom, or.getEmail(), trpc, body,
+								displayEmailName);
+					}
+				} catch (MessagingException | IOException e) {
+					logger.error(e.toString());
+				}
+			});
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+	}
 }
