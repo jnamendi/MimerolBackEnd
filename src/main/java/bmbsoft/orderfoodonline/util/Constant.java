@@ -93,7 +93,7 @@ public class Constant {
 
 	public enum EmailType {
 		Verify(1), Resend(2), Register(3), ChangePass(4), Payment(5), Delivered(6), Promotion(7), Review(
-				8), CreateNewUser(9), NewOrderToOwner(10),OrderCompleted(11);
+				8), CreateNewUser(9), NewOrderToOwner(10),OrderCompleted(11), OrderRejected(12), OrderCanceled(13), OrderConfirmed(14);
 
 		private int value;
 
@@ -145,7 +145,7 @@ public class Constant {
 	}
 
 	public enum Order {
-		New(1), Inprogress(2), Deliveried(3), Rejected(4), Canceled(5), Done(6), Complete(7);
+		New(1), Confirmed(2), Delivered(3), Rejected(4), Canceled(5), Done(6), Complete(7);
 
 		private int value;
 
@@ -366,9 +366,5 @@ public class Constant {
 	public static class ContentSmsRestaurant{
 		public static final String EN = "You have a new order %s. Please go to your admin console to review it and confirm or reject it.";
 		public static final String ES = "Tiene una nueva orden %s. Vaya a su consola de administración para revisarla y confirmarla o rechazarla.";
-	}
-	public static class AmazonKey{
-		public static final String ACCESS_KEY = "AKIAVZD3RCWISLZD5VKN";
-		public static final String SECRET_KEY = "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";
 	}
 }
