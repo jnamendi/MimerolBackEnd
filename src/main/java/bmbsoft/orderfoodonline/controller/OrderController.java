@@ -784,7 +784,7 @@ public class OrderController extends BaseController {
 							{
 								map.put("time", sp.getDileverTime() == null ? "" : "at around " + sp.getDileverTime());
 							} else {
-								map.put("time", sp.getDileverTime() == null ? "" :  sp.getDileverTime());
+								map.put("time", sp.getDileverTime() == null ? "" :  sp.getDileverTime().toLowerCase());
 							}
 						} else if(typeOfMail == Constant.EmailType.OrderCompleted.getValue()) {
 							map.put("restaurantName", or.getRestaurantName() == null ? "" : or.getRestaurantName());
