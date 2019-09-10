@@ -1,11 +1,7 @@
 package bmbsoft.orderfoodonline.service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -258,7 +254,9 @@ public class MenuService {
 							milr.setCurrencyRate(cur.getRate());
 							milr.setSymbolLeft(cur.getSymbolLeft());
 							milr.setPriceRate(mi.getPrice() * (long) cur.getRate());
-
+							milr.setAvailable(checkItemAvailable(mi.getAvailableMonday(), mi.getAvailableTuesday(), mi.getAvailableWednesday(),
+							mi.getAvailableThursday(), mi.getAvailableFriday(), mi.getAvailableSaturday(), mi.getAvailableSunday()));
+							milr.setOutOfStock(mi.getOutOfStock());
 							// get menu extra
 							Set<MenuExtraItem> smei = mi.getMenuExtraItems();
 							List<MenuExtraItemLiteResponse> lmeilr = new ArrayList<>();
@@ -325,5 +323,20 @@ public class MenuService {
 			return mr;
 		}
 		return null;
+	}
+
+	private boolean checkItemAvailable(boolean mon, boolean tue, boolean wed, boolean thu, boolean fri, boolean sat, boolean sun) {
+		LocalDate localDate = LocalDate.now();
+		boolean available = true;
+		switch (localDate.getDayOfWeek()) {
+			case MONDAY: available = mon; break;
+			case TUESDAY: available = tue; break;
+			case WEDNESDAY: available = wed; break;
+			case THURSDAY: available = thu; break;
+			case FRIDAY: available = fri; break;
+			case SATURDAY: available = sat; break;
+			case SUNDAY: available = sun; break;
+		}
+		return available;
 	}
 }

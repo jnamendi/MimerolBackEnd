@@ -392,7 +392,14 @@ public class MenuItemDAO {
 			menuItem.setIsCombo(vm.getIsCombo());
 			menuItem.setSortOrder(vm.getSortOrder());
 			menuItem.setIsStatus(Constant.Status.Publish.getValue());
-
+			menuItem.setAvailableMonday(vm.getAvailableMonday());
+			menuItem.setAvailableTuesday(vm.getAvailableTuesday());
+			menuItem.setAvailableWednesday(vm.getAvailableWednesday());
+			menuItem.setAvailableThursday(vm.getAvailableThursday());
+			menuItem.setAvailableFriday(vm.getAvailableFriday());
+			menuItem.setAvailableSaturday(vm.getAvailableSaturday());
+			menuItem.setAvailableSunday(vm.getAvailableSunday());
+			menuItem.setOutOfStock(vm.getOutOfStock());
 			return menuItem;
 		}
 		e.setMenu(m);

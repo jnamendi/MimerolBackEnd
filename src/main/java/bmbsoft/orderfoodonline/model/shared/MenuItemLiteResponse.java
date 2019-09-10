@@ -19,6 +19,8 @@ public class MenuItemLiteResponse {
 	private Long priceRate;
 	private String urlImge;
 	private String desc;
+	private Boolean available;
+	private Boolean outOfStock;
 	private float currencyRate;
 	private String symbolLeft;
 	@NotNull(message = "quantity is required")
@@ -111,5 +113,21 @@ public class MenuItemLiteResponse {
 	}
 	public void setMenuExraItems(List<MenuExtraItemLiteResponse> menuExraItems) {
 		this.menuExraItems = menuExraItems;
+	}
+
+	public Boolean getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(Boolean available) {
+		this.available = available;
+	}
+
+	public Boolean getOutOfStock() {
+		return outOfStock;
+	}
+
+	public void setOutOfStock(Boolean outOfStock) {
+		this.outOfStock = outOfStock;
 	}
 }
