@@ -24,7 +24,7 @@ public class MenuItem implements java.io.Serializable {
 	private Long menuItemId;
 	private ContentDefinition contentDefinition;
 	private Menu menu;
-	private Long price;
+	private Double price;
 	private String picturePath;
 	private Boolean isCombo;
 	private String urlSlug;
@@ -49,7 +49,7 @@ public class MenuItem implements java.io.Serializable {
 		this.menu = menu;
 	}
 
-	public MenuItem(Long menuItemId, ContentDefinition contentDefinition, Menu menu, Long price, String picturePath, Boolean isCombo, String urlSlug, Integer sortOrder, Integer isStatus, Boolean availableMonday, Boolean availableTuesday, Boolean availableWednesday, Boolean availableThursday, Boolean availableFriday, Boolean availableSaturday, Boolean availableSunday, Boolean outOfStock, Set<OrderLineItem> orderLineItems, Set<MenuExtraItem> menuExtraItems) {
+	public MenuItem(Long menuItemId, ContentDefinition contentDefinition, Menu menu, Double price, String picturePath, Boolean isCombo, String urlSlug, Integer sortOrder, Integer isStatus, Boolean availableMonday, Boolean availableTuesday, Boolean availableWednesday, Boolean availableThursday, Boolean availableFriday, Boolean availableSaturday, Boolean availableSunday, Boolean outOfStock, Set<OrderLineItem> orderLineItems, Set<MenuExtraItem> menuExtraItems) {
 		this.menuItemId = menuItemId;
 		this.contentDefinition = contentDefinition;
 		this.menu = menu;
@@ -103,12 +103,12 @@ public class MenuItem implements java.io.Serializable {
 		this.menu = menu;
 	}
 
-	@Column(name = "price", precision = 10, scale = 0)
-	public Long getPrice() {
+	@Column(name = "price", precision = 10, scale = 2)
+	public Double getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 

@@ -81,7 +81,7 @@ public class CommonHelper {
 		return result;
 	}
 
-	public static String formatDecimal(float number, String langCode, String curCode) {
+	public static String formatDecimal(Double number, String langCode, String curCode) {
 
 		Locale locale = new Locale(langCode, langCode.toUpperCase());
 		Currency currency = Currency.getInstance(curCode);

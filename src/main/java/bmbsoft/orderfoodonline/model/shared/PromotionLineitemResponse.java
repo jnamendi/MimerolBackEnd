@@ -23,7 +23,7 @@ public class PromotionLineitemResponse {
 
 	private Date startDate;
 	private Date endDate;
-	private Long minOrder;
+	private Double minOrder;
 
 	public Date getStartDate() {
 		return startDate;
@@ -76,11 +76,11 @@ public class PromotionLineitemResponse {
 		this.desc = desc;
 	}
 
-	public Long getMinOrder() {
+	public Double getMinOrder() {
 		return minOrder;
 	}
 
-	public void setMinOrder(Long minOrder) {
+	public void setMinOrder(Double minOrder) {
 		this.minOrder = minOrder;
 	}
 

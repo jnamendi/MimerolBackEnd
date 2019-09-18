@@ -1,21 +1,21 @@
 package bmbsoft.orderfoodonline.model.shared;
 
 public class OrderExtraItemRequest {
-	private Long price;
-	private Long unitPrice;
+	private Double price;
+	private Double unitPrice;
 	private Long extraItemId;
 	private Long menuItemId;
 	
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
-	public Long getUnitPrice() {
+	public Double getUnitPrice() {
 		return unitPrice;
 	}
-	public void setUnitPrice(Long unitPrice) {
+	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 	public Long getExtraItemId() {

@@ -28,13 +28,13 @@ public class RestaurantViewModel {
 	private int numOfReview;
 	private List<HashMap> categoryIds;
 	private List<HashMap> attributes;
-	private Long minPrice; // original
+	private Double minPrice; // original
 	private String price; // convert
-	private float currencyRate;
+	private Double currencyRate;
 	private String symbolLeft;
 	private String district;
 	private Long districtId;
-	private Long deliveryCost;
+	private Double deliveryCost;
 	private String estDeliveryTime;
 	private List<HashMap> userIds;
 	private List<PromotionLineitemResponse> promotionLineItems;
@@ -87,11 +87,11 @@ public class RestaurantViewModel {
 		this.price = price;
 	}
 
-	public float getCurrencyRate() {
+	public Double getCurrencyRate() {
 		return currencyRate;
 	}
 
-	public void setCurrencyRate(float currencyRate) {
+	public void setCurrencyRate(Double currencyRate) {
 		this.currencyRate = currencyRate;
 	}
 
@@ -311,11 +311,11 @@ public class RestaurantViewModel {
 		this.numOfReview = numOfReview;
 	}
 
-	public Long getMinPrice() {
+	public Double getMinPrice() {
 		return minPrice;
 	}
 
-	public void setMinPrice(Long minPrice) {
+	public void setMinPrice(Double minPrice) {
 		this.minPrice = minPrice;
 	}
 	
@@ -337,11 +337,11 @@ public class RestaurantViewModel {
 		this.district = district;
 	}
 
-	public Long getDeliveryCost() {
+	public Double getDeliveryCost() {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 

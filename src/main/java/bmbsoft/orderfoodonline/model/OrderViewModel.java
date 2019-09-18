@@ -55,11 +55,11 @@ public class OrderViewModel {
 		this.status = status;
 	}
 
-	public Long getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -78,7 +78,7 @@ public class OrderViewModel {
 	private String districtName;
 	private String cityName;
 	private int status;
-	private Long totalPrice;
+	private Double totalPrice;
 	private String userName;
 	private String checkSum;
 	private String email;

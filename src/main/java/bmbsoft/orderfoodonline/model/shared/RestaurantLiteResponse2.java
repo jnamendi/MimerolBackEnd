@@ -23,21 +23,21 @@ public class RestaurantLiteResponse2 {
 	private double rating;
 	private int numOfReview;
 	private int numOfFavouries;
-	private long minPrice;
+	private Double minPrice;
 	private List<UserRequest> userIds;
 	private List<CategoryLiteRequest> categoryIds;
 	private List<AttributeViewModel> attributeLst;
 	private List<PromotionLineitemResponse> promotionLineItems;
-	private Long deliveryCost;
+	private Double deliveryCost;
 	private String estTime;
 	private int status;
 	private boolean restaurantClosed;
 
-	public Long getDeliveryCost() {
+	public Double getDeliveryCost() {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 
@@ -177,11 +177,11 @@ public class RestaurantLiteResponse2 {
 		this.numOfFavouries = numOfFavouries;
 	}
 
-	public long getMinPrice() {
+	public Double getMinPrice() {
 		return minPrice;
 	}
 
-	public void setMinPrice(long minPrice) {
+	public void setMinPrice(Double minPrice) {
 		this.minPrice = minPrice;
 	}
 

@@ -107,7 +107,7 @@ public class OrderTransaction implements java.io.Serializable {
 		this.transactionIdentifier = transactionIdentifier;
 	}
 
-	@Column(name = "amount", precision = 10, scale = 0)
+	@Column(name = "amount", precision = 10, scale = 2)
 	public Long getAmount() {
 		return this.amount;
 	}

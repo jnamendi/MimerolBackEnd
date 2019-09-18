@@ -31,7 +31,7 @@ public class MenuItemResponse {
 	private Long restaurantId;
 	private String restaurantName;
 	private MenuViewModel menu;
-	private Long price;
+	private Double price;
 	private String imageUrl;
 	private Boolean isCombo;
 	private Integer sortOrder;
@@ -63,11 +63,11 @@ public class MenuItemResponse {
 		this.menu = menu;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 

@@ -21,7 +21,7 @@ public class ExtraItem implements java.io.Serializable {
 	private Long extraItemId;
 	private ContentDefinition contentDefinition;
 	private MenuExtraItem menuExtraItem;
-	private Long price;
+	private Double price;
 
 	public ExtraItem() {
 	}
@@ -30,7 +30,7 @@ public class ExtraItem implements java.io.Serializable {
 		this.menuExtraItem = menuExtraItem;
 	}
 
-	public ExtraItem(ContentDefinition contentDefinition, MenuExtraItem menuExtraItem, Long price) {
+	public ExtraItem(ContentDefinition contentDefinition, MenuExtraItem menuExtraItem, Double price) {
 		this.contentDefinition = contentDefinition;
 		this.menuExtraItem = menuExtraItem;
 		this.price = price;
@@ -68,12 +68,12 @@ public class ExtraItem implements java.io.Serializable {
 		this.menuExtraItem = menuExtraItem;
 	}
 
-	@Column(name = "price", precision = 10, scale = 0)
-	public Long getPrice() {
+	@Column(name = "price", precision = 10, scale = 2)
+	public Double getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 

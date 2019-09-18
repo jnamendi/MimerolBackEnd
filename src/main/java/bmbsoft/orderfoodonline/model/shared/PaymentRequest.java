@@ -24,13 +24,13 @@ public class PaymentRequest {
 	private OrderItem orderItem;
 	private String number;
 	private String languageCode;
-	private Long deliveryCost;
+	private Double deliveryCost;
 	private boolean receiveVoucher;
 	private Long voucherId;
 	private String voucherCode;
 	private Long promotionId;
 	private String promotionCode;
-	private Long paymentWith;
+	private Double paymentWith;
 	private String addressDesc;
 	
 	private Long discount;
@@ -189,11 +189,11 @@ public class PaymentRequest {
 		this.languageCode = languageCode;
 	}
 
-	public Long getDeliveryCost() {
+	public Double getDeliveryCost() {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 
@@ -213,11 +213,11 @@ public class PaymentRequest {
 		this.receiveVoucher = receiveVoucher;
 	}
 
-	public Long getPaymentWith() {
+	public Double getPaymentWith() {
 		return paymentWith;
 	}
 
-	public void setPaymentWith(Long paymentWith) {
+	public void setPaymentWith(Double paymentWith) {
 		this.paymentWith = paymentWith;
 	}
 

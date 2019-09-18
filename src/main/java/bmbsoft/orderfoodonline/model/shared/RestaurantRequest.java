@@ -38,7 +38,7 @@ public class RestaurantRequest {
 	private String phone2;
 	private String shipArea;
 	@NotNull(message = "minPrice is required")
-	private Long minPrice;
+	private Double minPrice;
 
 	@NotNull(message = "city is required")
 	private String city;
@@ -64,7 +64,7 @@ public class RestaurantRequest {
 	@NotNull(message = "estDeliveryTime is required")
 	private String estDeliveryTime;
 	@NotNull(message = "deliveryCost is required")
-	private Long deliveryCost;
+	private Double deliveryCost;
  
 	private Long districtId;
 
@@ -228,11 +228,11 @@ public class RestaurantRequest {
 		this.categoryIds = categoryIds;
 	}
 
-	public Long getMinPrice() {
+	public Double getMinPrice() {
 		return minPrice;
 	}
 
-	public void setMinPrice(Long minPrice) {
+	public void setMinPrice(Double minPrice) {
 		this.minPrice = minPrice;
 	}
 
@@ -244,11 +244,11 @@ public class RestaurantRequest {
 		this.estDeliveryTime = estDeliveryTime;
 	}
 
-	public Long getDeliveryCost() {
+	public Double getDeliveryCost() {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 

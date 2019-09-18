@@ -6,7 +6,15 @@ import bmbsoft.orderfoodonline.model.shared.OrderExtraItemRequest;
 
 public class OrderLineItemRequest { 
 	private Long menuItemId; 
-	 
+	private Double price; // gia original
+	private Double discount; // tong gia giamr
+	private Double totalPrice;  // tong gia =
+	private int quantity;
+	private int status;
+	private String menuItemName;
+	
+	private List<OrderExtraItemRequest> extraItemRequest;
+
 	public Long getMenuItemId() {
 		return menuItemId;
 	}
@@ -15,27 +23,27 @@ public class OrderLineItemRequest {
 		this.menuItemId = menuItemId;
 	}
 
-	public long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public long getDiscount() {
+	public Double getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(long discount) {
+	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
 
-	public long getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -70,14 +78,4 @@ public class OrderLineItemRequest {
 	public void setExtraItemRequest(List<OrderExtraItemRequest> extraItemRequest) {
 		this.extraItemRequest = extraItemRequest;
 	}
-
-	private long price; // gia original
-	private long discount; // tong gia giamr
-	private long totalPrice;  // tong gia = 
-	private int quantity;
-	private int status;
-	private String menuItemName;
-	
-	private List<OrderExtraItemRequest> extraItemRequest;
-	
 }

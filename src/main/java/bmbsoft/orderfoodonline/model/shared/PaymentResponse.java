@@ -33,13 +33,13 @@ public class PaymentResponse {
 	private String languageCode;
 	private String remarks;
 
-	private Long deliveryCost;
+	private Double deliveryCost;
 	private boolean receiveVoucher;
 	private Long voucherId;
 	private String voucherCode;
 	private Long promotionId;
 	private String promotionCode;
-	private Long paymentWith;
+	private Double paymentWith;
 	private String addressDesc;
 	private String phone2;
 	private String dileverTime;
@@ -48,22 +48,6 @@ public class PaymentResponse {
 
 	public String getOrderCode() {
 		return orderCode;
-	}
-
-	public String getDileverTime() {
-		return dileverTime;
-	}
-
-	public void setDileverTime(String dileverTime) {
-		this.dileverTime = dileverTime;
-	}
-
-	public String getPhone2() {
-		return phone2;
-	}
-
-	public void setPhone2(String phone) {
-		this.phone2 = phone;
 	}
 
 	public void setOrderCode(String orderCode) {
@@ -254,11 +238,11 @@ public class PaymentResponse {
 		this.remarks = remarks;
 	}
 
-	public Long getDeliveryCost() {
+	public Double getDeliveryCost() {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 
@@ -302,11 +286,11 @@ public class PaymentResponse {
 		this.promotionCode = promotionCode;
 	}
 
-	public Long getPaymentWith() {
+	public Double getPaymentWith() {
 		return paymentWith;
 	}
 
-	public void setPaymentWith(Long paymentWith) {
+	public void setPaymentWith(Double paymentWith) {
 		this.paymentWith = paymentWith;
 	}
 
@@ -316,6 +300,22 @@ public class PaymentResponse {
 
 	public void setAddressDesc(String addressDesc) {
 		this.addressDesc = addressDesc;
+	}
+
+	public String getPhone2() {
+		return phone2;
+	}
+
+	public void setPhone2(String phone2) {
+		this.phone2 = phone2;
+	}
+
+	public String getDileverTime() {
+		return dileverTime;
+	}
+
+	public void setDileverTime(String dileverTime) {
+		this.dileverTime = dileverTime;
 	}
 
 	public String getCompanyName() {

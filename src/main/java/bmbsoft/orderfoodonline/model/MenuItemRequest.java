@@ -12,7 +12,7 @@ public class MenuItemRequest {
 
 	@NotNull(message = "Menuid is field required.")
 	private Long menuId;
-	private Long price; 
+	private Double price;
 	private Boolean isCombo;
 	private Integer sortOrder;
 	private Integer status;
@@ -37,11 +37,11 @@ public class MenuItemRequest {
 		this.menuId = menuId;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	} 
 	public Boolean getIsCombo() {

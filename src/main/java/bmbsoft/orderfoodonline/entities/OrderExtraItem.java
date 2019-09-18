@@ -19,13 +19,13 @@ public class OrderExtraItem implements java.io.Serializable {
 	private Long menuItemId;
 	private Long menuExtraItemId;
 	private Long exraItemId;
-	private Long unitPrice;
-	private Long totalPrice;
+	private Double unitPrice;
+	private Double totalPrice;
 
 	public OrderExtraItem() {
 	}
 
-	public OrderExtraItem(Long menuItemId, Long menuExtraItemId, Long exraItemId, Long unitPrice, Long totalPrice) {
+	public OrderExtraItem(Long menuItemId, Long menuExtraItemId, Long exraItemId, Double unitPrice, Double totalPrice) {
 		this.menuItemId = menuItemId;
 		this.menuExtraItemId = menuExtraItemId;
 		this.exraItemId = exraItemId;
@@ -72,21 +72,21 @@ public class OrderExtraItem implements java.io.Serializable {
 		this.exraItemId = exraItemId;
 	}
 
-	@Column(name = "unit_price", precision = 10, scale = 0)
-	public Long getUnitPrice() {
+	@Column(name = "unit_price", precision = 10, scale = 2)
+	public Double getUnitPrice() {
 		return this.unitPrice;
 	}
 
-	public void setUnitPrice(Long unitPrice) {
+	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	@Column(name = "total_price", precision = 10, scale = 0)
-	public Long getTotalPrice() {
+	@Column(name = "total_price", precision = 10, scale = 2)
+	public Double getTotalPrice() {
 		return this.totalPrice;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 

@@ -202,7 +202,7 @@ public class MenuService {
 
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 
 		List<Menu> res = menuDAO.getAll(1, 0, null, Constant.Status.Publish.getValue(), l.getCode(), restaurantId,
@@ -253,7 +253,7 @@ public class MenuService {
 							milr.setPriceRateDisplay(priceConvert);
 							milr.setCurrencyRate(cur.getRate());
 							milr.setSymbolLeft(cur.getSymbolLeft());
-							milr.setPriceRate(mi.getPrice() * (long) cur.getRate());
+							milr.setPriceRate(mi.getPrice() * cur.getRate());
 							milr.setAvailable(checkItemAvailable(mi.getAvailableMonday(), mi.getAvailableTuesday(), mi.getAvailableWednesday(),
 							mi.getAvailableThursday(), mi.getAvailableFriday(), mi.getAvailableSaturday(), mi.getAvailableSunday()));
 							milr.setOutOfStock(mi.getOutOfStock());
@@ -284,12 +284,12 @@ public class MenuService {
 
 											ExtraItemLiteResponse eilr = new ExtraItemLiteResponse();
 											eilr.setExtraItemId(se.getExtraItemId());
-											long p = se.getPrice() == null ? 0 : se.getPrice();
+											Double p = se.getPrice() == null ? 0 : se.getPrice();
 											eilr.setPrice(p);
 											String exPrice = CommonHelper.formatDecimal(p * cur.getRate(), l.getCode(),
 													cur.getCode());
 											eilr.setPriceRateDisplay(exPrice);
-											eilr.setPriceRate(p * (long) cur.getRate());
+											eilr.setPriceRate(p * cur.getRate());
 
 											HashMap<String, String> exNames = languageService
 													.hashMapTranslate1(se.getContentDefinition(), l);

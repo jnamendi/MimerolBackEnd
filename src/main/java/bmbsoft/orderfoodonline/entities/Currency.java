@@ -120,7 +120,7 @@ public class Currency implements java.io.Serializable {
 		this.isStatus = isStatus;
 	}
 
-	@Column(name = "round_decimal", precision = 10, scale = 0)
+	@Column(name = "round_decimal", precision = 10, scale = 2)
 	public Long getRoundDecimal() {
 		return this.roundDecimal;
 	}

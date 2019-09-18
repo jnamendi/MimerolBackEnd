@@ -20,36 +20,22 @@ public class OrderResponse {
 	private String restaurantName;
 	private String imageUrl;
 	private Long userId;
-
-	public Long getUserId() {
-		return userId;
-	}
 	private String userName;
 	private String email;
 	private String phone;
 	private int paymentType;
 	private Date orderDate;
-	private Long totalPrice;
+	private Double totalPrice;
 	private Integer status;
 	private String currencyCode;
-	private Long taxTotal; 
-	private Long deliveryCost;
+	private Double taxTotal;
+	private Double deliveryCost;
 	private String symbolLeft;
-	private Long paymentWith;
+	private Double paymentWith;
 	private String reasonReject;
 	private String reasonCancel;
 
 	private List<OrderInfoResponse> orderInfos = new LinkedList<>();
-
-//	private List<OrderLineItemResponse> orderLineItems = new LinkedList<>();
-
-	public List<MenuItemLiteResponse> getOrderLineItems() {
-		return orderLineItems;
-	}
-
-	public void setOrderLineItems(List<MenuItemLiteResponse> orderLineItems) {
-		this.orderLineItems = orderLineItems;
-	}
 
 	private List<MenuItemLiteResponse> orderLineItems = new LinkedList<>();
 
@@ -61,46 +47,45 @@ public class OrderResponse {
 		this.orderId = orderId;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
+	public String getOrderCode() {
+		return orderCode;
 	}
 
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
 	}
 
-	public Long getTotalPrice() {
-		return totalPrice;
+	public Long getRestaurantId() {
+		return restaurantId;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
-		this.totalPrice = totalPrice;
+	public void setRestaurantId(Long restaurantId) {
+		this.restaurantId = restaurantId;
 	}
 
-	public Integer getStatus() {
-		return status;
+	public String getRestaurantName() {
+		return restaurantName;
 	}
 
-	public void setStatus(Integer status) {
-		this.status = status;
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
 	}
 
-	public String getCurrencyCode() {
-		return currencyCode;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setCurrencyCode(String currencyCode) {
-		this.currencyCode = currencyCode;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
-	public Long getTaxTotal() {
-		return taxTotal;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setTaxTotal(Long taxTotal) {
-		this.taxTotal = taxTotal;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
- 
 
 	public String getUserName() {
 		return userName;
@@ -126,54 +111,6 @@ public class OrderResponse {
 		this.phone = phone;
 	}
 
-	public Long getRestaurantId() {
-		return restaurantId;
-	}
-
-	public void setRestaurantId(Long restaurantId) {
-		this.restaurantId = restaurantId;
-	}
-
-	public String getRestaurantName() {
-		return restaurantName;
-	}
-
-	public void setRestaurantName(String restaurantName) {
-		this.restaurantName = restaurantName;
-	}
-
-	public List<OrderInfoResponse> getOrderInfos() {
-		return orderInfos;
-	}
-
-	public void setOrderInfos(List<OrderInfoResponse> orderInfos) {
-		this.orderInfos = orderInfos;
-	}
-
-//	public List<OrderLineItemResponse> getOrderLineItems() {
-//		return orderLineItems;
-//	}
-//
-//	public void setOrderLineItems(List<OrderLineItemResponse> orderLineItems) {
-//		this.orderLineItems = orderLineItems;
-//	}
-
-	public String getImageUrl() {
-		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public String getOrderCode() {
-		return orderCode;
-	}
-
-	public void setOrderCode(String orderCode) {
-		this.orderCode = orderCode;
-	}
-
 	public int getPaymentType() {
 		return paymentType;
 	}
@@ -182,11 +119,51 @@ public class OrderResponse {
 		this.paymentType = paymentType;
 	}
 
-	public Long getDeliveryCost() {
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public void setCurrencyCode(String currencyCode) {
+		this.currencyCode = currencyCode;
+	}
+
+	public Double getTaxTotal() {
+		return taxTotal;
+	}
+
+	public void setTaxTotal(Double taxTotal) {
+		this.taxTotal = taxTotal;
+	}
+
+	public Double getDeliveryCost() {
 		return deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 
@@ -198,11 +175,11 @@ public class OrderResponse {
 		this.symbolLeft = symbolLeft;
 	}
 
-	public Long getPaymentWith() {
+	public Double getPaymentWith() {
 		return paymentWith;
 	}
 
-	public void setPaymentWith(Long paymentWith) {
+	public void setPaymentWith(Double paymentWith) {
 		this.paymentWith = paymentWith;
 	}
 
@@ -220,5 +197,21 @@ public class OrderResponse {
 
 	public void setReasonCancel(String reasonCancel) {
 		this.reasonCancel = reasonCancel;
+	}
+
+	public List<OrderInfoResponse> getOrderInfos() {
+		return orderInfos;
+	}
+
+	public void setOrderInfos(List<OrderInfoResponse> orderInfos) {
+		this.orderInfos = orderInfos;
+	}
+
+	public List<MenuItemLiteResponse> getOrderLineItems() {
+		return orderLineItems;
+	}
+
+	public void setOrderLineItems(List<MenuItemLiteResponse> orderLineItems) {
+		this.orderLineItems = orderLineItems;
 	}
 }
