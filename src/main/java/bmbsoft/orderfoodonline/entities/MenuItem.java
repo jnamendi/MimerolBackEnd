@@ -24,12 +24,20 @@ public class MenuItem implements java.io.Serializable {
 	private Long menuItemId;
 	private ContentDefinition contentDefinition;
 	private Menu menu;
-	private Long price;
+	private Double price;
 	private String picturePath;
 	private Boolean isCombo;
 	private String urlSlug;
 	private Integer sortOrder;
 	private Integer isStatus;
+	private Boolean availableMonday;
+	private Boolean availableTuesday;
+	private Boolean availableWednesday;
+	private Boolean availableThursday;
+	private Boolean availableFriday;
+	private Boolean availableSaturday;
+	private Boolean availableSunday;
+	private Boolean outOfStock;
 	private Set<OrderLineItem> orderLineItems = new HashSet<OrderLineItem>(0);
 	private Set<MenuExtraItem> menuExtraItems = new HashSet<MenuExtraItem>(0);
 
@@ -41,9 +49,8 @@ public class MenuItem implements java.io.Serializable {
 		this.menu = menu;
 	}
 
-	public MenuItem(ContentDefinition contentDefinition, Menu menu, Long price, String picturePath, Boolean isCombo,
-			String urlSlug, Integer sortOrder, Integer isStatus, Set<OrderLineItem> orderLineItems,
-			Set<MenuExtraItem> menuExtraItems) {
+	public MenuItem(Long menuItemId, ContentDefinition contentDefinition, Menu menu, Double price, String picturePath, Boolean isCombo, String urlSlug, Integer sortOrder, Integer isStatus, Boolean availableMonday, Boolean availableTuesday, Boolean availableWednesday, Boolean availableThursday, Boolean availableFriday, Boolean availableSaturday, Boolean availableSunday, Boolean outOfStock, Set<OrderLineItem> orderLineItems, Set<MenuExtraItem> menuExtraItems) {
+		this.menuItemId = menuItemId;
 		this.contentDefinition = contentDefinition;
 		this.menu = menu;
 		this.price = price;
@@ -52,6 +59,14 @@ public class MenuItem implements java.io.Serializable {
 		this.urlSlug = urlSlug;
 		this.sortOrder = sortOrder;
 		this.isStatus = isStatus;
+		this.availableMonday = availableMonday;
+		this.availableTuesday = availableTuesday;
+		this.availableWednesday = availableWednesday;
+		this.availableThursday = availableThursday;
+		this.availableFriday = availableFriday;
+		this.availableSaturday = availableSaturday;
+		this.availableSunday = availableSunday;
+		this.outOfStock = outOfStock;
 		this.orderLineItems = orderLineItems;
 		this.menuExtraItems = menuExtraItems;
 	}
@@ -88,12 +103,12 @@ public class MenuItem implements java.io.Serializable {
 		this.menu = menu;
 	}
 
-	@Column(name = "price", precision = 10, scale = 0)
-	public Long getPrice() {
+	@Column(name = "price", precision = 10, scale = 2)
+	public Double getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -140,6 +155,78 @@ public class MenuItem implements java.io.Serializable {
 
 	public void setIsStatus(Integer isStatus) {
 		this.isStatus = isStatus;
+	}
+
+	@Column(name = "avai_mon")
+	public Boolean getAvailableMonday() {
+		return availableMonday;
+	}
+
+	public void setAvailableMonday(Boolean availableMonday) {
+		this.availableMonday = availableMonday;
+	}
+
+	@Column(name = "avai_tue")
+	public Boolean getAvailableTuesday() {
+		return availableTuesday;
+	}
+
+	public void setAvailableTuesday(Boolean availableTuesday) {
+		this.availableTuesday = availableTuesday;
+	}
+
+	@Column(name = "avai_wed")
+	public Boolean getAvailableWednesday() {
+		return availableWednesday;
+	}
+
+	public void setAvailableWednesday(Boolean availableWednesday) {
+		this.availableWednesday = availableWednesday;
+	}
+
+	@Column(name = "avai_thu")
+	public Boolean getAvailableThursday() {
+		return availableThursday;
+	}
+
+	public void setAvailableThursday(Boolean availableThursday) {
+		this.availableThursday = availableThursday;
+	}
+
+	@Column(name = "avai_fri")
+	public Boolean getAvailableFriday() {
+		return availableFriday;
+	}
+
+	public void setAvailableFriday(Boolean availableFriday) {
+		this.availableFriday = availableFriday;
+	}
+
+	@Column(name = "avai_sat")
+	public Boolean getAvailableSaturday() {
+		return availableSaturday;
+	}
+
+	public void setAvailableSaturday(Boolean availableSaturday) {
+		this.availableSaturday = availableSaturday;
+	}
+
+	@Column(name = "avai_sun")
+	public Boolean getAvailableSunday() {
+		return availableSunday;
+	}
+
+	public void setAvailableSunday(Boolean availableSunday) {
+		this.availableSunday = availableSunday;
+	}
+
+	@Column(name = "out_of_stock")
+	public Boolean getOutOfStock() {
+		return outOfStock;
+	}
+
+	public void setOutOfStock(Boolean outOfStock) {
+		this.outOfStock = outOfStock;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "menuItem")

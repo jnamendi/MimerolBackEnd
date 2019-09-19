@@ -61,7 +61,7 @@ public class CurrencyDAO {
 		Session s = this.sessionFactory.getCurrentSession();
 		CurrencyResponse cr = null;
 		try {
-			float rate = 1;
+			Double rate = 1d;
 			List<Currency> cs = s.createQuery("FROM Currency c where c.isDefault= 1", Currency.class).getResultList();
 			if (cs != null && cs.size() > 0) {
 				cr = new CurrencyResponse();

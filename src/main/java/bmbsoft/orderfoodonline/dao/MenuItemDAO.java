@@ -386,21 +386,24 @@ public class MenuItemDAO {
 
 	private MenuItem convertModelToEntity(final MenuItemRequest vm, MenuItem e, Menu m) {
 		if (e == null) {
-			MenuItem menuItem = new MenuItem();
-			menuItem.setMenu(m);
-			menuItem.setPrice(vm.getPrice());
-			menuItem.setIsCombo(vm.getIsCombo());
-			menuItem.setSortOrder(vm.getSortOrder());
-			menuItem.setIsStatus(Constant.Status.Publish.getValue());
-
-			return menuItem;
+			e = new MenuItem();
 		}
 		e.setMenu(m);
 		e.setPrice(vm.getPrice());
 		e.setIsCombo(vm.getIsCombo());
 		e.setSortOrder(vm.getSortOrder());
-		if (vm.getStatus() != null)
+		if (vm.getStatus() != null) {
 			e.setIsStatus(vm.getStatus());
+		} else e.setIsStatus(Constant.Status.Publish.getValue());
+
+		e.setAvailableMonday(vm.getAvailableMonday());
+		e.setAvailableTuesday(vm.getAvailableTuesday());
+		e.setAvailableWednesday(vm.getAvailableWednesday());
+		e.setAvailableThursday(vm.getAvailableThursday());
+		e.setAvailableFriday(vm.getAvailableFriday());
+		e.setAvailableSaturday(vm.getAvailableSaturday());
+		e.setAvailableSunday(vm.getAvailableSunday());
+		e.setOutOfStock(vm.getOutOfStock());
 		return e;
 	}
 }

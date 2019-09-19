@@ -24,7 +24,7 @@ public class CurrencyRate implements java.io.Serializable {
 	private Long currencyRateId;
 	private Currency currency;
 	private String checksum;
-	private Float rate;
+	private Double rate;
 	private Date updated;
 
 	public CurrencyRate() {
@@ -34,7 +34,7 @@ public class CurrencyRate implements java.io.Serializable {
 		this.currency = currency;
 	}
 
-	public CurrencyRate(Currency currency, String checksum, Float rate, Date updated) {
+	public CurrencyRate(Currency currency, String checksum, Double rate, Date updated) {
 		this.currency = currency;
 		this.checksum = checksum;
 		this.rate = rate;
@@ -72,12 +72,12 @@ public class CurrencyRate implements java.io.Serializable {
 		this.checksum = checksum;
 	}
 
-	@Column(name = "rate", precision = 12, scale = 0)
-	public Float getRate() {
+	@Column(name = "rate", precision = 12, scale = 2)
+	public Double getRate() {
 		return this.rate;
 	}
 
-	public void setRate(Float rate) {
+	public void setRate(Double rate) {
 		this.rate = rate;
 	}
 

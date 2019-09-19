@@ -1,16 +1,10 @@
 package bmbsoft.orderfoodonline.model.shared;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import bmbsoft.orderfoodonline.entities.MenuExtraItem;
-import bmbsoft.orderfoodonline.entities.MenuItem;
-import bmbsoft.orderfoodonline.entities.Order;
 
 public class OrderLineItemResponse {
 	private Long orderLineItemId;  
-	private Long unitPrice;
+	private Double unitPrice;
 	private Integer quantity;  
 	private String menuItemName;
 //	private List<MenuExtraItemLiteResponse> menuExraItems = new ArrayList<>();
@@ -27,10 +21,10 @@ public class OrderLineItemResponse {
 	public void setOrderLineItemId(Long orderLineItemId) {
 		this.orderLineItemId = orderLineItemId;
 	}
-	public Long getUnitPrice() {
+	public Double getUnitPrice() {
 		return unitPrice;
 	}
-	public void setUnitPrice(Long unitPrice) {
+	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 	public Integer getQuantity() {
@@ -45,16 +39,16 @@ public class OrderLineItemResponse {
 	public void setMenuItemName(String menuItemName) {
 		this.menuItemName = menuItemName;
 	}
-	public Long getDiscountTotal() {
+	public Double getDiscountTotal() {
 		return discountTotal;
 	}
-	public void setDiscountTotal(Long discountTotal) {
+	public void setDiscountTotal(Double discountTotal) {
 		this.discountTotal = discountTotal;
 	}
-	public Long getTotal() {
+	public Double getTotal() {
 		return total;
 	}
-	public void setTotal(Long total) {
+	public void setTotal(Double total) {
 		this.total = total;
 	}
 	public Date getCreatedDate() {
@@ -63,7 +57,7 @@ public class OrderLineItemResponse {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-	private Long discountTotal;
-	private Long total;
+	private Double discountTotal;
+	private Double total;
 	private Date createdDate;
 }

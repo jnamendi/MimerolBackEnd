@@ -159,6 +159,14 @@ public class MenuItemService {
 		vm.setSortOrder(e.getSortOrder());
 		vm.setStatus(e.getIsStatus());
 		vm.setImageUrl(e.getPicturePath());
+		vm.setAvailableMonday(e.getAvailableMonday());
+		vm.setAvailableTuesday(e.getAvailableTuesday());
+		vm.setAvailableWednesday(e.getAvailableWednesday());
+		vm.setAvailableThursday(e.getAvailableThursday());
+		vm.setAvailableFriday(e.getAvailableFriday());
+		vm.setAvailableSaturday(e.getAvailableSaturday());
+		vm.setAvailableSunday(e.getAvailableSunday());
+		vm.setOutOfStock(e.getOutOfStock());
 		vm.setLanguageLst(languageService.translate(e.getContentDefinition(), lang));
 
 		if (e.getMenu() != null) {

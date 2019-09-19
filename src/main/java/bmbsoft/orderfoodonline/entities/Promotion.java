@@ -178,7 +178,7 @@ public class Promotion implements java.io.Serializable {
 		this.valueType = valueType;
 	}
 
-	@Column(name = "min_order", precision = 10, scale = 0)
+	@Column(name = "min_order", precision = 10, scale = 2)
 	public Long getMinOrder() {
 		return this.minOrder;
 	}

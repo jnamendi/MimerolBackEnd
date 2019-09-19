@@ -45,11 +45,11 @@ public class Restaurant implements java.io.Serializable {
 	private String shipArea;
 	private String keySearch;
 	private Integer sortOrder;
-	private Long minPrice;
+	private Double minPrice;
 	private String city;
 	private String districtName;
 	private String imageUrl;
-	private Long deliveryCost;
+	private Double deliveryCost;
 	private String estimateDeliveryTime;
 	private String addressDesc;
 	private Integer typeReceive;
@@ -71,8 +71,8 @@ public class Restaurant implements java.io.Serializable {
 	public Restaurant(ContentDefinition contentDefinition, District district, String name, String slogan,
 			String addressLine, Double latitude, Double longitude, String openTime, String closeTime, String phone1,
 			String phone2, Integer status, String urlSlug, Date createdDate, String createdBy, Date modifiedDate,
-			String modifiedBy, String shipArea, String keySearch, Integer sortOrder, Long minPrice, String city,
-			String districtName, String imageUrl, Long deliveryCost, String estimateDeliveryTime, String addressDesc,
+			String modifiedBy, String shipArea, String keySearch, Integer sortOrder, Double minPrice, String city,
+			String districtName, String imageUrl, Double deliveryCost, String estimateDeliveryTime, String addressDesc,
 			Set<Rating> ratings, Set<Favouries> favourieses, Set<RestaurantComment> restaurantComments,
 			Set<RestaurantAttribute> restaurantAttributes, Set<RestaurantPaymentProvider> restaurantPaymentProviders,
 			Set<Order> orders, Set<RestaurantCategory> restaurantCategories, Set<UserRestaurant> userRestaurants,
@@ -176,7 +176,7 @@ public class Restaurant implements java.io.Serializable {
 		this.addressLine = addressLine;
 	}
 
-	@Column(name = "latitude", precision = 22, scale = 0)
+	@Column(name = "latitude", precision = 22, scale = 10)
 	public Double getLatitude() {
 		return this.latitude;
 	}
@@ -185,7 +185,7 @@ public class Restaurant implements java.io.Serializable {
 		this.latitude = latitude;
 	}
 
-	@Column(name = "longitude", precision = 22, scale = 0)
+	@Column(name = "longitude", precision = 22, scale = 10)
 	public Double getLongitude() {
 		return this.longitude;
 	}
@@ -313,12 +313,12 @@ public class Restaurant implements java.io.Serializable {
 		this.sortOrder = sortOrder;
 	}
 
-	@Column(name = "min_price", precision = 10, scale = 0)
-	public Long getMinPrice() {
+	@Column(name = "min_price", precision = 10, scale = 2)
+	public Double getMinPrice() {
 		return this.minPrice;
 	}
 
-	public void setMinPrice(Long minPrice) {
+	public void setMinPrice(Double minPrice) {
 		this.minPrice = minPrice;
 	}
 
@@ -349,12 +349,12 @@ public class Restaurant implements java.io.Serializable {
 		this.imageUrl = imageUrl;
 	}
 
-	@Column(name = "delivery_cost", precision = 10, scale = 0)
-	public Long getDeliveryCost() {
+	@Column(name = "delivery_cost", precision = 10, scale = 2)
+	public Double getDeliveryCost() {
 		return this.deliveryCost;
 	}
 
-	public void setDeliveryCost(Long deliveryCost) {
+	public void setDeliveryCost(Double deliveryCost) {
 		this.deliveryCost = deliveryCost;
 	}
 

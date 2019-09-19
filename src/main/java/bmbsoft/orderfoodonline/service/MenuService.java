@@ -1,11 +1,7 @@
 package bmbsoft.orderfoodonline.service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -206,7 +202,7 @@ public class MenuService {
 
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 
 		List<Menu> res = menuDAO.getAll(1, 0, null, Constant.Status.Publish.getValue(), l.getCode(), restaurantId,
@@ -257,8 +253,10 @@ public class MenuService {
 							milr.setPriceRateDisplay(priceConvert);
 							milr.setCurrencyRate(cur.getRate());
 							milr.setSymbolLeft(cur.getSymbolLeft());
-							milr.setPriceRate(mi.getPrice() * (long) cur.getRate());
-
+							milr.setPriceRate(mi.getPrice() * cur.getRate());
+							milr.setAvailable(checkItemAvailable(mi.getAvailableMonday(), mi.getAvailableTuesday(), mi.getAvailableWednesday(),
+							mi.getAvailableThursday(), mi.getAvailableFriday(), mi.getAvailableSaturday(), mi.getAvailableSunday()));
+							milr.setOutOfStock(mi.getOutOfStock());
 							// get menu extra
 							Set<MenuExtraItem> smei = mi.getMenuExtraItems();
 							List<MenuExtraItemLiteResponse> lmeilr = new ArrayList<>();
@@ -286,12 +284,12 @@ public class MenuService {
 
 											ExtraItemLiteResponse eilr = new ExtraItemLiteResponse();
 											eilr.setExtraItemId(se.getExtraItemId());
-											long p = se.getPrice() == null ? 0 : se.getPrice();
+											Double p = se.getPrice() == null ? 0 : se.getPrice();
 											eilr.setPrice(p);
 											String exPrice = CommonHelper.formatDecimal(p * cur.getRate(), l.getCode(),
 													cur.getCode());
 											eilr.setPriceRateDisplay(exPrice);
-											eilr.setPriceRate(p * (long) cur.getRate());
+											eilr.setPriceRate(p * cur.getRate());
 
 											HashMap<String, String> exNames = languageService
 													.hashMapTranslate1(se.getContentDefinition(), l);
@@ -325,5 +323,20 @@ public class MenuService {
 			return mr;
 		}
 		return null;
+	}
+
+	private boolean checkItemAvailable(boolean mon, boolean tue, boolean wed, boolean thu, boolean fri, boolean sat, boolean sun) {
+		LocalDate localDate = LocalDate.now();
+		boolean available = true;
+		switch (localDate.getDayOfWeek()) {
+			case MONDAY: available = mon; break;
+			case TUESDAY: available = tue; break;
+			case WEDNESDAY: available = wed; break;
+			case THURSDAY: available = thu; break;
+			case FRIDAY: available = fri; break;
+			case SATURDAY: available = sat; break;
+			case SUNDAY: available = sun; break;
+		}
+		return available;
 	}
 }

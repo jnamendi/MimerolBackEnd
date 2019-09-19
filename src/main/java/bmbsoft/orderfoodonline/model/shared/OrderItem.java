@@ -1,40 +1,37 @@
 package bmbsoft.orderfoodonline.model.shared;
 
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
-
-import bmbsoft.orderfoodonline.model.OrderLineItemRequest;
+import java.util.List;
 
 public class OrderItem {
 	@NotNull(message = "totalSubPrice is required")
-	private Long totalSubPrice;
+	private Double totalSubPrice;
 	@NotNull(message = "taxTotal is required")
-	private Long taxTotal;
+	private Double taxTotal;
 	@NotNull(message = "totalPrice is required")
-	private Long totalPrice;
+	private Double totalPrice;
 
-	public Long getTotalSubPrice() {
+	public Double getTotalSubPrice() {
 		return totalSubPrice;
 	}
 
-	public void setTotalSubPrice(Long totalSubPrice) {
+	public void setTotalSubPrice(Double totalSubPrice) {
 		this.totalSubPrice = totalSubPrice;
 	}
 
-	public Long getTaxTotal() {
+	public Double getTaxTotal() {
 		return taxTotal;
 	}
 
-	public void setTaxTotal(Long taxTotal) {
+	public void setTaxTotal(Double taxTotal) {
 		this.taxTotal = taxTotal;
 	}
 
-	public Long getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 

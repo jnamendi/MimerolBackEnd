@@ -1,7 +1,5 @@
 package bmbsoft.orderfoodonline.model.shared;
 
-import java.util.Date;
-
 public class CurrencyResponse {
 	 
 	private Long currencyId;
@@ -10,7 +8,7 @@ public class CurrencyResponse {
 	private String symbolLeft;
 	private String symbolRight; 
 	private Long roundDecimal;
-	private float rate;
+	private Double rate;
 	
 	public Long getCurrencyId() {
 		return currencyId;
@@ -48,10 +46,10 @@ public class CurrencyResponse {
 	public void setRoundDecimal(Long roundDecimal) {
 		this.roundDecimal = roundDecimal;
 	}
-	public float getRate() {
+	public Double getRate() {
 		return rate;
 	}
-	public void setRate(float rate) {
+	public void setRate(Double rate) {
 		this.rate = rate;
 	}  
 }

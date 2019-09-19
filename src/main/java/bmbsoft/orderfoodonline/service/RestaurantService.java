@@ -124,14 +124,14 @@ public class RestaurantService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 		List<Restaurant> restaurants = restaurantDAO.getByDistrict(req.getLanguageCode(), key);
 		RestaurantResponse rr = new RestaurantResponse();
 
 		List<RestaurantViewModel> crvm = new LinkedList<>();
 		List<RestaurantCategoryViewModel> rescat = new ArrayList<>();
-		HashMap<String, Float> rankPrice = new HashMap<>();
+		HashMap<String, Double> rankPrice = new HashMap<>();
 
 		if (restaurants != null && restaurants.size() > 0) {
 
@@ -153,7 +153,7 @@ public class RestaurantService {
 				vm.setStatus(r.getStatus());
 				vm.setSortOrder(r.getSortOrder());
 				vm.setCreatedDate(r.getCreatedDate());
-				vm.setMinPrice(r.getMinPrice() * (long) cur.getRate());
+				vm.setMinPrice(r.getMinPrice() * cur.getRate());
 				vm.setImageUrl(r.getImageUrl());
 				vm.setCurrencyRate(cur.getRate());
 				vm.setSymbolLeft(cur.getSymbolLeft());
@@ -247,7 +247,7 @@ public class RestaurantService {
 							p.setDesc(desc);
 							p.setStartDate(pr.getStartDate());
 							p.setEndDate(pr.getEndDate());
-							p.setMinOrder(pr.getMinOrder() * (long) cur.getRate());
+							p.setMinOrder(pr.getMinOrder() * cur.getRate());
 						}
 						p.setCode(s.getCode());
 						lplr.add(p);
@@ -284,8 +284,8 @@ public class RestaurantService {
 		if (minPrice != null && maxPrice != null) {
 			rankPrice.put("minPriceRate", minPrice.getMinPrice() * cur.getRate());
 			rankPrice.put("maxPriceRate", maxPrice.getMinPrice() * cur.getRate());
-			rankPrice.put("minPrice", (float) minPrice.getMinPrice());
-			rankPrice.put("maxPrice", (float) maxPrice.getMinPrice());
+			rankPrice.put("minPrice",  minPrice.getMinPrice());
+			rankPrice.put("maxPrice", maxPrice.getMinPrice());
 			rr.setRankPrice(rankPrice);
 		}
 
@@ -405,7 +405,7 @@ public class RestaurantService {
 		Double rating = restaurantCommentService.getRatingForRestaurant(res.getRestaurantId());
 		List<RestaurantWorkTimeModel> rwt = restaurantWorkTimeService.getByRestaurantId(res.getRestaurantId());
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 		c.setRestaurantId(res.getRestaurantId());
 		c.setName(res.getName());
@@ -416,7 +416,7 @@ public class RestaurantService {
 		c.setPhone1(res.getPhone1());
 		c.setUrlSlug(res.getUrlSlug());
 		c.setImageUrl(res.getImageUrl());
-		c.setMinPrice(res.getMinPrice() * (long) cur.getRate());
+		c.setMinPrice(res.getMinPrice() * cur.getRate());
 		c.setEstTime(res.getEstimateDeliveryTime());
 		c.setDeliveryCost(res.getDeliveryCost());
 		c.setStatus(res.getStatus());
@@ -493,7 +493,7 @@ public class RestaurantService {
 					p.setDesc(desc);
 					p.setStartDate(pr.getStartDate());
 					p.setEndDate(pr.getEndDate());
-					p.setMinOrder(pr.getMinOrder() * (long) cur.getRate());
+					p.setMinOrder(pr.getMinOrder() * cur.getRate());
 				}
 				p.setCode(s.getCode());
 				lplr.add(p);

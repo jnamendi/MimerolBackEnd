@@ -29,14 +29,14 @@ public class Order implements java.io.Serializable {
 	private User user;
 	private String restaurantName;
 	private Date orderDate;
-	private Long totalPrice;
+	private Double totalPrice;
 	private Integer status;
 	private String currencyCode;
-	private Long taxTotal;
+	private Double taxTotal;
 	private String orderReq;
 	private String checkSum;
 	private String orderCode;
-	private Long paymentWith;
+	private Double paymentWith;
 	private String reasonReject;
 	private String reasonCancel;
 	private Set<OrderInfo> orderInfos = new HashSet<OrderInfo>(0);
@@ -50,7 +50,7 @@ public class Order implements java.io.Serializable {
 		this.restaurant = restaurant;
 	}
 
-	public Order(Long orderId, Restaurant restaurant, User user, String restaurantName, Date orderDate, Long totalPrice, Integer status, String currencyCode, Long taxTotal, String orderReq, String checkSum, String orderCode, Long paymentWith, String reasonReject, String reasonCancel, Set<OrderInfo> orderInfos, Set<OrderPayment> orderPayments, Set<OrderLineItem> orderLineItems) {
+	public Order(Long orderId, Restaurant restaurant, User user, String restaurantName, Date orderDate, Double totalPrice, Integer status, String currencyCode, Double taxTotal, String orderReq, String checkSum, String orderCode, Double paymentWith, String reasonReject, String reasonCancel, Set<OrderInfo> orderInfos, Set<OrderPayment> orderPayments, Set<OrderLineItem> orderLineItems) {
 		this.orderId = orderId;
 		this.restaurant = restaurant;
 		this.user = user;
@@ -122,12 +122,12 @@ public class Order implements java.io.Serializable {
 		this.orderDate = orderDate;
 	}
 
-	@Column(name = "total_price", precision = 10, scale = 0)
-	public Long getTotalPrice() {
+	@Column(name = "total_price", precision = 10, scale = 2)
+	public Double getTotalPrice() {
 		return this.totalPrice;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -149,12 +149,12 @@ public class Order implements java.io.Serializable {
 		this.currencyCode = currencyCode;
 	}
 
-	@Column(name = "tax_total", precision = 10, scale = 0)
-	public Long getTaxTotal() {
+	@Column(name = "tax_total", precision = 10, scale = 2)
+	public Double getTaxTotal() {
 		return this.taxTotal;
 	}
 
-	public void setTaxTotal(Long taxTotal) {
+	public void setTaxTotal(Double taxTotal) {
 		this.taxTotal = taxTotal;
 	}
 
@@ -185,12 +185,12 @@ public class Order implements java.io.Serializable {
 		this.orderCode = orderCode;
 	}
 
-	@Column(name = "payment_with", precision = 10, scale = 0)
-	public Long getPaymentWith() {
+	@Column(name = "payment_with", precision = 10, scale = 2)
+	public Double getPaymentWith() {
 		return this.paymentWith;
 	}
 
-	public void setPaymentWith(Long paymentWith) {
+	public void setPaymentWith(Double paymentWith) {
 		this.paymentWith = paymentWith;
 	}
 

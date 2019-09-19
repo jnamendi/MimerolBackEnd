@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class ExtraItemResponse {
 
 	private Long extraItemId;
-	private Long price;
+	private Double price;
 	private List<LanguageViewModel> extraItem;
 
 	public Long getExtraItemId() {
@@ -19,11 +19,11 @@ public class ExtraItemResponse {
 		this.extraItemId = extraItemId;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 

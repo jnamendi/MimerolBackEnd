@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(value = Include.NON_NULL)
 public class ExtraItemLiteResponse {
 	private Long extraItemId;
-	private Long price;
-	private Long priceRate;
+	private Double price;
+	private Double priceRate;
 	private String name;
+	private String priceRateDisplay;
 
 	public Long getExtraItemId() {
 		return extraItemId;
@@ -18,19 +19,19 @@ public class ExtraItemLiteResponse {
 		this.extraItemId = extraItemId;
 	}
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public Long getPriceRate() {
+	public Double getPriceRate() {
 		return priceRate;
 	}
 
-	public void setPriceRate(Long priceRate) {
+	public void setPriceRate(Double priceRate) {
 		this.priceRate = priceRate;
 	}
 
@@ -49,6 +50,4 @@ public class ExtraItemLiteResponse {
 	public void setPriceRateDisplay(String priceRateDisplay) {
 		this.priceRateDisplay = priceRateDisplay;
 	}
-
-	private String priceRateDisplay;
 }

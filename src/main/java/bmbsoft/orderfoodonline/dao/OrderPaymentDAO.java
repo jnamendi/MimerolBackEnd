@@ -207,7 +207,7 @@ public class OrderPaymentDAO {
 						isOk = false;
 						msg = "Menu item is not exist.";
 					}
-					oli.setUnitPrice((long) ol.getPriceRate());
+					oli.setUnitPrice(ol.getPriceRate());
 					oli.setQuantity(ol.getQuantity());
 					oli.setStatus(Constant.Status.Publish.getValue());
 					oli.setMenuItemName(ol.getMenuItemName());

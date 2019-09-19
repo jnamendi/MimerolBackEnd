@@ -24,20 +24,20 @@ public class OrderLineItem implements java.io.Serializable {
 	private Long orderLineItemId;
 	private MenuItem menuItem;
 	private Order order;
-	private Long unitPrice;
+	private Double unitPrice;
 	private Integer quantity;
 	private String createdBy;
 	private Integer status;
 	private String menuItemName;
-	private Long discountTotal;
-	private Long total;
+	private Double discountTotal;
+	private Double total;
 	private Date createdDate;
 
 	public OrderLineItem() {
 	}
 
-	public OrderLineItem(MenuItem menuItem, Order order, Long unitPrice, Integer quantity, String createdBy,
-			Integer status, String menuItemName, Long discountTotal, Long total, Date createdDate) {
+	public OrderLineItem(MenuItem menuItem, Order order, Double unitPrice, Integer quantity, String createdBy,
+			Integer status, String menuItemName, Double discountTotal, Double total, Date createdDate) {
 		this.menuItem = menuItem;
 		this.order = order;
 		this.unitPrice = unitPrice;
@@ -82,12 +82,12 @@ public class OrderLineItem implements java.io.Serializable {
 		this.order = order;
 	}
 
-	@Column(name = "unit_price", precision = 10, scale = 0)
-	public Long getUnitPrice() {
+	@Column(name = "unit_price", precision = 10, scale = 2)
+	public Double getUnitPrice() {
 		return this.unitPrice;
 	}
 
-	public void setUnitPrice(Long unitPrice) {
+	public void setUnitPrice(Double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
@@ -127,21 +127,21 @@ public class OrderLineItem implements java.io.Serializable {
 		this.menuItemName = menuItemName;
 	}
 
-	@Column(name = "discount_total", precision = 10, scale = 0)
-	public Long getDiscountTotal() {
+	@Column(name = "discount_total", precision = 10, scale = 2)
+	public Double getDiscountTotal() {
 		return this.discountTotal;
 	}
 
-	public void setDiscountTotal(Long discountTotal) {
+	public void setDiscountTotal(Double discountTotal) {
 		this.discountTotal = discountTotal;
 	}
 
-	@Column(name = "total", precision = 10, scale = 0)
-	public Long getTotal() {
+	@Column(name = "total", precision = 10, scale = 2)
+	public Double getTotal() {
 		return this.total;
 	}
 
-	public void setTotal(Long total) {
+	public void setTotal(Double total) {
 		this.total = total;
 	}
 

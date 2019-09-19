@@ -87,7 +87,7 @@ public class RestaurantComment implements java.io.Serializable {
 		this.user = user;
 	}
 
-	@Column(name = "star_per_mark", precision = 22, scale = 0)
+	@Column(name = "star_per_mark", precision = 22, scale = 2)
 	public Double getStarPerMark() {
 		return this.starPerMark;
 	}
@@ -96,7 +96,7 @@ public class RestaurantComment implements java.io.Serializable {
 		this.starPerMark = starPerMark;
 	}
 
-	@Column(name = "star_quality", precision = 22, scale = 0)
+	@Column(name = "star_quality", precision = 22, scale = 2)
 	public Double getStarQuality() {
 		return this.starQuality;
 	}
@@ -105,7 +105,7 @@ public class RestaurantComment implements java.io.Serializable {
 		this.starQuality = starQuality;
 	}
 
-	@Column(name = "star_ship", precision = 22, scale = 0)
+	@Column(name = "star_ship", precision = 22, scale = 2)
 	public Double getStarShip() {
 		return this.starShip;
 	}

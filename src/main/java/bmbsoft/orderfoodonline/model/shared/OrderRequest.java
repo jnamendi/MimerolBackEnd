@@ -8,7 +8,7 @@ public class OrderRequest {
 	private Long orderId;
 	private Long restaurantId;
 	private Long userId;
-	private long taxTotal; 
+	private Double taxTotal;
 	private String currencyCode;
 	
 	private List<OrderLineItemRequest> orderLineItemsRequest;
@@ -29,19 +29,19 @@ public class OrderRequest {
 		this.userId = userId;
 	}
  
-	public Long getTotalPrice() {
+	public Double getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Long totalPrice) {
+	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
-	public long getTaxTotal() {
+	public Double getTaxTotal() {
 		return taxTotal;
 	}
 
-	public void setTaxTotal(long taxTotal) {
+	public void setTaxTotal(Double taxTotal) {
 		this.taxTotal = taxTotal;
 	}
 
@@ -69,5 +69,5 @@ public class OrderRequest {
 		this.orderId = orderId;
 	}
 
-	private Long totalPrice;
+	private Double totalPrice;
 }

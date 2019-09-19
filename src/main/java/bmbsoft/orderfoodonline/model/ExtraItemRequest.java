@@ -6,15 +6,15 @@ import javax.validation.constraints.NotNull;
 
 public class ExtraItemRequest {
 	@NotNull(message = "price is field required.")
-	private Long price;
+	private Double price;
 	@NotNull(message = "extraItem is field required.")
 	private List<LanguageViewModel> extraItem;
 
-	public Long getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Long price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 

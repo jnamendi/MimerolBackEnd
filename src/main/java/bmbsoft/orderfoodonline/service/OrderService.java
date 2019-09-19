@@ -110,7 +110,7 @@ public class OrderService {
 			// currency
 			CurrencyResponse cur = currencyDAO.getByDefault();
 			if (cur == null) {
-				cur.setRate(1);
+				cur.setRate(1d);
 			}
 			return toModelResponse(o, cur.getSymbolLeft());
 		} catch (Exception e) {
@@ -194,7 +194,7 @@ public class OrderService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 
 		if (ods != null && ods.size() > 0) {
@@ -214,7 +214,7 @@ public class OrderService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 
 		if (ods != null && ods.size() > 0) {
@@ -235,7 +235,7 @@ public class OrderService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 
 		if (ods != null && ods.size() > 0) {
@@ -400,7 +400,7 @@ public class OrderService {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
 		if (cur == null) {
-			cur.setRate(1);
+			cur.setRate(1d);
 		}
 
 		List<OrderResponse> lmr = new LinkedList<>();
