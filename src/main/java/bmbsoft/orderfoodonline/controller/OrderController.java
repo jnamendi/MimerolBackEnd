@@ -231,7 +231,7 @@ public class OrderController extends BaseController {
 						vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");
 						vars.put("guestPay", req.getPaymentWith() == null ? "" : req.getPaymentWith().toString());
 						vars.put("refunds", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
-                                String.valueOf(req.getPaymentWith() - req.getOrderItem().getTotalPrice()) : "");
+                                String.valueOf(Math.round((req.getPaymentWith() - req.getOrderItem().getTotalPrice())*100) /100.0) : "");
 						vars.put("frontendUrl", frontendURL);
 
 						StringBuilder sb = new StringBuilder();
