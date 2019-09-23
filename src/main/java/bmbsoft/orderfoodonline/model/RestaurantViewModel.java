@@ -43,6 +43,8 @@ public class RestaurantViewModel {
 	private Long cityId;
 	private Integer typeReceive;
 	private List<Long> workArea;
+	private Long zoneId;
+	private String zone;
 
 	public Integer getTypeReceive() {
 		return typeReceive;
@@ -415,5 +417,21 @@ public class RestaurantViewModel {
 
 	public void setWorkArea(List<Long> workArea) {
 		this.workArea = workArea;
+	}
+
+	public Long getZoneId() {
+		return zoneId;
+	}
+
+	public void setZoneId(Long zoneId) {
+		this.zoneId = zoneId;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
 	}
 }

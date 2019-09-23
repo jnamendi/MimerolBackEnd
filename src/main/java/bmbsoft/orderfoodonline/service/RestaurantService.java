@@ -348,6 +348,12 @@ public class RestaurantService {
 				c.setCity(city.getCityName());
 			}
 		}
+
+		Zone zone = res.getZone();
+		if(zone != null) {
+			c.setZone(zone.getName());
+			c.setZoneId(zone.getZoneId());
+		}
 		c.setDistrict(res.getDistrictName());
 
 		c.setAddressDesc(res.getAddressDesc());
