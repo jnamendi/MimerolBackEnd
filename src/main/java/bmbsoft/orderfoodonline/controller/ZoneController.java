@@ -1,13 +1,7 @@
 package bmbsoft.orderfoodonline.controller;
 
-import bmbsoft.orderfoodonline.model.DistrictViewModel;
 import bmbsoft.orderfoodonline.model.ZoneViewModel;
-import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGet;
-import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.service.CityService;
-import bmbsoft.orderfoodonline.service.DistrictService;
-import bmbsoft.orderfoodonline.service.RestaurantAreaService;
 import bmbsoft.orderfoodonline.service.ZoneService;
 import bmbsoft.orderfoodonline.util.Constant;
 import org.slf4j.Logger;

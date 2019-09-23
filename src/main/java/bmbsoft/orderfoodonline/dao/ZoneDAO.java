@@ -36,8 +36,7 @@ public class ZoneDAO {
     public List<Zone> getAll() {
         Session s = this.sessionFactory.getCurrentSession();
         try {
-            List<Zone> cs = s.createQuery("FROM zone", Zone.class).getResultList();
-            return cs;
+            return s.createQuery("FROM Zone", Zone.class).getResultList();
         } catch (Exception e) {
             logger.error(e.getMessage());
             return null;

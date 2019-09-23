@@ -1,23 +1,6 @@
 package bmbsoft.orderfoodonline.controller;
 
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import bmbsoft.orderfoodonline.entities.ContactUs;
 import bmbsoft.orderfoodonline.entities.Country;
-import bmbsoft.orderfoodonline.model.ContactUsViewModel;
 import bmbsoft.orderfoodonline.model.CountryViewModel;
 import bmbsoft.orderfoodonline.model.shared.DeleteManyRequest;
 import bmbsoft.orderfoodonline.response.Data;
@@ -25,6 +8,14 @@ import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.service.CountryService;
 import bmbsoft.orderfoodonline.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
