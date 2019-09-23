@@ -68,6 +68,8 @@ public class RestaurantRequest {
  
 	private Long districtId;
 
+	private Long zoneId;
+
 	public List<Long> getUserIds() {
 		return userIds;
 	}
@@ -290,5 +292,13 @@ public class RestaurantRequest {
 
 	public void setWorkArea(List<Long> workArea) {
 		this.workArea = workArea;
+	}
+
+	public Long getZoneId() {
+		return zoneId;
+	}
+
+	public void setZoneId(Long zoneId) {
+		this.zoneId = zoneId;
 	}
 }

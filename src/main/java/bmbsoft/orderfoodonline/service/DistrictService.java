@@ -116,7 +116,7 @@ public class DistrictService {
 		return district;
 	}
 
-	private DistrictViewModel convertEntityToModel(final District district) {
+	public DistrictViewModel convertEntityToModel(final District district) {
 		if (null == district)
 			return null;
 		DistrictViewModel model = new DistrictViewModel();

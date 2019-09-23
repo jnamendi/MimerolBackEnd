@@ -3,6 +3,8 @@ package bmbsoft.orderfoodonline.controller;
 import java.util.Date;
 import java.util.List;
 
+import bmbsoft.orderfoodonline.entities.Zone;
+import bmbsoft.orderfoodonline.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +29,6 @@ import bmbsoft.orderfoodonline.model.shared.DeleteManyRequest;
 import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.service.AddressService;
-import bmbsoft.orderfoodonline.service.DistrictService;
-import bmbsoft.orderfoodonline.service.ResidenceTypeService;
-import bmbsoft.orderfoodonline.service.UserService;
 import bmbsoft.orderfoodonline.util.Constant;
 
 @RestController
@@ -46,6 +44,8 @@ public class AddressController extends BaseController {
 	UserService userService;
 	@Autowired
 	DistrictService districtService;
+	@Autowired
+	ZoneService zoneService;
 
 	@RequestMapping(value = "/api/address/getAll/{pageIndex}/{pageSize}", method = RequestMethod.GET)
 	public ResponseEntity<?> getAll(@PathVariable int pageIndex, @PathVariable int pageSize,
@@ -58,18 +58,18 @@ public class AddressController extends BaseController {
 				responseGetPaging.setStatus(7);
 				responseGetPaging.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				responseGetPaging.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGetPaging, HttpStatus.BAD_REQUEST);
 			}
 			responseGetPaging = this.addressService.getAll(pageIndex, pageSize, title, status);
 			if (responseGetPaging.getStatus() != 0)
-				return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.OK);
-			return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.OK);
+				return new ResponseEntity<>(responseGetPaging, HttpStatus.OK);
+			return new ResponseEntity<>(responseGetPaging, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			responseGetPaging.setStatus(1);
 			responseGetPaging.setMessage(e.toString());
 			responseGetPaging.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
-			return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGetPaging, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class AddressController extends BaseController {
 				responseGetPaging.setStatus(7);
 				responseGetPaging.setMessage("Field userId is required");
 				responseGetPaging.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGetPaging, HttpStatus.BAD_REQUEST);
 			}
 
 			vm = this.addressService.getByUserId(userId);
@@ -98,7 +98,7 @@ public class AddressController extends BaseController {
 				responseGetPaging.setStatus(8);
 				responseGetPaging.setMessage("File not found.");
 				responseGetPaging.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-				return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGetPaging, HttpStatus.BAD_REQUEST);
 			}
 			Data rsm = new Data();
 			rsm.setTotalCount(vm.size());
@@ -107,14 +107,14 @@ public class AddressController extends BaseController {
 			rsm.setData(vm);
 			responseGetPaging.setStatus(0);
 			responseGetPaging.setContent(rsm);
-			return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.OK);
+			return new ResponseEntity<>(responseGetPaging, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			responseGetPaging.setStatus(1);
 			responseGetPaging.setMessage(e.toString());
 			responseGetPaging.setContent(null);
 			responseGetPaging.setErrorType("EXCEPTION");
-			return new ResponseEntity<ResponseGetPaging>(responseGetPaging, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGetPaging, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -127,24 +127,24 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(7);
 				responseGet.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				responseGet.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			AddressViewModel c = addressService.getById(id);
 			if (null == c) {
 				responseGet.setStatus(8);
 				responseGet.setMessage("Address invalid.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			responseGet.setStatus(0);
 			responseGet.setContent(c);
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.OK);
+			return new ResponseEntity<>(responseGet, HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.toString());
 			responseGet.setStatus(1);
 			responseGet.setMessage(e.toString());
 			responseGet.setErrorType("EXCEPTION");
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -157,20 +157,20 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(7);
 				responseGet.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				responseGet.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			if (result.hasErrors()) {
 				responseGet.setStatus(7);
 				responseGet.setMessage(result.getFieldError().getDefaultMessage());
 				responseGet.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			User u = userService.findById(req.getUserId());
 			if (u == null) {
 				responseGet.setStatus(7);
 				responseGet.setMessage("User invalid.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			// String dCode = CommonHelper.toPrettyURL(req.getDistrict());
 			// String cCode = CommonHelper.toPrettyURL(req.getCity());
@@ -187,33 +187,36 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(7);
 				responseGet.setMessage("District invalid.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
+
+			Zone zone = zoneService.getBaseById(req.getZone());
+
 			Address address = new Address();
 			address.setCreatedDate(new Date());
 			address.setDistrict(dt);
 			address.setUser(u);
 			address.setPhoneNumber(req.getPhoneNumber());
-			address.setWard(req.getWard());
+			address.setZone(zone);
 			address.setAddress(req.getAddress());
 			address.setIsStatus(Constant.Status.Publish.getValue());
 			address.setAddressDesc(req.getAddressDesc());
 
-			if (addressService.create(address) == true) {
+			if (addressService.create(address)) {
 				responseGet.setStatus(0);
 				responseGet.setMessage("save success.");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.OK);
+				return new ResponseEntity<>(responseGet, HttpStatus.OK);
 			}
 			responseGet.setStatus(1);
 			responseGet.setMessage("Error when process the data.");
 			responseGet.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			responseGet.setStatus(1);
 			responseGet.setMessage(e.toString());
 			responseGet.setErrorType("EXCEPTION");
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -227,13 +230,13 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(7);
 				responseGet.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				responseGet.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			if (result.hasErrors()) {
 				responseGet.setStatus(7);
 				responseGet.setMessage(result.getAllErrors().toString());
 				responseGet.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 
 			User u = userService.findById(req.getUserId());
@@ -241,14 +244,16 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(7);
 				responseGet.setMessage("User invalid.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			District dt = districtService.getBaseById(req.getDistrictId());
-			if (dt == null) {
+
+			Zone zone = zoneService.getBaseById(req.getZone());
+			if (zone == null) {
 				responseGet.setStatus(7);
-				responseGet.setMessage("District invalid.");
+				responseGet.setMessage("Zone invalid.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			// String dCode = CommonHelper.toPrettyURL(req.getDistrict());
 			// String cCode = CommonHelper.toPrettyURL(req.getCity());
@@ -266,14 +271,14 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(8);
 				responseGet.setMessage("Address invalid.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 
 			address.setCreatedDate(new Date());
 			address.setDistrict(dt);
 			address.setUser(u);
 			address.setPhoneNumber(req.getPhoneNumber());
-			address.setWard(req.getWard());
+			address.setZone(zone);
 			address.setAddress(req.getAddress());
 			address.setIsStatus(req.getStatus());
 			address.setAddressDesc(req.getAddressDesc());
@@ -281,18 +286,18 @@ public class AddressController extends BaseController {
 			if (addressService.update(address) == true) {
 				responseGet.setStatus(0);
 				responseGet.setMessage("update success.");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.OK);
+				return new ResponseEntity<>(responseGet, HttpStatus.OK);
 			}
 			responseGet.setStatus(1);
 			responseGet.setMessage("Error when process the data.");
 			responseGet.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			logger.error(e.toString());
 			responseGet.setStatus(1);
 			responseGet.setMessage(e.toString());
 			responseGet.setErrorType("EXCEPTION");
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -305,7 +310,7 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(7);
 				responseGet.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				responseGet.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 
 			Address c = this.addressService.getBaseById(id);
@@ -313,23 +318,23 @@ public class AddressController extends BaseController {
 				responseGet.setStatus(8);
 				responseGet.setMessage("Address not exists.");
 				responseGet.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 
 			if (addressService.delete(c)) {
 				responseGet.setStatus(0);
 				responseGet.setMessage("delete success.");
-				return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.OK);
+				return new ResponseEntity<>(responseGet, HttpStatus.OK);
 			}
 			responseGet.setStatus(1);
 			responseGet.setMessage("Error when process the data.");
 			responseGet.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
 			logger.error(e.toString());
 			responseGet.setStatus(1);
 			responseGet.setMessage(e.toString());
-			return new ResponseEntity<ResponseGet>(responseGet, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -344,14 +349,14 @@ public class AddressController extends BaseController {
 				rs.setStatus(7);
 				rs.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
 				rs.setMessage("Access Denied!");
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
 
 			if (cr == null || cr.getIds().length <= 0) {
 				rs.setStatus(7);
 				rs.setMessage("Could not found item.");
 				rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
-				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
 			StringBuilder s = new StringBuilder();
 			for (int i = 0; i < cr.getIds().length; i++) {
@@ -362,7 +367,7 @@ public class AddressController extends BaseController {
 					c.setModifiedDate(new Date());
 					addressService.update(c);
 				} else {
-					s.append("Could not found item: " + id);
+					s.append("Could not found item: ").append(id);
 				}
 			}
 			if (s.toString().isEmpty()) {
@@ -371,19 +376,19 @@ public class AddressController extends BaseController {
 				rs.setErrorType(Constant.ErrorTypeCommon.OK);
 				httpStatus = HttpStatus.OK;
 
-				return new ResponseEntity<ResponseGet>(rs, httpStatus);
+				return new ResponseEntity<>(rs, httpStatus);
 			}
 			rs.setStatus(6);
 			rs.setMessage(s.toString());
 			rs.setErrorType(Constant.ErrorTypeCommon.DELETE_MANY);
 			httpStatus = HttpStatus.OK;
 
-			return new ResponseEntity<ResponseGet>(rs, httpStatus);
+			return new ResponseEntity<>(rs, httpStatus);
 		} catch (Exception e) {
 			logger.info(e.toString());
 			rs.setStatus(1);
 			rs.setMessage(e.toString());
 		}
-		return new ResponseEntity<ResponseGet>(rs, httpStatus);
+		return new ResponseEntity<>(rs, httpStatus);
 	}
 }

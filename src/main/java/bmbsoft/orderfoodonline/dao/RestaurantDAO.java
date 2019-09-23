@@ -59,6 +59,9 @@ public class RestaurantDAO {
 	DistrictService ds;
 
 	@Autowired
+	ZoneService zs;
+
+	@Autowired
 	private RestaurantWorkTimeService restaurantWorkTimeService;
 
 	@Autowired
@@ -89,15 +92,22 @@ public class RestaurantDAO {
 
 				District district = ds.getBaseById(vm.getDistrictId());
 
+				Zone zone = zs.getBaseById(vm.getZoneId());
+
 				if (district == null) {
 
 					return "District is null";
+				}
+				if (zone == null) {
+
+					return "Zone is null";
 				}
 
 				Restaurant res = this.modelToEntity(vm, model);
 				Long resId = res.getRestaurantId();
 
 				res.setDistrict(district);
+				res.setZone(zone);
 				res.setDistrictName(district.getName());
 
 				City city = district.getCity();
@@ -264,10 +274,15 @@ public class RestaurantDAO {
 				return msg;
 			} else {
 				District district = ds.getBaseById(vm.getDistrictId());
+				Zone zone = zs.getBaseById(vm.getZoneId());
 
 				if (district == null) {
 
 					return "District is null";
+				}
+				if (zone == null) {
+
+					return "Zone is null";
 				}
 
 				// content defi
@@ -278,6 +293,7 @@ public class RestaurantDAO {
 				Restaurant res = this.modelToEntity(vm, null);
 				res.setDistrict(district);
 				res.setDistrictName(district.getName());
+				res.setZone(zone);
 
 				City city = district.getCity();
 				if (city != null) {

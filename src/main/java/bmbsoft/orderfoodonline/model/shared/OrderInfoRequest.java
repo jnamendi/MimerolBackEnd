@@ -54,6 +54,7 @@ public class OrderInfoRequest {
 	private String district;
 	private String time;
 	private String remark;
+	private String zone;
 
 	public String getAddress() {
 		return address;
@@ -93,5 +94,13 @@ public class OrderInfoRequest {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
 	}
 }

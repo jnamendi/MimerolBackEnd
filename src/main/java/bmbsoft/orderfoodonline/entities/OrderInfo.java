@@ -30,12 +30,13 @@ public class OrderInfo implements java.io.Serializable {
 	private String time;
 	private String remark;
 	private String addressDesc;
+	private String zone;
 
 	public OrderInfo() {
 	}
 
 	public OrderInfo(Order order, String infoName, String infoEmail, String infoNumber, String companyName,
-			String address, String city, String district, String time, String remark, String addressDesc) {
+			String address, String city, String district, String time, String remark, String addressDesc, String zone) {
 		this.order = order;
 		this.infoName = infoName;
 		this.infoEmail = infoEmail;
@@ -47,6 +48,7 @@ public class OrderInfo implements java.io.Serializable {
 		this.time = time;
 		this.remark = remark;
 		this.addressDesc = addressDesc;
+		this.zone = zone;
 	}
 
 	@Id
@@ -161,4 +163,12 @@ public class OrderInfo implements java.io.Serializable {
 		this.addressDesc = addressDesc;
 	}
 
+	@Column(name = "zone")
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
 }

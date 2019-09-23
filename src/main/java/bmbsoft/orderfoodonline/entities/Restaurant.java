@@ -27,6 +27,7 @@ public class Restaurant implements java.io.Serializable {
 	private Long restaurantId;
 	private ContentDefinition contentDefinition;
 	private District district;
+	private Zone zone;
 	private String name;
 	private String slogan;
 	private String addressLine;
@@ -68,17 +69,11 @@ public class Restaurant implements java.io.Serializable {
 	public Restaurant() {
 	}
 
-	public Restaurant(ContentDefinition contentDefinition, District district, String name, String slogan,
-			String addressLine, Double latitude, Double longitude, String openTime, String closeTime, String phone1,
-			String phone2, Integer status, String urlSlug, Date createdDate, String createdBy, Date modifiedDate,
-			String modifiedBy, String shipArea, String keySearch, Integer sortOrder, Double minPrice, String city,
-			String districtName, String imageUrl, Double deliveryCost, String estimateDeliveryTime, String addressDesc,
-			Set<Rating> ratings, Set<Favouries> favourieses, Set<RestaurantComment> restaurantComments,
-			Set<RestaurantAttribute> restaurantAttributes, Set<RestaurantPaymentProvider> restaurantPaymentProviders,
-			Set<Order> orders, Set<RestaurantCategory> restaurantCategories, Set<UserRestaurant> userRestaurants,
-			Set<Menu> menus, Set<PromotionLineitem> promotionLineitems, Set<RestaurantInfo> restaurantInfos) {
+	public Restaurant(Long restaurantId, ContentDefinition contentDefinition, District district, Zone zone, String name, String slogan, String addressLine, Double latitude, Double longitude, String openTime, String closeTime, String phone1, String phone2, Integer status, String urlSlug, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy, String shipArea, String keySearch, Integer sortOrder, Double minPrice, String city, String districtName, String imageUrl, Double deliveryCost, String estimateDeliveryTime, String addressDesc, Integer typeReceive, Set<Rating> ratings, Set<Favouries> favourieses, Set<RestaurantComment> restaurantComments, Set<RestaurantAttribute> restaurantAttributes, Set<RestaurantPaymentProvider> restaurantPaymentProviders, Set<Order> orders, Set<RestaurantCategory> restaurantCategories, Set<UserRestaurant> userRestaurants, Set<Menu> menus, Set<PromotionLineitem> promotionLineitems, Set<RestaurantInfo> restaurantInfos) {
+		this.restaurantId = restaurantId;
 		this.contentDefinition = contentDefinition;
 		this.district = district;
+		this.zone = zone;
 		this.name = name;
 		this.slogan = slogan;
 		this.addressLine = addressLine;
@@ -104,6 +99,7 @@ public class Restaurant implements java.io.Serializable {
 		this.deliveryCost = deliveryCost;
 		this.estimateDeliveryTime = estimateDeliveryTime;
 		this.addressDesc = addressDesc;
+		this.typeReceive = typeReceive;
 		this.ratings = ratings;
 		this.favourieses = favourieses;
 		this.restaurantComments = restaurantComments;
@@ -147,6 +143,16 @@ public class Restaurant implements java.io.Serializable {
 
 	public void setDistrict(District district) {
 		this.district = district;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zoneId")
+	public Zone getZone() {
+		return zone;
+	}
+
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 
 	@Column(name = "name")

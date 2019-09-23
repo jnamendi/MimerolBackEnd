@@ -24,7 +24,7 @@ public class Address implements java.io.Serializable {
 	private Long addressId;
 	private District district;
 	private User user;
-	private String ward;
+	private Zone zone;
 	private String address;
 	private String emailAdd;
 	private String phoneNumber;
@@ -38,12 +38,12 @@ public class Address implements java.io.Serializable {
 	public Address() {
 	}
 
-	public Address(District district, User user, String ward, String address, String emailAdd, String phoneNumber,
+	public Address(District district, User user, Zone zone, String address, String emailAdd, String phoneNumber,
 			Integer isStatus, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy,
 			String addressDesc) {
 		this.district = district;
 		this.user = user;
-		this.ward = ward;
+		this.zone = zone;
 		this.address = address;
 		this.emailAdd = emailAdd;
 		this.phoneNumber = phoneNumber;
@@ -87,13 +87,14 @@ public class Address implements java.io.Serializable {
 		this.user = user;
 	}
 
-	@Column(name = "ward")
-	public String getWard() {
-		return this.ward;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ward")
+	public Zone getZone() {
+		return zone;
 	}
 
-	public void setWard(String ward) {
-		this.ward = ward;
+	public void setZone(Zone zone) {
+		this.zone = zone;
 	}
 
 	@Column(name = "address", length = 200)

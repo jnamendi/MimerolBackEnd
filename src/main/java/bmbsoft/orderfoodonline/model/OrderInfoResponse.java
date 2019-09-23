@@ -12,6 +12,7 @@ public class OrderInfoResponse {
 	private String time;
 	private String remark;
 	private String addressDescription;
+	private String zone;
 
 	public String getInfoName() {
 		return infoName;
@@ -91,5 +92,13 @@ public class OrderInfoResponse {
 
 	public void setAddressDescription(String addressDescription) {
 		this.addressDescription = addressDescription;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
 	}
 }
