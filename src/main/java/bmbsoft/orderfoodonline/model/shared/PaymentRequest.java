@@ -19,6 +19,8 @@ public class PaymentRequest {
 	private String city;
 	private String district;
 	private Long districtId;
+	private String zone;
+	private Long zoneId;
 	private String time;
 	private String currencyCode;
 	private OrderItem orderItem;
@@ -255,4 +257,19 @@ public class PaymentRequest {
 		this.discount = discount;
 	}
 
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	public Long getZoneId() {
+		return zoneId;
+	}
+
+	public void setZoneId(Long zoneId) {
+		this.zoneId = zoneId;
+	}
 }

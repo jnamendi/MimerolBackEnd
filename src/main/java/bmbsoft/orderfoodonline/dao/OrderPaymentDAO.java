@@ -68,7 +68,7 @@ public class OrderPaymentDAO {
 	private AddressService ads;
 
 	@Autowired
-	private DistrictService dss;
+	private ZoneService zs;
 
 	Gson mapper = new Gson();
 
@@ -260,10 +260,11 @@ public class OrderPaymentDAO {
 				Address add = ads.getBaseById(req.getAddressId());
 				if (add != null) {
 					oin.setAddress(add.getAddress());
-					District d = add.getDistrict();
-					if (d != null) {
-						oin.setDistrict(d.getName());
-						City c = d.getCity();
+					Zone z = add.getZone();
+					if (z != null) {
+						oin.setZone(z.getName());
+						oin.setDistrict(z.getDistrict().getName());
+						City c = z.getDistrict().getCity();
 						if (c != null) {
 							oin.setCity(c.getCityName());
 						}
@@ -272,13 +273,16 @@ public class OrderPaymentDAO {
 			} else {
 				// create address profile
 				Address address = new Address();
-				District d = dss.getBaseById(req.getDistrictId());
-				if (d == null) {
-					msg = "District is null.";
+				Zone z = zs.getBaseById(req.getZoneId());
+				if (z == null) {
+					msg = "Zone is null.";
 					isOk = false;
+				} else {
+					address.setDistrict(z.getDistrict());
+					oin.setDistrict(z.getDistrict().getName());
+					oin.setZone(z.getName());
 				}
 				address.setCreatedDate(new Date());
-				address.setDistrict(d);
 				address.setUser(u);
 				// address.setPhoneNumber(req.getP);
 				// address.setWard(req.getWard());
@@ -290,7 +294,6 @@ public class OrderPaymentDAO {
 				// ass
 				oin.setAddress(req.getAddress());
 				oin.setCity(req.getCity());
-				oin.setDistrict(d.getName());
 			}
 
 			oin.setCompanyName(req.getCompanyName());

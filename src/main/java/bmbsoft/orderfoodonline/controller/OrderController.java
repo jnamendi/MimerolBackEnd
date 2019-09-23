@@ -59,6 +59,9 @@ public class OrderController extends BaseController {
 	private DistrictService districtService;
 
 	@Autowired
+	private ZoneService zoneService;
+
+	@Autowired
 	private SmsService smsService;
 
 	Gson mapper = new Gson();
@@ -182,6 +185,11 @@ public class OrderController extends BaseController {
 				DistrictViewModel model = districtService.getById(req.getDistrictId());
 				req.setDistrict(model.getName() == null ? "" : model.getName());
 				req.setCity(model.getCity() == null ? "" : model.getCity().getName());
+			}
+
+			if(req.getZoneId() != null) {
+				ZoneViewModel model = zoneService.getById(req.getZoneId());
+				req.setZone(model.getName() == null ? "" : model.getName());
 			}
 
 			PaymentResponse ps = ops.create(req);
