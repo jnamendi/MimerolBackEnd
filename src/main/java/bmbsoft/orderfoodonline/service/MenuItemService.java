@@ -167,6 +167,7 @@ public class MenuItemService {
 		vm.setAvailableSaturday(e.getAvailableSaturday());
 		vm.setAvailableSunday(e.getAvailableSunday());
 		vm.setOutOfStock(e.getOutOfStock());
+		vm.setPriority(e.getPriority());
 		vm.setLanguageLst(languageService.translate(e.getContentDefinition(), lang));
 
 		if (e.getMenu() != null) {

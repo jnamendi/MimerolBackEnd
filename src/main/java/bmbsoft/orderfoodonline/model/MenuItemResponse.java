@@ -44,6 +44,7 @@ public class MenuItemResponse {
 	private Boolean availableSaturday;
 	private Boolean availableSunday;
 	private Boolean outOfStock;
+	private Integer priority;
 	private List<LanguageViewModel> languageLst;
 	private List<MenuExtraItemResponse> menuExtraLst;
 
@@ -189,5 +190,13 @@ public class MenuItemResponse {
 
 	public void setOutOfStock(Boolean outOfStock) {
 		this.outOfStock = outOfStock;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
 	}
 }
