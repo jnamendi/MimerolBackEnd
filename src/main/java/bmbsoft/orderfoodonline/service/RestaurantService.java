@@ -169,6 +169,11 @@ public class RestaurantService {
 						vm.setCity(city.getCityName());
 					}
 				}
+				Zone zone = r.getZone();
+				if(zone != null) {
+					vm.setZoneId(zone.getZoneId());
+					vm.setZone(zone.getName());
+				}
 				vm.setDeliveryCost(r.getDeliveryCost());
 				vm.setEstDeliveryTime(r.getEstimateDeliveryTime());
 				vm.setCity(r.getCity());
@@ -416,7 +421,7 @@ public class RestaurantService {
 		c.setRestaurantId(res.getRestaurantId());
 		c.setName(res.getName());
 		c.setSlogan(res.getSlogan());
-		c.setAddress(res.getAddressLine());
+		c.setAddress(res.getAddressDesc());
 		c.setOpenTime(res.getOpenTime());
 		c.setCloseTime(res.getCloseTime());
 		c.setPhone1(res.getPhone1());
