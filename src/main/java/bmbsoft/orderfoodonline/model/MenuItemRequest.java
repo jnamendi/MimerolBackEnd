@@ -24,6 +24,7 @@ public class MenuItemRequest {
 	private Boolean availableSaturday;
 	private Boolean availableSunday;
 	private Boolean outOfStock;
+	private int priority;
 	@NotNull(message = "languageLst is field required.")
 	private List<LanguageViewModel> languageLst;
 	private List<MenuExtraItemRequest> menuExtraLst;
@@ -146,5 +147,13 @@ public class MenuItemRequest {
 
 	public void setOutOfStock(Boolean outOfStock) {
 		this.outOfStock = outOfStock;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 }

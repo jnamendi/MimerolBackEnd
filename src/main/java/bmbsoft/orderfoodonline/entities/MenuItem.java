@@ -38,6 +38,7 @@ public class MenuItem implements java.io.Serializable {
 	private Boolean availableSaturday;
 	private Boolean availableSunday;
 	private Boolean outOfStock;
+	private Integer priority;
 	private Set<OrderLineItem> orderLineItems = new HashSet<OrderLineItem>(0);
 	private Set<MenuExtraItem> menuExtraItems = new HashSet<MenuExtraItem>(0);
 
@@ -49,7 +50,7 @@ public class MenuItem implements java.io.Serializable {
 		this.menu = menu;
 	}
 
-	public MenuItem(Long menuItemId, ContentDefinition contentDefinition, Menu menu, Double price, String picturePath, Boolean isCombo, String urlSlug, Integer sortOrder, Integer isStatus, Boolean availableMonday, Boolean availableTuesday, Boolean availableWednesday, Boolean availableThursday, Boolean availableFriday, Boolean availableSaturday, Boolean availableSunday, Boolean outOfStock, Set<OrderLineItem> orderLineItems, Set<MenuExtraItem> menuExtraItems) {
+	public MenuItem(Long menuItemId, ContentDefinition contentDefinition, Menu menu, Double price, String picturePath, Boolean isCombo, String urlSlug, Integer sortOrder, Integer isStatus, Boolean availableMonday, Boolean availableTuesday, Boolean availableWednesday, Boolean availableThursday, Boolean availableFriday, Boolean availableSaturday, Boolean availableSunday, Boolean outOfStock, Integer priority, Set<OrderLineItem> orderLineItems, Set<MenuExtraItem> menuExtraItems) {
 		this.menuItemId = menuItemId;
 		this.contentDefinition = contentDefinition;
 		this.menu = menu;
@@ -67,6 +68,7 @@ public class MenuItem implements java.io.Serializable {
 		this.availableSaturday = availableSaturday;
 		this.availableSunday = availableSunday;
 		this.outOfStock = outOfStock;
+		this.priority = priority;
 		this.orderLineItems = orderLineItems;
 		this.menuExtraItems = menuExtraItems;
 	}
@@ -227,6 +229,15 @@ public class MenuItem implements java.io.Serializable {
 
 	public void setOutOfStock(Boolean outOfStock) {
 		this.outOfStock = outOfStock;
+	}
+
+	@Column(name = "priority")
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "menuItem")

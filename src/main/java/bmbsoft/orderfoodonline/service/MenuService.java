@@ -218,7 +218,7 @@ public class MenuService {
 				if (smi != null && smi.size() > 0) {
 					smi = smi.stream().filter(p -> p.getIsStatus() == Constant.Status.Publish.getValue())
 							.collect(Collectors.toSet());
-					if(smi!=null && smi.size()>0) {
+					if(smi.size() > 0) {
 						MenuLiteResponse mlr = new MenuLiteResponse();
 						mlr.setMenuId(m.getMenuId());
 						mlr.setSortOrder(m.getSortOrder());
@@ -257,6 +257,7 @@ public class MenuService {
 							milr.setAvailable(checkItemAvailable(mi.getAvailableMonday(), mi.getAvailableTuesday(), mi.getAvailableWednesday(),
 							mi.getAvailableThursday(), mi.getAvailableFriday(), mi.getAvailableSaturday(), mi.getAvailableSunday()));
 							milr.setOutOfStock(mi.getOutOfStock());
+							milr.setPriority(mi.getPriority());
 							// get menu extra
 							Set<MenuExtraItem> smei = mi.getMenuExtraItems();
 							List<MenuExtraItemLiteResponse> lmeilr = new ArrayList<>();
@@ -312,11 +313,12 @@ public class MenuService {
 
 							// add to menu item
 							lmlr.add(milr);
-
 						});
 					}
 					
 				}
+				//sort menu item by priority
+				lmlr.sort((item1, item2) -> item1.getMenuId().compareTo(item2.getMenuId()) != 0 ? item1.getMenuId().compareTo(item2.getMenuId()) :  item1.getPriority().compareTo(item2.getPriority()));
 				mr.setMenuItems(lmlr);
 			});
 

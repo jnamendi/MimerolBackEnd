@@ -27,6 +27,8 @@ public class MenuItemLiteResponse {
 	private int quantity;
 	@NotNull(message = "totalPrice is required")
 	private Double totalPrice;
+
+	private Integer priority;
 	
 	private List<MenuExtraItemLiteResponse> menuExraItems;
 
@@ -156,5 +158,13 @@ public class MenuItemLiteResponse {
 
 	public void setMenuExraItems(List<MenuExtraItemLiteResponse> menuExraItems) {
 		this.menuExraItems = menuExraItems;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
 	}
 }

@@ -117,7 +117,6 @@ public class MenuItemDAO {
 				return message.toString();
 			}
 			transaction.commit();
-			message.append("");
 			return message.toString();
 		} catch (Exception ex) {
 			logger.error(ex.toString());
@@ -404,6 +403,7 @@ public class MenuItemDAO {
 		e.setAvailableSaturday(vm.getAvailableSaturday());
 		e.setAvailableSunday(vm.getAvailableSunday());
 		e.setOutOfStock(vm.getOutOfStock());
+		e.setPriority(vm.getPriority());
 		return e;
 	}
 }
