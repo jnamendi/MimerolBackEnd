@@ -2,14 +2,14 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for zone
+-- Table structure for zoneId
 -- ----------------------------
-DROP TABLE IF EXISTS `zone`;
-CREATE TABLE `zone`  (
+DROP TABLE IF EXISTS `zoneId`;
+CREATE TABLE `zoneId`  (
   `zone_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `district_id` bigint(20) NOT NULL,
-  `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `code` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `code` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `status` int(11) NULL DEFAULT 1,
   `created_date` datetime(0) NULL DEFAULT NULL,
   `created_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
