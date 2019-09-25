@@ -14,13 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import bmbsoft.orderfoodonline.dao.MenuItemDAO;
-import bmbsoft.orderfoodonline.entities.Category;
 import bmbsoft.orderfoodonline.entities.ExtraItem;
 import bmbsoft.orderfoodonline.entities.Language;
 import bmbsoft.orderfoodonline.entities.Menu;
 import bmbsoft.orderfoodonline.entities.MenuExtraItem;
 import bmbsoft.orderfoodonline.entities.MenuItem;
-import bmbsoft.orderfoodonline.model.CategoryViewModel;
 import bmbsoft.orderfoodonline.model.ExtraItemResponse;
 import bmbsoft.orderfoodonline.model.MenuExtraItemResponse;
 import bmbsoft.orderfoodonline.model.MenuItemRequest;
@@ -28,7 +26,6 @@ import bmbsoft.orderfoodonline.model.MenuItemResponse;
 import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.Constant;
-import bmbsoft.orderfoodonline.util.Constant.ControlType;
 
 @Service
 public class MenuItemService {
@@ -57,7 +54,7 @@ public class MenuItemService {
 	@Async
 	public MenuItemResponse getDetail(final long id) {
 		MenuItem m = menuItemDAO.getById(id);
-		return (m == null) ? null : this.enityToModel(m, null);
+		return (m == null) ? null : this.entityToModel(m, null);
 	}
 
 	@Transactional
@@ -74,13 +71,13 @@ public class MenuItemService {
 		int currentPage = (pageIndex < 1) ? 1 : pageIndex;
 		int firstResult = (currentPage - 1) * pageSize;
 		int maxResult = currentPage * pageSize;
-		List<MenuItem> Categorys = menuItemDAO.getAll(firstResult, maxResult, menuId, name, codeLanguage, status);
+		List<MenuItem> Categories = menuItemDAO.getAll(firstResult, maxResult, menuId, name, codeLanguage, status);
 		int totalRecord = menuItemDAO.countGetAll(menuId, name, codeLanguage, status);
 
 		ResponseGetPaging rs = new ResponseGetPaging();
 		Data content = new Data();
 
-		if (Categorys == null || Categorys.isEmpty()) {
+		if (Categories == null || Categories.isEmpty()) {
 			rs.setStatus(0);
 			rs.setMessage("Could not found items.");
 			content.setTotalCount(0);
@@ -90,9 +87,9 @@ public class MenuItemService {
 		}
 
 		List<MenuItemResponse> lmr = new LinkedList<>();
-		if (Categorys != null && !Categorys.isEmpty()) {
-			Categorys.forEach(res -> {
-				lmr.add(enityToModel(res, codeLanguage));
+		if (Categories != null && !Categories.isEmpty()) {
+			Categories.forEach(res -> {
+				lmr.add(entityToModel(res, codeLanguage));
 			});
 		}
 		if (totalRecord > 0 && !lmr.isEmpty()) {
@@ -134,7 +131,7 @@ public class MenuItemService {
 		List<MenuItemResponse> lmr = new LinkedList<>();
 		if (Categorys != null && !Categorys.isEmpty()) {
 			Categorys.forEach(res -> {
-				lmr.add(enityToModel(res, codeLanguage));
+				lmr.add(entityToModel(res, codeLanguage));
 			});
 		}
 		if (totalRecord > 0 && !lmr.isEmpty()) {
@@ -149,11 +146,10 @@ public class MenuItemService {
 		return rs;
 	}
 
-	private MenuItemResponse enityToModel(MenuItem e, String codeLang) {
+	private MenuItemResponse entityToModel(MenuItem e, String codeLang) {
 		Language lang = (codeLang == null || codeLang.isEmpty()) ? null : languageService.getLanguageByCode(codeLang);
 		MenuItemResponse vm = new MenuItemResponse();
 		vm.setMenuItemId(e.getMenuItemId());
-		vm.setMenuName(e.getMenu().getName());
 		vm.setPrice(e.getPrice());
 		vm.setCombo(e.getIsCombo());
 		vm.setSortOrder(e.getSortOrder());
@@ -176,6 +172,10 @@ public class MenuItemService {
 				vm.setRestaurantId(e.getMenu().getRestaurant().getRestaurantId());
 				vm.setRestaurantName(e.getMenu().getRestaurant().getName());
 			}
+			List<String> names = languageService.hashMapTranslate(e.getContentDefinition(), lang);
+
+			String name = names != null && names.size() > 0 ? names.get(0) : "";
+			vm.setMenuName(name);
 		}
 
 		List<MenuExtraItemResponse> meirs = new LinkedList<>();
