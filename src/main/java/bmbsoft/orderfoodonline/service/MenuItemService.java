@@ -172,7 +172,7 @@ public class MenuItemService {
 				vm.setRestaurantId(e.getMenu().getRestaurant().getRestaurantId());
 				vm.setRestaurantName(e.getMenu().getRestaurant().getName());
 			}
-			List<String> names = languageService.hashMapTranslate(e.getContentDefinition(), lang);
+			List<String> names = languageService.hashMapTranslate(e.getMenu().getContentDefinition(), lang);
 
 			String name = names != null && names.size() > 0 ? names.get(0) : "";
 			vm.setMenuName(name);
