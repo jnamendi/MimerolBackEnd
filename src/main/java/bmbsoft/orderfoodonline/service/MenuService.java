@@ -318,7 +318,8 @@ public class MenuService {
 					
 				}
 				//sort menu item by priority
-				lmlr.sort((item1, item2) -> item1.getMenuId().compareTo(item2.getMenuId()) != 0 ? item1.getMenuId().compareTo(item2.getMenuId()) :  item1.getPriority().compareTo(item2.getPriority()));
+				lmlr.sort((item1, item2) -> item1.getMenuId().compareTo(item2.getMenuId()) != 0 ? item1.getMenuId().compareTo(item2.getMenuId())
+						:  item1.getPriority().compareTo(item2.getPriority()) != 0 ? item1.getPriority().compareTo(item2.getPriority()) : item1.getMenuItemName().compareTo(item2.getMenuItemName()));
 				mr.setMenuItems(lmlr);
 			});
 

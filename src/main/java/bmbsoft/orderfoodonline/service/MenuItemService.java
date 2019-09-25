@@ -153,9 +153,9 @@ public class MenuItemService {
 		Language lang = (codeLang == null || codeLang.isEmpty()) ? null : languageService.getLanguageByCode(codeLang);
 		MenuItemResponse vm = new MenuItemResponse();
 		vm.setMenuItemId(e.getMenuItemId());
-		// vm.setMenu(this.menuService.r);
+		vm.setMenuName(e.getMenu().getName());
 		vm.setPrice(e.getPrice());
-		vm.setIsCombo(e.getIsCombo());
+		vm.setCombo(e.getIsCombo());
 		vm.setSortOrder(e.getSortOrder());
 		vm.setStatus(e.getIsStatus());
 		vm.setImageUrl(e.getPicturePath());
