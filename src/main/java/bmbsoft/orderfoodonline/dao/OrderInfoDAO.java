@@ -41,6 +41,7 @@ public class OrderInfoDAO {
 			oi.setDistrict(req.getDistrict());
 			oi.setTime(req.getTime());
 			oi.setRemark(req.getRemark());
+			oi.setZone(req.getZone());
 
 			session.save(oi);
 

@@ -21,6 +21,8 @@ public class AddressViewModel {
 	public Long getCityId() {
 		return cityId;
 	}
+	private Long zone;
+	private String zoneName;
 
 	public void setCityId(Long cityId) {
 		this.cityId = cityId;
@@ -46,7 +48,6 @@ public class AddressViewModel {
 	private String residenceTypeName;
 	private Long userId;
 	private String userName;
-	private String ward;
 	private String residenceName;
 	private String address;
 	private String phoneNumber;
@@ -58,26 +59,6 @@ public class AddressViewModel {
 	
 	public AddressViewModel() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public AddressViewModel(Long addressId, String districtName, String countryName, String cityName,
-			String residenceTypeName, String userName, String ward, String residenceName, String address,
-			String phoneNumber, String roomNumber, Date createdDate, String createdBy) {
-		super();
-		this.addressId = addressId;
-		this.district = districtName;
-		this.country = countryName;
-		this.city = cityName;
-		this.residenceTypeName = residenceTypeName;
-		this.userName = userName;
-		this.ward = ward;
-		this.residenceName = residenceName;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.roomNumber = roomNumber;
-		this.createdDate = createdDate;
-		this.createdBy = createdBy;
 	}
 
 	public Long getAddressId() {
@@ -126,14 +107,6 @@ public class AddressViewModel {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getWard() {
-		return ward;
-	}
-
-	public void setWard(String ward) {
-		this.ward = ward;
 	}
 
 	public String getResidenceName() {
@@ -208,4 +181,19 @@ public class AddressViewModel {
 		this.addressDesc = addressDesc;
 	}
 
+	public Long getZone() {
+		return zone;
+	}
+
+	public void setZone(Long zone) {
+		this.zone = zone;
+	}
+
+	public String getZoneName() {
+		return zoneName;
+	}
+
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
 }

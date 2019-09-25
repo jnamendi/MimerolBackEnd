@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import bmbsoft.orderfoodonline.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +14,6 @@ import bmbsoft.orderfoodonline.dao.AddressDAO;
 import bmbsoft.orderfoodonline.dao.DistrictDAO;
 import bmbsoft.orderfoodonline.dao.ResidenceTypeDAO;
 import bmbsoft.orderfoodonline.dao.UserDAO;
-import bmbsoft.orderfoodonline.entities.Address;
-import bmbsoft.orderfoodonline.entities.City;
-import bmbsoft.orderfoodonline.entities.Country;
-import bmbsoft.orderfoodonline.entities.District;
-import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.model.AddressViewModel;
 import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
@@ -28,12 +24,6 @@ public class AddressService {
 
 	@Autowired
 	private AddressDAO addressDAO;
-	@Autowired
-	private DistrictDAO districtDAO;
-	@Autowired
-	private UserDAO userDAO;
-	@Autowired
-	private ResidenceTypeDAO residenceTypeDAO;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status) {
@@ -41,11 +31,11 @@ public class AddressService {
 		int currentPage = (pageIndex < 1) ? 1 : pageIndex;
 		int firstResult = (currentPage - 1) * pageSize;
 		int maxResult = currentPage * pageSize;
-		List<Address> Addresss = addressDAO.getAll(firstResult, maxResult, title, status);
+		List<Address> address = addressDAO.getAll(firstResult, maxResult, title, status);
 
 		ResponseGetPaging rs = new ResponseGetPaging();
 		Data content = new Data();
-		if (Addresss == null || Addresss.isEmpty()) {
+		if (address == null || address.isEmpty()) {
 			rs.setStatus(0);
 			rs.setMessage("Could not found items.");
 			content.setTotalCount(0);
@@ -55,7 +45,7 @@ public class AddressService {
 		}
 		{
 			List<AddressViewModel> listModel = new LinkedList<>();
-			Addresss.forEach(Address -> {
+			address.forEach(Address -> {
 				listModel.add(convertEntityToModel(Address));
 			});
 
@@ -74,11 +64,11 @@ public class AddressService {
 	@Transactional
 	public List<AddressViewModel> getByUserId(Long userId) {
 		List<AddressViewModel> listModel = new LinkedList<>();
-		List<Address> Addresss = addressDAO.getByUser(userId);
-		if (null == Addresss) {
+		List<Address> address = addressDAO.getByUser(userId);
+		if (null == address) {
 			return null;
 		}
-		Addresss.forEach(Address -> {
+		address.forEach(Address -> {
 			listModel.add(convertEntityToModel(Address));
 		});
 		return listModel;
@@ -132,22 +122,24 @@ public class AddressService {
 		if (d != null) {
 			City c = d.getCity();
 			Country ct = c.getCountry();
-			// if final version remove, because not check database.
-			if (address.getDistrict() != null) {
-				model.setCountry(ct.getName());
-				model.setCity(c.getCityName());
-				model.setDistrict(d.getName());
-				model.setCityId(c.getCityId());
-				model.setDistrictId(d.getDistrictId());
-				model.setCountryId(ct.getCountryId());
-			}
+			model.setCountry(ct.getName());
+			model.setCity(c.getCityName());
+			model.setDistrict(d.getName());
+			model.setCityId(c.getCityId());
+			model.setDistrictId(d.getDistrictId());
+			model.setCountryId(ct.getCountryId());
+		}
+
+		Zone z = address.getZone();
+		if(z != null) {
+			model.setZone(z.getZoneId());
+			model.setZoneName(z.getName());
 		}
 
 		model.setUserId(u.getUserId());
 		model.setUserName(u.getFullName());
 		model.setPhoneNumber(address.getPhoneNumber());
 
-		model.setWard(address.getWard());
 		model.setAddress(address.getAddress());
 		model.setEmail(address.getEmailAdd());
 		model.setCreatedBy(address.getCreatedBy());

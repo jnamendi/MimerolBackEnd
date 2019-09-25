@@ -30,7 +30,7 @@ public class MenuItemResponse {
 
 	private Long restaurantId;
 	private String restaurantName;
-	private MenuViewModel menu;
+	private String menuName;
 	private Double price;
 	private String imageUrl;
 	private Boolean isCombo;
@@ -44,6 +44,7 @@ public class MenuItemResponse {
 	private Boolean availableSaturday;
 	private Boolean availableSunday;
 	private Boolean outOfStock;
+	private Integer priority;
 	private List<LanguageViewModel> languageLst;
 	private List<MenuExtraItemResponse> menuExtraLst;
 
@@ -55,12 +56,20 @@ public class MenuItemResponse {
 		this.menuItemId = menuItemId;
 	}
 
-	public MenuViewModel getMenu() {
-		return menu;
+	public String getRestaurantName() {
+		return restaurantName;
 	}
 
-	public void setMenu(MenuViewModel menu) {
-		this.menu = menu;
+	public void setRestaurantName(String restaurantName) {
+		this.restaurantName = restaurantName;
+	}
+
+	public String getMenuName() {
+		return menuName;
+	}
+
+	public void setMenuName(String menuName) {
+		this.menuName = menuName;
 	}
 
 	public Double getPrice() {
@@ -79,12 +88,12 @@ public class MenuItemResponse {
 		this.imageUrl = imageUrl;
 	}
 
-	public Boolean getIsCombo() {
+	public Boolean getCombo() {
 		return isCombo;
 	}
 
-	public void setIsCombo(Boolean isCombo) {
-		this.isCombo = isCombo;
+	public void setCombo(Boolean combo) {
+		isCombo = combo;
 	}
 
 	public Integer getSortOrder() {
@@ -101,30 +110,6 @@ public class MenuItemResponse {
 
 	public void setStatus(Integer status) {
 		this.status = status;
-	}
-
-	public List<LanguageViewModel> getLanguageLst() {
-		return languageLst;
-	}
-
-	public void setLanguageLst(List<LanguageViewModel> languageLst) {
-		this.languageLst = languageLst;
-	}
-
-	public List<MenuExtraItemResponse> getMenuExtraLst() {
-		return menuExtraLst;
-	}
-
-	public void setMenuExtraLst(List<MenuExtraItemResponse> menuExtraLst) {
-		this.menuExtraLst = menuExtraLst;
-	}
-
-	public String getRestaurantName() {
-		return restaurantName;
-	}
-
-	public void setRestaurantName(String restaurantName) {
-		this.restaurantName = restaurantName;
 	}
 
 	public Boolean getAvailableMonday() {
@@ -189,5 +174,29 @@ public class MenuItemResponse {
 
 	public void setOutOfStock(Boolean outOfStock) {
 		this.outOfStock = outOfStock;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	public List<LanguageViewModel> getLanguageLst() {
+		return languageLst;
+	}
+
+	public void setLanguageLst(List<LanguageViewModel> languageLst) {
+		this.languageLst = languageLst;
+	}
+
+	public List<MenuExtraItemResponse> getMenuExtraLst() {
+		return menuExtraLst;
+	}
+
+	public void setMenuExtraLst(List<MenuExtraItemResponse> menuExtraLst) {
+		this.menuExtraLst = menuExtraLst;
 	}
 }

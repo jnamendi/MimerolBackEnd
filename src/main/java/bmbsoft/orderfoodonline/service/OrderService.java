@@ -1,36 +1,28 @@
 package bmbsoft.orderfoodonline.service;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import javax.transaction.Transactional;
-
+import bmbsoft.orderfoodonline.dao.CurrencyDAO;
+import bmbsoft.orderfoodonline.dao.OrderDAO;
 import bmbsoft.orderfoodonline.dao.OrderInfoDAO;
+import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.OrderInfoResponse;
+import bmbsoft.orderfoodonline.model.OrderResponse;
+import bmbsoft.orderfoodonline.model.OrderViewModel;
 import bmbsoft.orderfoodonline.model.shared.*;
+import bmbsoft.orderfoodonline.response.Data;
+import bmbsoft.orderfoodonline.response.ResponseGetPaging;
+import bmbsoft.orderfoodonline.util.CommonHelper;
+import bmbsoft.orderfoodonline.util.Constant;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import bmbsoft.orderfoodonline.dao.CurrencyDAO;
-import bmbsoft.orderfoodonline.dao.OrderDAO;
-import bmbsoft.orderfoodonline.entities.Order;
-import bmbsoft.orderfoodonline.entities.OrderHistory;
-import bmbsoft.orderfoodonline.entities.OrderInfo;
-import bmbsoft.orderfoodonline.entities.OrderLineItem;
-import bmbsoft.orderfoodonline.entities.OrderPayment;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.model.OrderInfoResponse;
-import bmbsoft.orderfoodonline.model.OrderResponse;
-import bmbsoft.orderfoodonline.model.OrderViewModel;
-import bmbsoft.orderfoodonline.response.Data;
-import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class OrderService {
@@ -329,6 +321,7 @@ public class OrderService {
 				oir.setTime(oi.getTime());
 				oir.setRemark(oi.getRemark());
 				oir.setAddressDescription(oi.getAddressDesc());
+				oir.setZone(oi.getZone());
 				oirs.add(oir);
 			}
 		}

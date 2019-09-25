@@ -117,7 +117,6 @@ public class MenuItemDAO {
 				return message.toString();
 			}
 			transaction.commit();
-			message.append("");
 			return message.toString();
 		} catch (Exception ex) {
 			logger.error(ex.toString());
@@ -298,9 +297,8 @@ public class MenuItemDAO {
 		query.distinct(form.get("menuItemId") != null);
 		query.orderBy(cb.desc(form.get("menuItemId")));
 
-		List<MenuItem> Menus = (max == 0) ? session.createQuery(query).getResultList()
+		return (max == 0) ? session.createQuery(query).getResultList()
 				: session.createQuery(query).setFirstResult(first).setMaxResults(max).getResultList();
-		return Menus;
 	}
 
 	public List<MenuItem> getAllByOwner(int first, int max, String codeLanguage, Integer status, Long userId) {
@@ -313,9 +311,8 @@ public class MenuItemDAO {
 		query.distinct(form.get("menuItemId") != null);
 		query.orderBy(cb.desc(form.get("menuItemId")));
 
-		List<MenuItem> Menus = (max == 0) ? session.createQuery(query).getResultList()
+		return (max == 0) ? session.createQuery(query).getResultList()
 				: session.createQuery(query).setFirstResult(first).setMaxResults(max).getResultList();
-		return Menus;
 	}
 
 	public int countGetAll(Long menuId, String name, String codeLanguage, Integer status) throws Exception {
@@ -404,6 +401,7 @@ public class MenuItemDAO {
 		e.setAvailableSaturday(vm.getAvailableSaturday());
 		e.setAvailableSunday(vm.getAvailableSunday());
 		e.setOutOfStock(vm.getOutOfStock());
+		e.setPriority(vm.getPriority());
 		return e;
 	}
 }

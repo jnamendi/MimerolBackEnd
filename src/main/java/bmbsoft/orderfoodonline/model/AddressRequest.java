@@ -1,19 +1,10 @@
 package bmbsoft.orderfoodonline.model;
 
-import java.util.Date;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-
-import org.junit.Ignore;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import bmbsoft.orderfoodonline.util.Constant.Status;
+import javax.validation.constraints.NotNull;
 
 @JsonSerialize
 @JsonInclude(value = Include.NON_NULL)
@@ -26,7 +17,7 @@ public class AddressRequest {
 	private String city;
 	@NotNull
 	private Long userId;
-	private String ward;
+	private Long zone;
 	@NotNull
 	private String address;
 	private String addressDesc;
@@ -70,12 +61,12 @@ public class AddressRequest {
 		this.userId = userId;
 	}
 
-	public String getWard() {
-		return ward;
+	public Long getZone() {
+		return zone;
 	}
 
-	public void setWard(String ward) {
-		this.ward = ward;
+	public void setZone(Long zone) {
+		this.zone = zone;
 	}
 
 	public String getAddress() {
