@@ -168,7 +168,7 @@ public class OrderController extends BaseController {
 //			}
 			if (result.hasErrors()) {
 				rs.setStatus(7);
-				rs.setMessage(result.getFieldError().getDefaultMessage());
+				rs.setMessage(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
 				rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
 				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
 			}
@@ -234,7 +234,7 @@ public class OrderController extends BaseController {
 								req.getNumber() != null && !req.getNumber().isEmpty() ? req.getNumber() : "");
 						vars.put("deliveryTime", req.getTime() == null ? "" : req.getTime());
 						vars.put("remarks", req.getRemarks() == null ? "" : req.getRemarks());
-						vars.put("symbolLeft", req.getSymbolLeft() == null && req.getSymbolLeft().isEmpty() ? ""
+						vars.put("symbolLeft", req.getSymbolLeft() == null || req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
 						vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");

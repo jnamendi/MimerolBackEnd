@@ -2,23 +2,17 @@ package bmbsoft.orderfoodonline.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.services.sns.model.MessageAttributeValue;
-import com.amazonaws.services.sns.model.PublishRequest;
-import com.amazonaws.services.sns.model.PublishResult;
 
 public class Constant {
 	public static int PageNumber = 20;
-	public static int Start = 1;
 	public static final int EXPIRATION = 60 * 30;
 
 	public enum PaymentMethod {
-		Cash(1), Visa(2), Paypal(3);
+		Cash(1), Visa(2), Paypal(3), Credit_On_Delivery(4);
 
 		private int value;
 
-		private PaymentMethod(int v) {
+		PaymentMethod(int v) {
 			this.value = v;
 		}
 
@@ -44,7 +38,7 @@ public class Constant {
 
 		private int value;
 
-		private ContactType(int v) {
+		ContactType(int v) {
 			this.value = v;
 		}
 
@@ -70,7 +64,7 @@ public class Constant {
 
 		private int value;
 
-		private AccountType(int v) {
+		AccountType(int v) {
 			this.value = v;
 		}
 
@@ -123,7 +117,7 @@ public class Constant {
 
 		private int value;
 
-		private Provider(int v) {
+		Provider(int v) {
 			this.value = v;
 		}
 
@@ -149,7 +143,7 @@ public class Constant {
 
 		private int value;
 
-		private Order(int v) {
+		Order(int v) {
 			this.value = v;
 		}
 
@@ -175,7 +169,7 @@ public class Constant {
 
 		private int value;
 
-		private Payment(int v) {
+		Payment(int v) {
 			this.value = v;
 		}
 
@@ -202,7 +196,7 @@ public class Constant {
 		private int value;
 		private static Map map = new HashMap<>();
 
-		private Status(int value) {
+		Status(int value) {
 			this.value = value;
 		}
 
@@ -228,7 +222,7 @@ public class Constant {
 		private int value;
 		private static Map map = new HashMap<>();
 
-		private ControlType(int value) {
+		ControlType(int value) {
 			this.value = value;
 		}
 
