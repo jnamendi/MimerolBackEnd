@@ -658,7 +658,7 @@ public class RestaurantController extends BaseController {
 				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
 
-			RestaurantLiteResponse2 r = restaurantService.getByIdAndLangauge(id, l);
+			RestaurantLiteResponse2 r = restaurantService.getByIdAndLanguage(id, l);
 			if (r == null) {
 				rs.setStatus(0);
 				rs.setMessage("File not found");

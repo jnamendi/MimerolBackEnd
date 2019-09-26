@@ -16,7 +16,7 @@ public class PaymentProviderViewModel {
 	public void setSortOrder(int sortOrder) {
 		this.sortOrder = sortOrder;
 	}
-	private Long PaymentProviderId;
+	private Long paymentProviderId;
 	public String getName() {
 		return name;
 	}
@@ -24,9 +24,9 @@ public class PaymentProviderViewModel {
 		this.name = name;
 	}
 	public Long getPaymentProviderId() {
-		return PaymentProviderId;
+		return paymentProviderId;
 	}
 	public void setPaymentProviderId(Long paymentProviderId) {
-		PaymentProviderId = paymentProviderId;
+		this.paymentProviderId = paymentProviderId;
 	}
 }
