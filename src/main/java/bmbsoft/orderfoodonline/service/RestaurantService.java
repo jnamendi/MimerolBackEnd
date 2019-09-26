@@ -444,7 +444,7 @@ public class RestaurantService {
 			c.setDescription(desc != null && desc.size() > 0 ? desc.get(0) : "");
 		}
 
-		// coment
+		// comment
 		Set<RestaurantComment> srco = res.getRestaurantComments();
 		if (srco != null && srco.size() > 0) {
 			int cr = (int) srco.stream().filter(p -> p.getStatus() == Constant.Status.Publish.getValue()).count();

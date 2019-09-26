@@ -1,6 +1,7 @@
 package bmbsoft.orderfoodonline.service;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -27,10 +28,6 @@ public class PaymentProviderService {
 	@Autowired
 	PaymentProviderDAO PaymentProvider;
 
-	public ResponseGetPaging getAll(int pageIndex, int pageSize, String paymentName) {
-		return PaymentProvider.getAll(pageIndex, pageSize, paymentName);
-	}
-
 	public boolean save(final PaymentProvider c) {
 		return PaymentProvider.save(c);
 	}
@@ -47,6 +44,27 @@ public class PaymentProviderService {
 		c.setIsStatus(Constant.Status.Deleted.getValue());
 		c.setModifiedDate(new Date());
 		return PaymentProvider.save(c);
+	}
+
+	public List<PaymentProviderViewModel> getAllProviders() {
+		List<PaymentProvider> pp = PaymentProvider.getAllProvider();
+		return getPaymentProviderViewModels(pp);
+	}
+
+	public List<PaymentProviderViewModel> getPaymentProvidersByRestaurant(long restaurantId) {
+		List<PaymentProvider> pp = PaymentProvider.getProviderByRestaurant(restaurantId);
+		return getPaymentProviderViewModels(pp);
+	}
+
+	private List<PaymentProviderViewModel> getPaymentProviderViewModels(List<PaymentProvider> pp) {
+		List<PaymentProviderViewModel> rs = new LinkedList<>();
+		if(pp != null && !pp.isEmpty()) {
+			pp.forEach(r -> {
+				PaymentProviderViewModel rv = convertEntityToModel(r);
+				rs.add(rv);
+			});
+		}
+		return rs;
 	}
 
 	private PaymentProviderViewModel convertEntityToModel(PaymentProvider r) {

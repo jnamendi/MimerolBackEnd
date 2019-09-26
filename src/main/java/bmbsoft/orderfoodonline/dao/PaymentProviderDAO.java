@@ -9,6 +9,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+
+import bmbsoft.orderfoodonline.entities.RestaurantPaymentProvider;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -55,75 +57,26 @@ public class PaymentProviderDAO {
 		session.delete(a);
 	}
 
-	public ResponseGetPaging getAll(int pageIndex, int pageSize, String paymentName) {
+	public List<PaymentProvider> getAllProvider() {
 		Session s = this.sessionFactory.getCurrentSession();
-		try {
-			int currentPage = (pageIndex < 1) ? 1 : pageIndex;
-			int firstResult = (currentPage - 1) * pageSize;
-			int maxResult = currentPage * pageSize;
-
-			CriteriaBuilder cb = s.getCriteriaBuilder();
-			CriteriaQuery<PaymentProvider> cq = cb.createQuery(PaymentProvider.class);
-			Root<PaymentProvider> from = cq.from(PaymentProvider.class);
-
-			//Join<PaymentProvider, Restaurant> join = from.join("restaurant");
-			cq.where(cb.notEqual(from.get("isStatus"), Constant.Status.Deleted.getValue()));
-			if (paymentName != null && !paymentName.isEmpty()) {
-				cq.where(cb.like(from.get("name"), '%' + paymentName + '%'));
-			}
-			cq.orderBy(cb.desc(from.get("sortOrder")));
-
-			TypedQuery<PaymentProvider> tq = s.createQuery(cq);
-			List<PaymentProvider> PaymentProvideres = tq.getResultList();
-
-			int totalRecord = PaymentProvideres.size();
-			PaymentProvideres = maxResult == 0 ? tq.getResultList()
-					: tq.setFirstResult(firstResult).setMaxResults(maxResult).getResultList();
-
-			ResponseGetPaging rs = new ResponseGetPaging();
-			if (PaymentProvideres == null || PaymentProvideres.size() <= 0) {
-				rs.setStatus(8);
-				rs.setMessage("Could not found items.");
-				rs.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-				return rs;
-			}
-
-			List<PaymentProviderViewModel> rvm = new LinkedList<>();
-			PaymentProvideres.forEach(r -> {
-				PaymentProviderViewModel rv = convertEntityToModel(r);
-				rvm.add(rv);
-			});
-			Data content = new Data();
-			if (totalRecord > 0 && !rvm.isEmpty()) {
-				content.setData(rvm);
-				content.setPageIndex(pageIndex);
-				content.setPageSize(pageSize);
-				content.setTotalCount(totalRecord);
-				rs.setContent(content);
-				rs.setStatus(0);
-				rs.setMessage("Success.");
-
-				return rs;
-			}
-
-			rs.setStatus(8);
-			rs.setMessage("Could not found items.");
-			rs.setErrorType(Constant.ErrorTypeCommon.NOT_FOUND_ITEM);
-
-			return rs;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return null;
-		}
+		CriteriaBuilder cb = s.getCriteriaBuilder();
+		CriteriaQuery<PaymentProvider> cq = cb.createQuery(PaymentProvider.class);
+		Root<PaymentProvider> from = cq.from(PaymentProvider.class);
+		cq.where(cb.notEqual(from.get("isStatus"), Constant.Status.Deleted.getValue()));
+		return s.createQuery(cq).getResultList();
 	}
 
-	private PaymentProviderViewModel convertEntityToModel(PaymentProvider r) {
-		PaymentProviderViewModel vm = new PaymentProviderViewModel();
-		vm.setPaymentProviderId(r.getPaymentProviderId());
-		vm.setName(r.getName());
-		vm.setStatus(r.getIsStatus());
-		vm.setSortOrder(r.getSortOrder());
-		
-		return vm;
+	public List<PaymentProvider> getProviderByRestaurant(long restaurantId) {
+		Session s = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder cb = s.getCriteriaBuilder();
+		CriteriaQuery<RestaurantPaymentProvider> cq = cb.createQuery(RestaurantPaymentProvider.class);
+		Root<RestaurantPaymentProvider> rpp = cq.from(RestaurantPaymentProvider.class);
+		cq.select(rpp).where(cb.equal(rpp.join("restaurant").get("restaurantId"), restaurantId));
+		List<RestaurantPaymentProvider> rsProviderList = s.createQuery(cq).getResultList();
+		List<PaymentProvider> pp = new LinkedList<>();
+		if(rsProviderList != null && !rsProviderList.isEmpty()) {
+			rsProviderList.forEach(item -> pp.add(item.getPaymentProvider()));
+		}
+		return pp;
 	}
 }
