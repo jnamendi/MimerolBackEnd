@@ -600,10 +600,10 @@ public class RestaurantController extends BaseController {
 				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			String key = "";
-			if (dCode != null && !dCode.isEmpty()) {
+			if (!dCode.isEmpty()) {
 				key += dCode;
 			}
-			if (cCode != null && !cCode.isEmpty()) {
+			if (!cCode.isEmpty()) {
 				key += "#" + cCode;
 			}
 			RestaurantResponse res = this.restaurantService.getByDistrict(req, l, key);
@@ -658,7 +658,7 @@ public class RestaurantController extends BaseController {
 				return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
 			}
 
-			RestaurantLiteResponse2 r = restaurantService.getByIdAndLangauge(id, l);
+			RestaurantLiteResponse2 r = restaurantService.getByIdAndLanguage(id, l);
 			if (r == null) {
 				rs.setStatus(0);
 				rs.setMessage("File not found");

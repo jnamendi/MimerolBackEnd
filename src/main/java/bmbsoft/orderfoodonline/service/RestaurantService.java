@@ -40,6 +40,8 @@ public class RestaurantService {
 	private RestaurantWorkTimeService restaurantWorkTimeService;
 	@Autowired
 	private RestaurantAreaService restaurantAreaService;
+	@Autowired
+	private PaymentProviderService paymentProviderService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -62,11 +64,7 @@ public class RestaurantService {
 		}
 
 		List<RestaurantViewModel> restaurantModels = new LinkedList<>();
-		if (restaurants != null && !restaurants.isEmpty()) {
-			restaurants.forEach(res -> {
-				restaurantModels.add(entityToModel(res, null));
-			});
-		}
+		restaurants.forEach(res -> restaurantModels.add(entityToModel(res, null)));
 
 		if (totalRecord > 0 && !restaurantModels.isEmpty()) {
 			content.setData(restaurantModels);
@@ -107,7 +105,7 @@ public class RestaurantService {
 	}
 
 	@Transactional
-	public RestaurantLiteResponse2 getByIdAndLangauge(final long id, Language l) throws ParseException {
+	public RestaurantLiteResponse2 getByIdAndLanguage(final long id, Language l) throws ParseException {
 		Restaurant res = restaurantDAO.getById(id);
 		return (res == null || res.getStatus() != Constant.Status.Publish.getValue()) ? null
 				: entityToModelLite2(res, l);
@@ -119,18 +117,17 @@ public class RestaurantService {
 	}
 
 	@Transactional
-	public RestaurantResponse getByDistrict(final AddressSearchModel req, Language l, String key)
-			throws ParseException {
+	public RestaurantResponse getByDistrict(final AddressSearchModel req, Language l, String key) {
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
+		if (cur != null) {
 			cur.setRate(1d);
 		}
 		List<Restaurant> restaurants = restaurantDAO.getByDistrict(req.getLanguageCode(), key);
 		RestaurantResponse rr = new RestaurantResponse();
 
-		List<RestaurantViewModel> crvm = new LinkedList<>();
-		List<RestaurantCategoryViewModel> rescat = new ArrayList<>();
+		List<RestaurantViewModel> restaurantViewModels = new LinkedList<>();
+		List<RestaurantCategoryViewModel> categoryViewModels = new ArrayList<>();
 		HashMap<String, Double> rankPrice = new HashMap<>();
 
 		if (restaurants != null && restaurants.size() > 0) {
@@ -153,26 +150,23 @@ public class RestaurantService {
 				vm.setStatus(r.getStatus());
 				vm.setSortOrder(r.getSortOrder());
 				vm.setCreatedDate(r.getCreatedDate());
-				vm.setMinPrice(r.getMinPrice() * cur.getRate());
+				vm.setMinPrice(r.getMinPrice() * Objects.requireNonNull(cur).getRate());
 				vm.setImageUrl(r.getImageUrl());
 				vm.setCurrencyRate(cur.getRate());
 				vm.setSymbolLeft(cur.getSymbolLeft());
 				vm.setSymbolRight(cur.getSymbolRight());
 				vm.setDistrict(r.getDistrictName());
 				vm.setTypeReceive(r.getTypeReceive());
-				District dt = r.getDistrict();
-				if (dt != null) {
-					vm.setDistrictId(dt.getDistrictId());
-					City city=dt.getCity();
-					if(city!=null) {
-						vm.setCityId(city.getCityId());
-						vm.setCity(city.getCityName());
-					}
-				}
 				Zone zone = r.getZone();
 				if(zone != null) {
 					vm.setZoneId(zone.getZoneId());
 					vm.setZone(zone.getName());
+					vm.setDistrictId(zone.getDistrict().getDistrictId());
+					City city= zone.getDistrict().getCity();
+					if(city!=null) {
+						vm.setCityId(city.getCityId());
+						vm.setCity(city.getCityName());
+					}
 				}
 				vm.setDeliveryCost(r.getDeliveryCost());
 				vm.setEstDeliveryTime(r.getEstimateDeliveryTime());
@@ -202,7 +196,7 @@ public class RestaurantService {
 						rcv.setCategoryId(cg.getCategoryId());
 						rcv.setCategoryName(cName);
 
-						rescat.add(rcv);
+						categoryViewModels.add(rcv);
 
 						categories.add(hm);
 					});
@@ -220,8 +214,9 @@ public class RestaurantService {
 					vm.setNumOfReview(c);
 				}
 
-				// #end rating
-				crvm.add(vm);
+				// payment provider
+				List<PaymentProviderViewModel> paymentProviderViewModelList = paymentProviderService.getPaymentProvidersByRestaurant(r.getRestaurantId());
+				vm.setPaymentProviderLst(paymentProviderViewModelList);
 
 				// promotion
 
@@ -260,29 +255,32 @@ public class RestaurantService {
 					});
 				}
 				vm.setPromotionLineItems(lplr);
+
+
+				restaurantViewModels.add(vm);
 			}
 		}
-		rr.setRestaurants(crvm);
+		rr.setRestaurants(restaurantViewModels);
 
 		// list category
-		if (rescat.size() > 0) {
-			Map<Object, List<RestaurantCategoryViewModel>> rc = rescat.stream()
-					.collect(Collectors.groupingBy(g -> g.getCategoryId()));
-			List<RestaurantCategoryViewModel> lrcv = new ArrayList<>();
-			rc.entrySet().forEach(c -> {
+		if (categoryViewModels.size() > 0) {
+			Map<Object, List<RestaurantCategoryViewModel>> rc = categoryViewModels.stream()
+					.collect(Collectors.groupingBy(RestaurantCategoryViewModel::getCategoryId));
+			List<RestaurantCategoryViewModel> restaurantCategoryViewModels = new ArrayList<>();
+			rc.forEach((key1, value) -> {
 				RestaurantCategoryViewModel rcv = new RestaurantCategoryViewModel();
-				rcv.setCategoryId((long) c.getKey());
-				int count = c.getValue().size();
+				rcv.setCategoryId((long) key1);
+				int count = value.size();
 
 				rcv.setNumberOfRest(count);
-				rcv.setCategoryName(c.getValue().get(0).getCategoryName());
+				rcv.setCategoryName(value.get(0).getCategoryName());
 
-				lrcv.add(rcv);
+				restaurantCategoryViewModels.add(rcv);
 			});
-			rr.setCategories(lrcv);
+			rr.setCategories(restaurantCategoryViewModels);
 		}
 
-		Restaurant minPrice = restaurants.stream().min(Comparator.comparing(Restaurant::getMinPrice))
+		Restaurant minPrice = Objects.requireNonNull(restaurants).stream().min(Comparator.comparing(Restaurant::getMinPrice))
 				.orElseThrow(NoSuchElementException::new);
 		Restaurant maxPrice = restaurants.stream().max(Comparator.comparing(Restaurant::getMinPrice))
 				.orElseThrow(NoSuchElementException::new);
@@ -403,6 +401,10 @@ public class RestaurantService {
 			});
 		}
 
+		// set payment provider
+		List<PaymentProviderViewModel> ppv = paymentProviderService.getPaymentProvidersByRestaurant(res.getRestaurantId());
+		c.setPaymentProviderLst(ppv);
+
 
 		// c.setUrlSlug(slg.slugify(vm.getName()));
 		// c.setStatus(Constant.Status.Publish.hashCode());
@@ -444,7 +446,7 @@ public class RestaurantService {
 			c.setDescription(desc != null && desc.size() > 0 ? desc.get(0) : "");
 		}
 
-		// coment
+		// comment
 		Set<RestaurantComment> srco = res.getRestaurantComments();
 		if (srco != null && srco.size() > 0) {
 			int cr = (int) srco.stream().filter(p -> p.getStatus() == Constant.Status.Publish.getValue()).count();
@@ -538,6 +540,11 @@ public class RestaurantService {
 			uvm.add(vm);
 		}
 		c.setAttributeLst(uvm);
+
+		// set payment provider
+		List<PaymentProviderViewModel> ppv = paymentProviderService.getPaymentProvidersByRestaurant(res.getRestaurantId());
+		c.setPaymentProviderLst(ppv);
+
 		return c;
 	}
 

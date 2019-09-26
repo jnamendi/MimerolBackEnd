@@ -168,7 +168,7 @@ public class OrderController extends BaseController {
 //			}
 			if (result.hasErrors()) {
 				rs.setStatus(7);
-				rs.setMessage(result.getFieldError().getDefaultMessage());
+				rs.setMessage(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
 				rs.setErrorType(Constant.ErrorTypeCommon.INVALID_INPUT);
 				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
 			}
@@ -198,7 +198,7 @@ public class OrderController extends BaseController {
 				//send sms
 				try {
 					logger.info("------------Send sms -- payment");
-					if (ps != null && req != null && ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
+					if (ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
 						smsService.sendSms(ps.getOrderCode(),ps.getPhone2(),req.getLanguageCode(), null, false);
 					}
 				}catch (Exception e){
@@ -226,6 +226,7 @@ public class OrderController extends BaseController {
 						vars.put("userName", req.getName() == null ? "" : req.getName());
 						vars.put("userCompanyName", req.getCompanyName() == null ? "" : req.getCompanyName());
 						vars.put("userAddress", req.getAddress() == null ? "" : req.getAddress());
+						vars.put("userZone", req.getZone() == null ? "" : req.getZone());
 						vars.put("userDistrict", req.getDistrict() == null ? "" : req.getDistrict());
 						vars.put("userCity", req.getCity() == null ? "" : req.getCity());
 						vars.put("userAddressDesc", req.getAddressDesc() == null ? "" : req.getAddressDesc());
@@ -233,7 +234,7 @@ public class OrderController extends BaseController {
 								req.getNumber() != null && !req.getNumber().isEmpty() ? req.getNumber() : "");
 						vars.put("deliveryTime", req.getTime() == null ? "" : req.getTime());
 						vars.put("remarks", req.getRemarks() == null ? "" : req.getRemarks());
-						vars.put("symbolLeft", req.getSymbolLeft() == null && req.getSymbolLeft().isEmpty() ? ""
+						vars.put("symbolLeft", req.getSymbolLeft() == null || req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
 						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
 						vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");

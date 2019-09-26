@@ -53,7 +53,7 @@ public class ZoneDAO {
         Join<Zone, Object> join = root.join("district");
         query =query.select(root)
                 .where(cb.and(
-                        cb.equal(join.get("districtId"), districtId)));
+                        cb.equal(join.get("districtId"), districtId))).orderBy(cb.asc(root.get("name")));
 
         List<Zone> c = session.createQuery(query).getResultList();
         if (c != null && c.size() > 0) {

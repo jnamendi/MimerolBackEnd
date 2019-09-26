@@ -87,7 +87,7 @@ public class RestaurantDAO {
 		try {
 
 			if (model != null) {
-				Boolean isF = false;
+				boolean isF = false;
 				String msg = "";
 
 				District district = ds.getBaseById(vm.getDistrictId());
