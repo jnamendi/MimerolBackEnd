@@ -33,7 +33,7 @@ public class RestaurantLiteResponse2 {
 	private String estTime;
 	private int status;
 	private boolean restaurantClosed;
-	private List<PaymentProviderViewModel> paymentProviderViewModels;
+	private List<PaymentProviderViewModel> paymentProviderLst;
 
 	public Double getDeliveryCost() {
 		return deliveryCost;
@@ -243,11 +243,11 @@ public class RestaurantLiteResponse2 {
 		this.restaurantWorkTimeModels = restaurantWorkTimeModels;
 	}
 
-	public List<PaymentProviderViewModel> getPaymentProviderViewModels() {
-		return paymentProviderViewModels;
+	public List<PaymentProviderViewModel> getPaymentProviderLst() {
+		return paymentProviderLst;
 	}
 
-	public void setPaymentProviderViewModels(List<PaymentProviderViewModel> paymentProviderViewModels) {
-		this.paymentProviderViewModels = paymentProviderViewModels;
+	public void setPaymentProviderLst(List<PaymentProviderViewModel> paymentProviderLst) {
+		this.paymentProviderLst = paymentProviderLst;
 	}
 }

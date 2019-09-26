@@ -40,6 +40,8 @@ public class RestaurantService {
 	private RestaurantWorkTimeService restaurantWorkTimeService;
 	@Autowired
 	private RestaurantAreaService restaurantAreaService;
+	@Autowired
+	private PaymentProviderService paymentProviderService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -403,6 +405,10 @@ public class RestaurantService {
 			});
 		}
 
+		// set payment provider
+		List<PaymentProviderViewModel> ppv = paymentProviderService.getPaymentProvidersByRestaurant(res.getRestaurantId());
+		c.setPaymentProviderLst(ppv);
+
 
 		// c.setUrlSlug(slg.slugify(vm.getName()));
 		// c.setStatus(Constant.Status.Publish.hashCode());
@@ -538,6 +544,11 @@ public class RestaurantService {
 			uvm.add(vm);
 		}
 		c.setAttributeLst(uvm);
+
+		// set payment provider
+		List<PaymentProviderViewModel> ppv = paymentProviderService.getPaymentProvidersByRestaurant(res.getRestaurantId());
+		c.setPaymentProviderLst(ppv);
+
 		return c;
 	}
 
