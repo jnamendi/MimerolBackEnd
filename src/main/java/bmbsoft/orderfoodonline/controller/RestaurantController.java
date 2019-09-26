@@ -600,10 +600,10 @@ public class RestaurantController extends BaseController {
 				return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
 			}
 			String key = "";
-			if (dCode != null && !dCode.isEmpty()) {
+			if (!dCode.isEmpty()) {
 				key += dCode;
 			}
-			if (cCode != null && !cCode.isEmpty()) {
+			if (!cCode.isEmpty()) {
 				key += "#" + cCode;
 			}
 			RestaurantResponse res = this.restaurantService.getByDistrict(req, l, key);

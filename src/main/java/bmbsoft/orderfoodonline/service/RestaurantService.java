@@ -222,8 +222,9 @@ public class RestaurantService {
 					vm.setNumOfReview(c);
 				}
 
-				// #end rating
-				crvm.add(vm);
+				// payment provider
+				List<PaymentProviderViewModel> paymentProviderViewModelList = paymentProviderService.getPaymentProvidersByRestaurant(r.getRestaurantId());
+				vm.setPaymentProviderLst(paymentProviderViewModelList);
 
 				// promotion
 
@@ -262,6 +263,9 @@ public class RestaurantService {
 					});
 				}
 				vm.setPromotionLineItems(lplr);
+
+
+				crvm.add(vm);
 			}
 		}
 		rr.setRestaurants(crvm);
