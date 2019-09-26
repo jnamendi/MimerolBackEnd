@@ -198,7 +198,7 @@ public class OrderController extends BaseController {
 				//send sms
 				try {
 					logger.info("------------Send sms -- payment");
-					if (ps != null && req != null && ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
+					if (ps.getOrderCode() != null && req.getNumber() != null && req.getTime() != null && req.getLanguageCode() != null){
 						smsService.sendSms(ps.getOrderCode(),ps.getPhone2(),req.getLanguageCode(), null, false);
 					}
 				}catch (Exception e){
@@ -226,6 +226,7 @@ public class OrderController extends BaseController {
 						vars.put("userName", req.getName() == null ? "" : req.getName());
 						vars.put("userCompanyName", req.getCompanyName() == null ? "" : req.getCompanyName());
 						vars.put("userAddress", req.getAddress() == null ? "" : req.getAddress());
+						vars.put("userZone", req.getZone() == null ? "" : req.getZone());
 						vars.put("userDistrict", req.getDistrict() == null ? "" : req.getDistrict());
 						vars.put("userCity", req.getCity() == null ? "" : req.getCity());
 						vars.put("userAddressDesc", req.getAddressDesc() == null ? "" : req.getAddressDesc());
