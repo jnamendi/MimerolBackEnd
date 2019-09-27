@@ -9,7 +9,6 @@ import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.service.*;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
-import bmbsoft.orderfoodonline.util.Constant.PaymentMethod;
 import com.google.gson.Gson;
 import jlibs.core.util.regex.TemplateMatcher;
 import org.slf4j.Logger;
@@ -236,12 +235,28 @@ public class OrderController extends BaseController {
 						vars.put("remarks", req.getRemarks() == null ? "" : req.getRemarks());
 						vars.put("symbolLeft", req.getSymbolLeft() == null || req.getSymbolLeft().isEmpty() ? ""
 								: req.getSymbolLeft());
-						vars.put("paymentType", PaymentMethod.valueOf(req.getPaymentType()).toString());
+
 						vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");
 						vars.put("guestPay", req.getPaymentWith() == null ? "" : req.getPaymentWith().toString());
 						vars.put("refunds", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
                                 String.valueOf(Math.round((req.getPaymentWith() - req.getOrderItem().getTotalPrice())*100) /100.0) : "");
 						vars.put("frontendUrl", frontendURL);
+						// set payment Type
+						if(req.getLanguageCode().equals("en")) {
+							switch (req.getPaymentType()) {
+								case 1 : vars.put("paymentType", Constant.CASH_EN);break;
+								case 2 : vars.put("paymentType", Constant.VISA_EN);break;
+								case 3 : vars.put("paymentType", Constant.PAYPAL_EN);break;
+								case 4 : vars.put("paymentType", Constant.CREDIT_DEBIT_ON_DELIVERY_EN);break;
+							}
+						} else {
+							switch (req.getPaymentType()) {
+								case 1 : vars.put("paymentType", Constant.CASH_ES);break;
+								case 2 : vars.put("paymentType", Constant.VISA_ES);break;
+								case 3 : vars.put("paymentType", Constant.PAYPAL_ES);break;
+								case 4 : vars.put("paymentType", Constant.CREDIT_DEBIT_ON_DELIVERY_ES);break;
+							}
+						}
 
 						StringBuilder sb = new StringBuilder();
 						if (req.getOrderItem().getOrderItemsRequest() != null
@@ -797,7 +812,6 @@ public class OrderController extends BaseController {
 							}
 						} else if(typeOfMail == Constant.EmailType.OrderCompleted.getValue()) {
 							map.put("restaurantName", or.getRestaurantName() == null ? "" : or.getRestaurantName());
-							map.put("paymentType",PaymentMethod.valueOf(or.getPaymentType()).toString());
 							map.put("deliveryCost", or.getDeliveryCost() == null ? "" : or.getDeliveryCost().toString());
 							map.put("symbolLeft", or.getSymbolLeft() == null ? "" : or.getSymbolLeft());
 							map.put("totalPrice", or.getTotalPrice() == null ? "" : or.getTotalPrice().toString());
@@ -810,6 +824,24 @@ public class OrderController extends BaseController {
 							map.put("userCity", sp.getCity() == null ? "" :sp.getCity());
 							map.put("userAddressDesc", sp.getAddressDesc() == null ? "" : sp.getAddressDesc());
 							map.put("userCompanyName", sp.getCompanyName() == null ? "" : sp.getCompanyName());
+
+							// set payment method
+							if(req.getLanguageCode().equals("en")) {
+								switch (or.getPaymentType()) {
+									case 1 : map.put("paymentType", Constant.CASH_EN);break;
+									case 2 : map.put("paymentType", Constant.VISA_EN);break;
+									case 3 : map.put("paymentType", Constant.PAYPAL_EN);break;
+									case 4 : map.put("paymentType", Constant.CREDIT_DEBIT_ON_DELIVERY_EN);break;
+								}
+							} else {
+								switch (or.getPaymentType()) {
+									case 1 : map.put("paymentType", Constant.CASH_ES);break;
+									case 2 : map.put("paymentType", Constant.VISA_ES);break;
+									case 3 : map.put("paymentType", Constant.PAYPAL_ES);break;
+									case 4 : map.put("paymentType", Constant.CREDIT_DEBIT_ON_DELIVERY_ES);break;
+								}
+							}
+
 							StringBuilder sb = new StringBuilder();
 							if (req.getOrderLineItems() != null
 									&& req.getOrderLineItems().size() > 0) {

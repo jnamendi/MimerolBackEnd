@@ -2,8 +2,6 @@ package bmbsoft.orderfoodonline.util;
 
 import bmbsoft.orderfoodonline.entities.CloseOpen;
 import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
-import bmbsoft.orderfoodonline.model.sModel;
-import com.google.gson.Gson;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,8 +13,11 @@ import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CommonHelper {
@@ -24,8 +25,8 @@ public class CommonHelper {
 		return BCrypt.hashpw(password, BCrypt.gensalt(4));
 	}
 
-	public static Boolean CheckPw(String password, String haspw) {
-		return BCrypt.checkpw(password, haspw);
+	public static Boolean CheckPw(String password, String hashPassword) {
+		return BCrypt.checkpw(password, hashPassword);
 	}
 
 	public static String applySha256(String input) {
@@ -91,30 +92,23 @@ public class CommonHelper {
 		DecimalFormat numberFormat = (DecimalFormat) DecimalFormat.getNumberInstance(locale);
 		numberFormat.setCurrency(currency);
 
-		// DecimalFormat df = new DecimalFormat("####,####.##");
-		// return df.format(number);
 		return numberFormat.format(number);
 	}
 
-	public static String doUpload(String oldFile, MultipartFile file) {
-
+	public static String doUpload(String oldFile, MultipartFile file) throws Exception {
 		try {
-			if (file == null && oldFile != null && !oldFile.isEmpty())
-				return oldFile;
-
-			if (file == null && (oldFile == null || oldFile.isEmpty()))
-				return null;
+			if (file == null) {
+				if (oldFile != null && !oldFile.isEmpty()) return oldFile;
+				else return null;
+			}
 
 			// delete file
 			if (oldFile != null && !oldFile.isEmpty()) {
-				String uploadRootPath = System.getProperty("user.dir") + "/";
+				String uploadRootPath = System.getProperty("user.home") + "/";
 				delete(new File(uploadRootPath + oldFile));
 			}
 
-			// test
-			String imgUrl = null;
-			String uploadRootPath = System.getProperty("user.dir") + "/images";
-			System.out.println("uploadRootPath=" + uploadRootPath);
+			String uploadRootPath = System.getProperty("user.home") + "/images";
 			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 			String time = format.format(new Date());
 
@@ -123,54 +117,33 @@ public class CommonHelper {
 			if (!uploadRootDir.exists()) {
 				uploadRootDir.mkdirs();
 			}
-			sModel r = new sModel();
 
 			String name = file.getOriginalFilename();
-			System.out.println("Client File Name = " + name);
 
 			if (name != null && name.length() > 0) {
-				try {
-					Long t = new Date().getTime();
-					String fileName = t + "_" + name;
-					File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + fileName);
+				long t = new Date().getTime();
+				String fileName = t + "_" + name;
+				File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + fileName);
 
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(file.getBytes());
-					stream.close();
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+				stream.write(file.getBytes());
+				stream.close();
 
-					System.out.println("Write file: " + serverFile);
-
-					return "images/" + time + "/" + fileName;
-
-				} catch (Exception e) {
-					System.out.println("Error Write file: " + name);
-				}
+				return "images/" + time + "/" + fileName;
 			}
-			return imgUrl;
+			throw new Exception("File name invalid");
 		} catch (Exception e) {
-			return null;
+			throw new Exception("Can not upload file!");
 		}
 	}
 
 	private static void delete(File file) {
-		boolean success = false;
 		if (file.isDirectory()) {
-			for (File deleteMe : file.listFiles()) {
+			for (File deleteMe : Objects.requireNonNull(file.listFiles())) {
 				// recursive delete
 				delete(deleteMe);
 			}
 		}
-		success = file.delete();
-		if (success) {
-			System.out.println(file.getAbsoluteFile() + " Deleted");
-		} else {
-			System.out.println(file.getAbsoluteFile() + " Deletion failed!!!");
-		}
-	}
-
-	public static String toJson(Object obj) {
-		Gson gson = new Gson();
-		return gson.toJson(obj);
 	}
 
 	public static boolean checkBetweenTime(List<RestaurantWorkTimeModel> rwt) {
@@ -222,20 +195,15 @@ public class CommonHelper {
 			if (closeTime == null || closeTime.isEmpty())
 				return false;
 			// check open time close time
-			String string1 = openTime;
-			Date time1 = new SimpleDateFormat("HH:mm").parse(string1);
+			Date time1 = new SimpleDateFormat("HH:mm").parse(openTime);
 			Calendar calendar1 = Calendar.getInstance();
 			calendar1.setTime(time1);
 
-			String string2 = closeTime;
-			Date time2 = new SimpleDateFormat("HH:mm").parse(string2);
+			Date time2 = new SimpleDateFormat("HH:mm").parse(closeTime);
 			Calendar calendar2 = Calendar.getInstance();
 			calendar2.setTime(time2);
 
-			if (calendar1.after(calendar2)) {
-				return true;
-			}
-			return false;
+			return calendar1.after(calendar2);
 		} catch (Exception e) {
 			return false;
 		}
