@@ -6,32 +6,14 @@ import java.util.Map;
 public class Constant {
 	public static int PageNumber = 20;
 	public static final int EXPIRATION = 60 * 30;
-
-	public enum PaymentMethod {
-		Cash(1), Visa(2), Paypal(3), Credit_On_Delivery(4);
-
-		private int value;
-
-		PaymentMethod(int v) {
-			this.value = v;
-		}
-
-		private static Map map = new HashMap<>();
-
-		static {
-			for (PaymentMethod pageType : PaymentMethod.values()) {
-				map.put(pageType.value, pageType);
-			}
-		}
-
-		public static PaymentMethod valueOf(int pageType) {
-			return (PaymentMethod) map.get(pageType);
-		}
-
-		public int getValue() {
-			return value;
-		}
-	}
+	public static final String CASH_EN = "Cash";
+	public static final String VISA_EN = "Visa";
+	public static final String PAYPAL_EN = "Paypal";
+	public static final String CREDIT_DEBIT_ON_DELIVERY_EN = "Cash/Debit on delivery";
+	public static final String CASH_ES = "EFECTIVO";
+	public static final String CREDIT_DEBIT_ON_DELIVERY_ES = "PAGO CON TARJETA";
+	public static final String PAYPAL_ES = "Paypal";
+	public static final String VISA_ES = "Visa";
 
 	public enum ContactType {
 		Suggestion(1), Complaint(2), Question(3);
