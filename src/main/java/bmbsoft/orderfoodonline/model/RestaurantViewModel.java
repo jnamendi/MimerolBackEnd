@@ -45,6 +45,15 @@ public class RestaurantViewModel {
 	private List<Long> workArea;
 	private Long zoneId;
 	private String zone;
+	private List<DeliveryArea> deliveryArea;
+
+	public List<DeliveryArea> getDeliveryArea() {
+		return deliveryArea;
+	}
+
+	public void setDeliveryArea(List<DeliveryArea> deliveryArea) {
+		this.deliveryArea = deliveryArea;
+	}
 
 	public Integer getTypeReceive() {
 		return typeReceive;

@@ -10,6 +10,7 @@ public class RestaurantArea implements java.io.Serializable {
     private Long restaurantAreaId;
     private Restaurant restaurant;
     private District district;
+    private Zone zone;
 
     public RestaurantArea() {
     }
@@ -49,5 +50,15 @@ public class RestaurantArea implements java.io.Serializable {
 
     public void setDistrict(District district) {
         this.district = district;
+    }
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "zone_id", nullable = false)
+    public Zone getZone() {
+        return zone;
+    }
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 }

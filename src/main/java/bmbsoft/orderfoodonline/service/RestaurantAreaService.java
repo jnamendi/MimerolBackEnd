@@ -3,10 +3,7 @@ package bmbsoft.orderfoodonline.service;
 import bmbsoft.orderfoodonline.dao.RestaurantAreaDAO;
 import bmbsoft.orderfoodonline.entities.District;
 import bmbsoft.orderfoodonline.entities.RestaurantArea;
-import bmbsoft.orderfoodonline.model.CityViewModel;
-import bmbsoft.orderfoodonline.model.DistrictViewModel;
-import bmbsoft.orderfoodonline.model.RestaurantDeliveryAreaModel;
-import bmbsoft.orderfoodonline.model.RestaurantDeliveryDistrictModel;
+import bmbsoft.orderfoodonline.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -143,6 +140,29 @@ public class RestaurantAreaService {
 
         return new ArrayList(districts);
     }
+
+    @Transactional
+    public List<DeliveryArea> getDeliveryZone(long restaurantId, List<Long> idDis){
+        List<DeliveryArea> deliveryAreaList = new ArrayList<>();
+        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+
+        if(ra != null && !ra.isEmpty() && idDis!= null && !idDis.isEmpty()) {
+            for (Long l: idDis ){
+                DeliveryArea dlv = new DeliveryArea();
+                List<Long> z = new ArrayList<>();
+                dlv.setDeliveryAreaId(l);
+                for (RestaurantArea r: ra) {
+                    if(r.getDistrict().getDistrictId() == l){
+                        z.add(r.getZone().getZoneId());
+                    }
+                }
+                dlv.setDeliveryZoneId(z);
+                deliveryAreaList.add(dlv);
+            }
+        }
+        return deliveryAreaList;
+    }
+
 
     private DistrictViewModel convertEntityToModel(final District district) {
         if (null == district)

@@ -365,6 +365,8 @@ public class RestaurantService {
 
 		c.setWorkArea(restaurantAreaService.getDistrictDeliveryListByRestaurant(res.getRestaurantId()));
 
+		c.setDeliveryArea(restaurantAreaService.getDeliveryZone(res.getRestaurantId(),restaurantAreaService.getDistrictDeliveryListByRestaurant(res.getRestaurantId())));
+
 		List<Long> ownerId = new ArrayList<>();
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
 			res.getUserRestaurants().forEach(item -> {
