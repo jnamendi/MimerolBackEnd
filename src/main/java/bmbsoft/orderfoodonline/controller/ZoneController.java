@@ -2,6 +2,7 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.model.ZoneViewModel;
 import bmbsoft.orderfoodonline.response.ResponseGet;
+import bmbsoft.orderfoodonline.service.RestaurantAreaService;
 import bmbsoft.orderfoodonline.service.ZoneService;
 import bmbsoft.orderfoodonline.util.Constant;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -48,6 +50,21 @@ public class ZoneController {
             return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/api/zone/getZoneByDistrict/{districtId}/{restaurantId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getZoneByDistrict(@PathVariable long districtId,@PathVariable long restaurantId) {
+        ResponseGet responseGet = new ResponseGet();
+        try {
+            List<ZoneViewModel> c = zoneService.getZonebyDistrict(districtId,restaurantId);
+            return setContent(responseGet, c);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            responseGet.setStatus(1);
+            responseGet.setMessage(e.toString());
+            return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     private ResponseEntity<?> setContent(ResponseGet responseGet, List<ZoneViewModel> c) {
         if (c == null || c.isEmpty()) {

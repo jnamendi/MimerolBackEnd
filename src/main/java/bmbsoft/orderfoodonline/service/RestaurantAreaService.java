@@ -21,6 +21,12 @@ public class RestaurantAreaService {
     @Autowired
     private CityService cityService;
 
+    @Autowired
+    private RestaurantAreaService restaurantAreaService;
+
+    @Autowired
+    private DistrictService districtService;
+
     @Transactional
     public List<RestaurantDeliveryAreaModel> getDistrictByRestaurant(long restaurantId) {
         List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
@@ -113,18 +119,13 @@ public class RestaurantAreaService {
 
     @Transactional
     public List<DistrictViewModel> getDistrictByRestaurantAndCity(long restaurantId, long cityId) {
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
         List<DistrictViewModel> districtViewModels = new ArrayList<>();
-        if(ra != null && !ra.isEmpty()) {
-            for (RestaurantArea r: ra) {
-
-                if(r.getDistrict().getCity().getCityId().equals(cityId)) {
-                    DistrictViewModel model = convertEntityToModel(r.getDistrict());
-                    districtViewModels.add(model);
-                }
-            }
+        List<Long> arrayDis = restaurantAreaService.getDistrictDeliveryListByRestaurant(restaurantId);
+        if(arrayDis != null && !arrayDis.isEmpty()){
+            arrayDis.forEach(d->{
+                districtViewModels.add(districtService.getById(d));
+            });
         }
-
         return districtViewModels;
     }
 
@@ -152,7 +153,7 @@ public class RestaurantAreaService {
                 List<Long> z = new ArrayList<>();
                 dlv.setDeliveryAreaId(l);
                 for (RestaurantArea r: ra) {
-                    if(r.getDistrict().getDistrictId() == l){
+                    if(r.getDistrict().getDistrictId() == l && r.getZone().getZoneId() != null){
                         z.add(r.getZone().getZoneId());
                     }
                 }
