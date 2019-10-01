@@ -38,7 +38,7 @@ public class Menu implements java.io.Serializable {
 	private Integer sortOrder;
 	private String imageUrl;
 	private Double rate;
-	private Set<MenuItem> menuItems = new HashSet<MenuItem>(0);
+	private Set<MenuItem> menuItems = new HashSet<>(0);
 
 	public Menu() {
 	}

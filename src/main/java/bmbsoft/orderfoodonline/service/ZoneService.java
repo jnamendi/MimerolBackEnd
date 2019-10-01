@@ -1,7 +1,6 @@
 package bmbsoft.orderfoodonline.service;
 
 import bmbsoft.orderfoodonline.dao.ZoneDAO;
-import bmbsoft.orderfoodonline.entities.RestaurantArea;
 import bmbsoft.orderfoodonline.entities.Zone;
 import bmbsoft.orderfoodonline.model.DeliveryArea;
 import bmbsoft.orderfoodonline.model.ZoneViewModel;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,9 +29,7 @@ public class ZoneService {
         List<ZoneViewModel> listModel = new LinkedList<>();
         List<Zone> zones = zoneDAO.getAll();
 
-        zones.forEach(zone -> {
-            listModel.add(convertEntityToModel(zone));
-        });
+        zones.forEach(zone -> listModel.add(convertEntityToModel(zone)));
         return listModel;
     }
 
@@ -51,9 +47,7 @@ public class ZoneService {
     public List<ZoneViewModel> getByDistrict(final long id) {
         List<ZoneViewModel> listModel = new LinkedList<>();
         List<Zone> zones = zoneDAO.getZoneByDistrictId(id);
-        zones.forEach(zone -> {
-            listModel.add(convertEntityToModel(zone));
-        });
+        zones.forEach(zone -> listModel.add(convertEntityToModel(zone)));
         return listModel;
     }
 
@@ -64,9 +58,7 @@ public class ZoneService {
         if(zoneList != null && !zoneList.isEmpty()){
             zoneList.forEach( s ->{
                 if(s.getDeliveryAreaId() == idDis){
-                    s.getDeliveryZoneId().forEach(z -> {
-                        listModel.add(convertEntityToModel(zoneDAO.getById(z)));
-                    });
+                    s.getDeliveryZoneId().forEach(z -> listModel.add(convertEntityToModel(zoneDAO.getById(z))));
                 }
             });
         }
