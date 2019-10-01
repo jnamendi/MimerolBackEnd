@@ -37,6 +37,7 @@ public class RestaurantViewModel {
 	private Double deliveryCost;
 	private String estDeliveryTime;
 	private List<HashMap> userIds;
+	private List<HashMap> userList;
 	private List<PromotionLineitemResponse> promotionLineItems;
 	private String city; 
 	private boolean restaurantClosed;
@@ -45,6 +46,23 @@ public class RestaurantViewModel {
 	private List<Long> workArea;
 	private Long zoneId;
 	private String zone;
+	private List<DeliveryArea> deliveryArea;
+
+	public List<HashMap> getUserList() {
+		return userList;
+	}
+
+	public void setUserList(List userList) {
+		this.userList = userList;
+	}
+
+	public List<DeliveryArea> getDeliveryArea() {
+		return deliveryArea;
+	}
+
+	public void setDeliveryArea(List<DeliveryArea> deliveryArea) {
+		this.deliveryArea = deliveryArea;
+	}
 
 	public Integer getTypeReceive() {
 		return typeReceive;

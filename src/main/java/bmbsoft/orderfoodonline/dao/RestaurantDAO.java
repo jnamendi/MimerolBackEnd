@@ -266,6 +266,25 @@ public class RestaurantDAO {
 					}
 				}
 
+				if(vm.getDeliveryArea() != null && !vm.getDeliveryArea().isEmpty()){
+					String removeDeliveryArea = "DELETE FROM restaurant_area WHERE restaurant_id=:resId";
+					session.createNativeQuery(removeDeliveryArea).setParameter("resId", resId)
+							.executeUpdate();
+
+					// save data
+					for (DeliveryArea c : vm.getDeliveryArea()) {
+						for (Long z1 : c.getDeliveryZoneId()){
+							RestaurantArea ra = new RestaurantArea();
+							District d = ds.getBaseById(c.getDeliveryAreaId());
+							Zone zone1 = zs.getBaseById(z1);
+							ra.setDistrict(d);
+							ra.setRestaurant(res);
+							ra.setZone(zone1);
+							session.save(ra);
+						}
+					}
+				}
+
 				if (!isF) {
 
 					t.commit();
@@ -410,6 +429,20 @@ public class RestaurantDAO {
 						District d = ds.getBaseById(c);
 						ra.setDistrict(d);
 						session.save(ra);
+					}
+				}
+
+				if (vm.getDeliveryArea() != null && !vm.getDeliveryArea().isEmpty()){
+					for (DeliveryArea c : vm.getDeliveryArea()) {
+						for (Long z1 : c.getDeliveryZoneId()){
+							RestaurantArea ra = new RestaurantArea();
+							District d = ds.getBaseById(c.getDeliveryAreaId());
+							Zone zone1 = zs.getBaseById(z1);
+							ra.setDistrict(d);
+							ra.setRestaurant(res);
+							ra.setZone(zone1);
+							session.save(ra);
+						}
 					}
 				}
 
