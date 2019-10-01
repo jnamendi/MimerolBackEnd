@@ -1,6 +1,7 @@
 package bmbsoft.orderfoodonline.service;
 
 import bmbsoft.orderfoodonline.dao.ZoneDAO;
+import bmbsoft.orderfoodonline.entities.RestaurantArea;
 import bmbsoft.orderfoodonline.entities.Zone;
 import bmbsoft.orderfoodonline.model.DeliveryArea;
 import bmbsoft.orderfoodonline.model.ZoneViewModel;
@@ -57,7 +58,7 @@ public class ZoneService {
     }
 
     @Transactional
-    public List<ZoneViewModel> getZonebyDistrict(final  long idDis,long idRes){
+    public List<ZoneViewModel> getZoneByDistrict(final  long idDis, long idRes){
         List<ZoneViewModel> listModel = new LinkedList<>();
         List<DeliveryArea> zoneList = restaurantAreaService.getDeliveryZone(idRes,restaurantAreaService.getDistrictDeliveryListByRestaurant(idRes));
         if(zoneList != null && !zoneList.isEmpty()){
@@ -71,6 +72,12 @@ public class ZoneService {
         }
         return listModel;
     }
+
+    @Transactional
+    public boolean checkZoneByRestaurant(final  long zoneId, long idRes){
+        return restaurantAreaService.getZoneByRestaurant(zoneId,idRes);
+    }
+
 
 
     private ZoneViewModel convertEntityToModel(final Zone zone) {

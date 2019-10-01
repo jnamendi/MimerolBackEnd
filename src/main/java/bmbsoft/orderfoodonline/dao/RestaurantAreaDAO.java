@@ -1,8 +1,6 @@
 package bmbsoft.orderfoodonline.dao;
 
-import bmbsoft.orderfoodonline.entities.City;
 import bmbsoft.orderfoodonline.entities.RestaurantArea;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class RestaurantAreaDAO {
         }
     }
 
-    public List<RestaurantArea> getDistrictIdByRestaurantId(long restaurantId) {
+    public List<RestaurantArea> getZoneIdByRestaurantId(long restaurantId) {
         Session session = this.sessionFactory.getCurrentSession();
         CriteriaBuilder criteriaBd = session.getCriteriaBuilder();
         CriteriaQuery<RestaurantArea> query = criteriaBd.createQuery(RestaurantArea.class);
@@ -44,4 +43,19 @@ public class RestaurantAreaDAO {
         return session.createQuery(query).getResultList();
     }
 
+    public boolean checkZone(long zoneId,long restaurantId) {
+        Session session = this.sessionFactory.getCurrentSession();
+        CriteriaBuilder criteriaBd = session.getCriteriaBuilder();
+        CriteriaQuery<RestaurantArea> query = criteriaBd.createQuery(RestaurantArea.class);
+        Root<RestaurantArea> root = query.from(RestaurantArea.class);
+        query.select(root).where(toPredicate(root, criteriaBd, zoneId, restaurantId));
+        return !session.createQuery(query).getResultList().isEmpty();
+    }
+
+    private Predicate toPredicate(Root<?> root, CriteriaBuilder cb, long zoneId, long restaurantId) {
+        Predicate predicate = cb.conjunction();
+        predicate = cb.and(predicate, cb.equal(root.<Long>get("restaurant"), restaurantId));
+        predicate = cb.and(predicate, cb.equal(root.<Integer>get("zone"), zoneId));
+        return predicate;
+    }
 }

@@ -368,10 +368,16 @@ public class RestaurantService {
 		c.setDeliveryArea(restaurantAreaService.getDeliveryZone(res.getRestaurantId(),restaurantAreaService.getDistrictDeliveryListByRestaurant(res.getRestaurantId())));
 
 		List<Long> ownerId = new ArrayList<>();
+		List<UserInfoResponse> userInfoResponseArrayList = new ArrayList<>();
 		if (res.getUserRestaurants() != null && !res.getUserRestaurants().isEmpty()) {
 			res.getUserRestaurants().forEach(item -> {
+				UserInfoResponse u = new UserInfoResponse();
+				u.setContactName(item.getUser().getFullName());
+				u.setUserInfoId(item.getUser().getUserId());
+				userInfoResponseArrayList.add(u);
 				ownerId.add(item.getUser().getUserId());
 			});
+			c.setUserList(userInfoResponseArrayList);
 			c.setUserIdArray(ownerId);
 			//c.setUserIds(owners);
 		}

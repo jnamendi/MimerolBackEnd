@@ -29,7 +29,7 @@ public class RestaurantAreaService {
 
     @Transactional
     public List<RestaurantDeliveryAreaModel> getDistrictByRestaurant(long restaurantId) {
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         List<RestaurantDeliveryAreaModel> deliveryAreaModelsList = new ArrayList<>();
         List<RestaurantDeliveryAreaModel> result = new ArrayList<>();
         Set<Long> cityList = new HashSet<>();
@@ -84,7 +84,7 @@ public class RestaurantAreaService {
 
     @Transactional
     public List<CityViewModel> getCityByRestaurant(long restaurantId) {
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         List<CityViewModel> cityViewModelList = new ArrayList<>();
         Set<Long> cityList = new HashSet<>();
 
@@ -132,7 +132,7 @@ public class RestaurantAreaService {
     @Transactional
     public List<Long> getDistrictDeliveryListByRestaurant(long restaurantId) {
         Set<Long> districts = new HashSet<>();
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         if(ra != null && !ra.isEmpty()) {
             for (RestaurantArea r: ra) {
                 districts.add(r.getDistrict().getDistrictId());
@@ -145,7 +145,7 @@ public class RestaurantAreaService {
     @Transactional
     public List<DeliveryArea> getDeliveryZone(long restaurantId, List<Long> idDis){
         List<DeliveryArea> deliveryAreaList = new ArrayList<>();
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
 
         if(ra != null && !ra.isEmpty() && idDis!= null && !idDis.isEmpty()) {
             for (Long l: idDis ){
@@ -164,6 +164,10 @@ public class RestaurantAreaService {
         return deliveryAreaList;
     }
 
+    @Transactional
+    public boolean getZoneByRestaurant(long zoneId,long restaurantId){
+        return areaDAO.checkZone(zoneId,restaurantId);
+    }
 
     private DistrictViewModel convertEntityToModel(final District district) {
         if (null == district)

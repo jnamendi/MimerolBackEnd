@@ -2,7 +2,6 @@ package bmbsoft.orderfoodonline.controller;
 
 import bmbsoft.orderfoodonline.model.ZoneViewModel;
 import bmbsoft.orderfoodonline.response.ResponseGet;
-import bmbsoft.orderfoodonline.service.RestaurantAreaService;
 import bmbsoft.orderfoodonline.service.ZoneService;
 import bmbsoft.orderfoodonline.util.Constant;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -55,7 +53,7 @@ public class ZoneController {
     public ResponseEntity<?> getZoneByDistrict(@PathVariable long districtId,@PathVariable long restaurantId) {
         ResponseGet responseGet = new ResponseGet();
         try {
-            List<ZoneViewModel> c = zoneService.getZonebyDistrict(districtId,restaurantId);
+            List<ZoneViewModel> c = zoneService.getZoneByDistrict(districtId,restaurantId);
             return setContent(responseGet, c);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -65,6 +63,15 @@ public class ZoneController {
         }
     }
 
+    @RequestMapping(value = "/api/zone/checkZoneRestaurant/{zoneId}/{restaurantId}", method = RequestMethod.GET)
+    public Boolean checkZoneRestaurant(@PathVariable long zoneId, @PathVariable long restaurantId) {
+        ResponseGet responseGet = new ResponseGet();
+        try {
+             return  zoneService.checkZoneByRestaurant(zoneId,restaurantId);
+        } catch (Exception e) {
+           return  false;
+        }
+    }
 
     private ResponseEntity<?> setContent(ResponseGet responseGet, List<ZoneViewModel> c) {
         if (c == null || c.isEmpty()) {
