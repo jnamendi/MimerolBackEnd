@@ -37,14 +37,14 @@ public class Menu implements java.io.Serializable {
 	private String modifiedBy;
 	private Integer sortOrder;
 	private String imageUrl;
+	private Double rate;
 	private Set<MenuItem> menuItems = new HashSet<MenuItem>(0);
 
 	public Menu() {
 	}
 
-	public Menu(ContentDefinition contentDefinition, Restaurant restaurant, String name, String code, String urlSlug,
-			Integer status, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy, Integer sortOrder,
-			String imageUrl, Set<MenuItem> menuItems) {
+	public Menu(Long menuId, ContentDefinition contentDefinition, Restaurant restaurant, String name, String code, String urlSlug, Integer status, Date createdDate, String createdBy, Date modifiedDate, String modifiedBy, Integer sortOrder, String imageUrl, Double rate, Set<MenuItem> menuItems) {
+		this.menuId = menuId;
 		this.contentDefinition = contentDefinition;
 		this.restaurant = restaurant;
 		this.name = name;
@@ -57,6 +57,7 @@ public class Menu implements java.io.Serializable {
 		this.modifiedBy = modifiedBy;
 		this.sortOrder = sortOrder;
 		this.imageUrl = imageUrl;
+		this.rate = rate;
 		this.menuItems = menuItems;
 	}
 
@@ -182,6 +183,15 @@ public class Menu implements java.io.Serializable {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	@Column(name = "rate", precision = 5, scale = 2)
+	public Double getRate() {
+		return rate;
+	}
+
+	public void setRate(Double rate) {
+		this.rate = rate;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")

@@ -66,11 +66,7 @@ public class MenuService {
 		}
 
 		List<MenuViewModel> menuModels = new LinkedList<>();
-		if (Menus != null && !Menus.isEmpty()) {
-			Menus.forEach(res -> {
-				menuModels.add(entityToModel(res, codeLang));
-			});
-		}
+		Menus.forEach(res -> menuModels.add(entityToModel(res, codeLang)));
 
 		if (totalRecord > 0 && !menuModels.isEmpty()) {
 			content.setData(menuModels);
@@ -132,11 +128,7 @@ public class MenuService {
 		}
 
 		List<MenuViewModel> menuModels = new LinkedList<>();
-		if (menus != null && !menus.isEmpty()) {
-			menus.forEach(m -> {
-				menuModels.add(this.entityToModel(m, codeLang));
-			});
-		}
+		menus.forEach(m -> menuModels.add(this.entityToModel(m, codeLang)));
 
 		if (totalRecord > 0 && !menuModels.isEmpty()) {
 			content.setData(menuModels);
@@ -166,6 +158,7 @@ public class MenuService {
 		vm.setName(m.getName());
 		vm.setUrl_slug(m.getUrlSlug());
 		vm.setStatus(m.getStatus());
+		vm.setRate(m.getRate());
 		vm.setRestaurantId(m.getRestaurant().getRestaurantId());
 		vm.setRestaurantName(m.getRestaurant().getName());
 		vm.setLanguageLst(languageService.translate(m.getContentDefinition(), lang));
@@ -228,7 +221,7 @@ public class MenuService {
 						mlr.setMenuName(name);
 						mlr.setCurrencyCode(cur.getCode());
 						mlr.setUrlSlug(CommonHelper.toPrettyURL(name));
-						
+
 						// menu
 						lm.add(mlr); 
 						mr.setMennu(lm);
