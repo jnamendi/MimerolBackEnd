@@ -149,6 +149,7 @@ public class MenuDAO {
 			menu.setModifiedDate(new Date());
 			menu.setStatus(menuModel.getStatus());
 			menu.setSortOrder(menuModel.getSortOrder());
+			menu.setRate(menuModel.getRate());
 
 			String imageUrl = CommonHelper.doUpload(menu.getImageUrl(), file);
 			menu.setImageUrl(imageUrl);
@@ -157,7 +158,7 @@ public class MenuDAO {
 
 			String q = "DELETE FROM content_entry WHERE content_dep_id=:cd";
 			Long cdId = cd.getContentDepId();
-			int d = session.createNativeQuery(q).setParameter("cd", cdId).executeUpdate();
+			session.createNativeQuery(q).setParameter("cd", cdId).executeUpdate();
 
 			boolean isF = false;
 			List<LanguageViewModel> lvm = menuModel.getLanguageLst();
@@ -267,34 +268,6 @@ public class MenuDAO {
 		} finally {
 			session.close();
 		}
-	}
-
-	/**
-	 * @param vm
-	 * @return new Menu miss ContenDefinition or old Menu updated
-	 */
-	private Menu convertModelToEntity(final MenuRequest vm) {
-		Menu menu = new Menu();
-		if (vm.getMenuId() != null && vm.getMenuId() > 0) {
-			menu = getById(vm.getMenuId());
-			// miss modified by.
-			menu.setName(vm.getName());
-			menu.setUrlSlug(CommonHelper.toPrettyURL(vm.getName()));
-			menu.setModifiedDate(new Date());
-			menu.setStatus(vm.getStatus());
-			menu.setSortOrder(vm.getSortOrder());
-			return menu;
-		}
-		// new menu object miss filed ContenDefinition
-		// miss create by.
-		menu.setName(vm.getName());
-		menu.setRestaurant(restaurantDAO.getById(vm.getRestaurantId()));
-		menu.setUrlSlug(CommonHelper.toPrettyURL(vm.getName()));
-		menu.setCreatedDate(new Date());
-		menu.setStatus(vm.getStatus());
-		menu.setSortOrder(vm.getSortOrder());
-		menu.setRate(vm.getRate());
-		return menu;
 	}
 
 	public List<Menu> getMenuByOwner(final int firstResult, final int maxResult, long idOwner) {
