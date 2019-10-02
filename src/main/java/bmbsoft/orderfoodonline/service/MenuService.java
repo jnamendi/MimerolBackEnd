@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import bmbsoft.orderfoodonline.model.shared.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,6 @@ import bmbsoft.orderfoodonline.entities.Menu;
 import bmbsoft.orderfoodonline.entities.MenuExtraItem;
 import bmbsoft.orderfoodonline.entities.MenuItem;
 import bmbsoft.orderfoodonline.model.MenuViewModel;
-import bmbsoft.orderfoodonline.model.shared.CurrencyResponse;
-import bmbsoft.orderfoodonline.model.shared.ExtraItemLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuExtraItemLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuItemLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuRequest;
-import bmbsoft.orderfoodonline.model.shared.MenuResponse;
 import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.CommonHelper;
@@ -43,6 +37,8 @@ public class MenuService {
 	private LanguageService languageService;
 	@Autowired
 	CurrencyDAO currencyDAO;
+	@Autowired
+	MenuItemTimeAvailableService menuItemTimeAvailableService;
 
 	@Transactional
 	@Async
@@ -227,6 +223,7 @@ public class MenuService {
 							MenuItemLiteResponse menuItemLiteResponse = new MenuItemLiteResponse();
 							menuItemLiteResponse.setMenuItemId(mi.getMenuItemId());
 							menuItemLiteResponse.setMenuId(m.getMenuId());
+							List<MenuItemTimeAvailableModel> mta = menuItemTimeAvailableService.getByMenutId(mi.getMenuItemId());
 
 							HashMap<String, String> miNames = languageService.hashMapTranslate1(mi.getContentDefinition(),
 									l);
@@ -244,8 +241,7 @@ public class MenuService {
 							menuItemLiteResponse.setCurrencyRate(cur.getRate());
 							menuItemLiteResponse.setSymbolLeft(cur.getSymbolLeft());
 							menuItemLiteResponse.setPriceRate(mi.getPrice() * cur.getRate());
-							menuItemLiteResponse.setAvailable(checkItemAvailable(mi.getAvailableMonday(), mi.getAvailableTuesday(), mi.getAvailableWednesday(),
-							mi.getAvailableThursday(), mi.getAvailableFriday(), mi.getAvailableSaturday(), mi.getAvailableSunday()));
+							menuItemLiteResponse.setAvailable(CommonHelper.checkBetweenTimeMenu(mta));
 							menuItemLiteResponse.setOutOfStock(mi.getOutOfStock());
 							menuItemLiteResponse.setPriority(mi.getPriority());
 							// get menu extra

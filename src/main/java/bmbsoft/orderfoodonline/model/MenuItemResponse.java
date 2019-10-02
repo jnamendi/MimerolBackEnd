@@ -2,6 +2,7 @@ package bmbsoft.orderfoodonline.model;
 
 import java.util.List;
 
+import bmbsoft.orderfoodonline.model.shared.MenuItemTimeAvailableModel;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -47,6 +48,15 @@ public class MenuItemResponse {
 	private Integer priority;
 	private List<LanguageViewModel> languageLst;
 	private List<MenuExtraItemResponse> menuExtraLst;
+	private List<MenuItemTimeAvailableModel> listMenuTimeAvailableModel;
+
+	public List<MenuItemTimeAvailableModel> getListMenuTimeAvailableModel() {
+		return listMenuTimeAvailableModel;
+	}
+
+	public void setListMenuTimeAvailableModel(List<MenuItemTimeAvailableModel> listMenuTimeAvailableModel) {
+		this.listMenuTimeAvailableModel = listMenuTimeAvailableModel;
+	}
 
 	public Long getMenuItemId() {
 		return menuItemId;

@@ -62,6 +62,8 @@ public class ZoneService {
                 }
             });
         }
+        listModel.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
+
         return listModel;
     }
 

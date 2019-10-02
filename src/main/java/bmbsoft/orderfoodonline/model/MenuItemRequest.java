@@ -4,9 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import bmbsoft.orderfoodonline.model.shared.MenuItemTimeAvailableModel;
 
 public class MenuItemRequest {
 
@@ -28,8 +26,16 @@ public class MenuItemRequest {
 	@NotNull(message = "languageLst is field required.")
 	private List<LanguageViewModel> languageLst;
 	private List<MenuExtraItemRequest> menuExtraLst;
-	
-	 
+	private List<MenuItemTimeAvailableModel> listMenuTimeAvailableModel;
+
+	public List<MenuItemTimeAvailableModel> getListMenuTimeAvailableModel() {
+		return listMenuTimeAvailableModel;
+	}
+
+	public void setListMenuTimeAvailableModel(List<MenuItemTimeAvailableModel> listMenuTimeAvailableModel) {
+		this.listMenuTimeAvailableModel = listMenuTimeAvailableModel;
+	}
+
 	public Long getMenuId() {
 		return menuId;
 	}
