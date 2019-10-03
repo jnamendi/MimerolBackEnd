@@ -89,11 +89,7 @@ public class MenuItemService {
 		}
 
 		List<MenuItemResponse> lmr = new LinkedList<>();
-		if (Categories != null && !Categories.isEmpty()) {
-			Categories.forEach(res -> {
-				lmr.add(entityToModel(res, codeLanguage));
-			});
-		}
+		Categories.forEach(res -> lmr.add(entityToModel(res, codeLanguage)));
 		if (totalRecord > 0 && !lmr.isEmpty()) {
 			content.setData(lmr);
 			content.setPageIndex(pageIndex);
@@ -114,14 +110,14 @@ public class MenuItemService {
 		int currentPage = (pageIndex < 1) ? 1 : pageIndex;
 		int firstResult = (currentPage - 1) * pageSize;
 		int maxResult = currentPage * pageSize;
-		List<MenuItem> Categorys = menuItemDAO.getAllByOwner(firstResult, maxResult, codeLanguage, status,
+		List<MenuItem> categories = menuItemDAO.getAllByOwner(firstResult, maxResult, codeLanguage, status,
 				userId);
 		int totalRecord = menuItemDAO.getAllByOwner(0, 0, codeLanguage, status, userId).size();
 
 		ResponseGetPaging rs = new ResponseGetPaging();
 		Data content = new Data();
 
-		if (Categorys == null || Categorys.isEmpty()) {
+		if (categories == null || categories.isEmpty()) {
 			rs.setStatus(0);
 			rs.setMessage("Could not found items.");
 			content.setTotalCount(0);
@@ -131,11 +127,7 @@ public class MenuItemService {
 		}
 
 		List<MenuItemResponse> lmr = new LinkedList<>();
-		if (Categorys != null && !Categorys.isEmpty()) {
-			Categorys.forEach(res -> {
-				lmr.add(entityToModel(res, codeLanguage));
-			});
-		}
+		categories.forEach(res -> lmr.add(entityToModel(res, codeLanguage)));
 		if (totalRecord > 0 && !lmr.isEmpty()) {
 			content.setData(lmr);
 			content.setPageIndex(pageIndex);
@@ -180,37 +172,37 @@ public class MenuItemService {
 			vm.setMenuName(name);
 		}
 
-		List<MenuExtraItemResponse> meirs = new LinkedList<>();
-		Set<MenuExtraItem> meis = e.getMenuExtraItems();
-		if (meis != null && meis.size() > 0) {
+		List<MenuExtraItemResponse> menuExtraItemResponses = new LinkedList<>();
+		Set<MenuExtraItem> menuExtraItems = e.getMenuExtraItems();
+		if (menuExtraItems != null && menuExtraItems.size() > 0) {
 
-			meis.forEach(item -> {
+			menuExtraItems.forEach(item -> {
 				MenuExtraItemResponse meir = new MenuExtraItemResponse();
 				meir.setMenuExtraItemId(item.getMenuExtraItemId());
 				meir.setExtraItemType(item.getType());
 				if (item.getContentDefinition() != null)
 					meir.setLanguageLst(languageService.translate(item.getContentDefinition(), lang));
 
-				List<ExtraItemResponse> eirs = new LinkedList<>();
-				Set<ExtraItem> exis = item.getExtraItems();
-				if (exis != null && exis.size() > 0) {
-					exis.forEach(ex -> {
+				List<ExtraItemResponse> extraItemResponses = new LinkedList<>();
+				Set<ExtraItem> extraItems = item.getExtraItems();
+				if (extraItems != null && extraItems.size() > 0) {
+					extraItems.forEach(ex -> {
 						ExtraItemResponse exr = new ExtraItemResponse();
 						exr.setExtraItemId(ex.getExtraItemId());
 						exr.setPrice(ex.getPrice());
 						if (ex.getContentDefinition() != null)
 							exr.setExtraItem(languageService.translate(ex.getContentDefinition(), lang));
 
-						eirs.add(exr);
+						extraItemResponses.add(exr);
 					});
 				}
-				meir.setExtraItemLst(eirs);
+				meir.setExtraItemLst(extraItemResponses);
 
-				meirs.add(meir);
+				menuExtraItemResponses.add(meir);
 			});
 		}
 
-		vm.setMenuExtraLst(meirs);
+		vm.setMenuExtraLst(menuExtraItemResponses);
 		return vm;
 	}
 }

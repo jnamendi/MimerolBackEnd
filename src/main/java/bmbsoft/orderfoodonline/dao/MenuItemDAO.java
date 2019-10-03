@@ -1,18 +1,10 @@
 package bmbsoft.orderfoodonline.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.*;
 import bmbsoft.orderfoodonline.model.shared.MenuItemTimeAvailableModel;
+import bmbsoft.orderfoodonline.util.CommonHelper;
+import bmbsoft.orderfoodonline.util.Constant;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,13 +15,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import bmbsoft.orderfoodonline.model.ContentDefModel;
-import bmbsoft.orderfoodonline.model.ExtraItemRequest;
-import bmbsoft.orderfoodonline.model.LanguageViewModel;
-import bmbsoft.orderfoodonline.model.MenuExtraItemRequest;
-import bmbsoft.orderfoodonline.model.MenuItemRequest;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
+import javax.persistence.NoResultException;
+import javax.persistence.criteria.*;
+import java.util.List;
+import java.util.Set;
 
 @Repository(value = "menuItemDAO")
 @Transactional
@@ -68,9 +57,9 @@ public class MenuItemDAO {
 			}
 
 			// insert MenuExtraItemRequest
-			List<MenuExtraItemRequest> meis = vm.getMenuExtraLst();
-			if (meis != null && meis.size() > 0) {
-				for (MenuExtraItemRequest mei : meis) {
+			List<MenuExtraItemRequest> menuExtraLst = vm.getMenuExtraLst();
+			if (menuExtraLst != null && menuExtraLst.size() > 0) {
+				for (MenuExtraItemRequest mei : menuExtraLst) {
 
 					ContentDefinition cdMei = new ContentDefinition();
 					cdMei.setName("Menu_extral_item");
@@ -87,7 +76,7 @@ public class MenuItemDAO {
 						message.append(error);
 					}
 					if (mei.getExtraItemLst() != null) {
-						for (ExtraItemRequest exrq : mei.getExtraItemLst()) {
+						for (ExtraItemRequest extraItemRequest : mei.getExtraItemLst()) {
 							ContentDefinition cdEx = new ContentDefinition();
 							cdEx.setName("Extra_item");
 							session.persist(cdEx);
@@ -95,9 +84,9 @@ public class MenuItemDAO {
 							ExtraItem ex = new ExtraItem();
 							ex.setContentDefinition(cdEx);
 							ex.setMenuExtraItem(menuEx);
-							ex.setPrice(exrq.getPrice());
+							ex.setPrice(extraItemRequest.getPrice());
 							session.persist(ex);
-							String error1 = this.insertEntry(session, exrq.getExtraItem(), cdEx);
+							String error1 = this.insertEntry(session, extraItemRequest.getExtraItem(), cdEx);
 							if (error1 != null && !error1.isEmpty()) {
 								message.append(error1);
 							}
@@ -106,6 +95,26 @@ public class MenuItemDAO {
 
 				}
 			}
+
+			List<MenuItemTimeAvailableModel> listMenuTime = vm.getListMenuTimeAvailableModel();
+			if(listMenuTime != null && !listMenuTime.isEmpty()){
+				for (MenuItemTimeAvailableModel menuItemTimeAvailableModel : listMenuTime) {
+					if (menuItemTimeAvailableModel != null) {
+						List<CloseOpen> cl = menuItemTimeAvailableModel.getList();
+						if(cl != null && !cl.isEmpty()){
+							for(CloseOpen c : cl){
+								MenuItemTimeAvailable mit = new MenuItemTimeAvailable();
+								mit.setMenuItem(menuItem);
+								mit.setEndTime(c.getCloseTime());
+								mit.setStartTime(c.getOpenTime());
+								mit.setWeekday(menuItemTimeAvailableModel.getWeekDay());
+								session.save(mit);
+							}
+						}
+					}
+				}
+			}
+
 			if (!message.toString().isEmpty()) {
 				transaction.rollback();
 				return message.toString();
@@ -184,13 +193,13 @@ public class MenuItemDAO {
 					return message.append(error).toString();
 				}
 			}
-			// check model request. notEmty delete and create
-			List<MenuExtraItemRequest> meirs = vm.getMenuExtraLst();
-			if (meirs != null && meirs.size() > 0) {
+			// check model request. not empty delete and create
+			List<MenuExtraItemRequest> menuExtraLst = vm.getMenuExtraLst();
+			if (menuExtraLst != null && menuExtraLst.size() > 0) {
 				// delete multiple table;
-				Set<MenuExtraItem> meis = e.getMenuExtraItems();
-				if (meis != null && meis.size() > 0) {
-					for (MenuExtraItem mei : meis) {
+				Set<MenuExtraItem> menuExtraItems = e.getMenuExtraItems();
+				if (menuExtraItems != null && menuExtraItems.size() > 0) {
+					for (MenuExtraItem mei : menuExtraItems) {
 
 						ContentDefinition meiDef = mei.getContentDefinition();
 						if (meiDef != null) {
@@ -215,7 +224,7 @@ public class MenuItemDAO {
 					}
 				}
 				// insert MenuExtraItemRequest
-				for (MenuExtraItemRequest meir : meirs) {
+				for (MenuExtraItemRequest meir : menuExtraLst) {
 
 					ContentDefinition cdMei = new ContentDefinition();
 					cdMei.setName("Menu_extral_item");
@@ -233,7 +242,7 @@ public class MenuItemDAO {
 						message.append(error);
 					}
 					if (meir.getExtraItemLst() != null) {
-						for (ExtraItemRequest exrq : meir.getExtraItemLst()) {
+						for (ExtraItemRequest extraItemRequest : meir.getExtraItemLst()) {
 							ContentDefinition cdEx = new ContentDefinition();
 							cdEx.setName("Extra_item");
 							session.persist(cdEx);
@@ -241,9 +250,9 @@ public class MenuItemDAO {
 							ExtraItem ex = new ExtraItem();
 							ex.setContentDefinition(cdEx);
 							ex.setMenuExtraItem(menuEx);
-							ex.setPrice(exrq.getPrice());
+							ex.setPrice(extraItemRequest.getPrice());
 							session.save(ex);
-							String error1 = this.insertEntry(session, exrq.getExtraItem(), cdEx);
+							String error1 = this.insertEntry(session, extraItemRequest.getExtraItem(), cdEx);
 							if (error1 != null) {
 								message.append(error1);
 							}
@@ -280,7 +289,6 @@ public class MenuItemDAO {
 				return message.toString();
 			}
 			transaction.commit();
-			message.append("");
 			return message.toString();
 		} catch (
 
