@@ -1,6 +1,7 @@
 package bmbsoft.orderfoodonline.service;
 
 import bmbsoft.orderfoodonline.dao.RestaurantAreaDAO;
+import bmbsoft.orderfoodonline.entities.City;
 import bmbsoft.orderfoodonline.entities.District;
 import bmbsoft.orderfoodonline.entities.RestaurantArea;
 import bmbsoft.orderfoodonline.model.*;
@@ -20,6 +21,12 @@ public class RestaurantAreaService {
 
     @Autowired
     private CityService cityService;
+
+    @Autowired
+    private RestaurantAreaService restaurantAreaService;
+
+    @Autowired
+    private DistrictService districtService;
 
     @Transactional
     public List<RestaurantDeliveryAreaModel> getDistrictByRestaurant(long restaurantId) {
@@ -113,19 +120,22 @@ public class RestaurantAreaService {
 
     @Transactional
     public List<DistrictViewModel> getDistrictByRestaurantAndCity(long restaurantId, long cityId) {
-        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         List<DistrictViewModel> districtViewModels = new ArrayList<>();
-        if(ra != null && !ra.isEmpty()) {
-            for (RestaurantArea r: ra) {
-                if(r.getDistrict().getCity().getCityId().equals(cityId)) {
-                    DistrictViewModel model = convertEntityToModel(r.getDistrict());
-                    districtViewModels.add(model);
-                }
-            }
+        List<DistrictViewModel> districtViewModels2 = districtService.getAllByCityId(cityId);
+        List<Long> arrayDis = restaurantAreaService.getDistrictDeliveryListByRestaurant(restaurantId);
+        if(arrayDis != null && !arrayDis.isEmpty() && districtViewModels2 != null && !districtViewModels2.isEmpty()){
+            arrayDis.forEach(d->{
+                districtViewModels2.forEach( d2 -> {
+                    if(d == d2.getDistrictId()){
+                        districtViewModels.add(districtService.getById(d));
+                    }
+                });
+            });
         }
-
+        districtViewModels.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
         return districtViewModels;
     }
+
 
     @Transactional
     public List<Long> getDistrictDeliveryListByRestaurant(long restaurantId) {

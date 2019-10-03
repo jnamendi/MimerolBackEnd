@@ -18,4 +18,4 @@ CREATE TABLE `menu_item_time_available`  (
 SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE 'restaurant_area'
-ADD zone_id bigint(20)
+ADD 'zone_id' bigint(20)
