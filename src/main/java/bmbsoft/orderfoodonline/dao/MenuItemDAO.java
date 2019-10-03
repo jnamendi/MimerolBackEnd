@@ -1,5 +1,6 @@
 package bmbsoft.orderfoodonline.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import bmbsoft.orderfoodonline.entities.*;
+import bmbsoft.orderfoodonline.model.shared.MenuItemTimeAvailableModel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -20,15 +23,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import bmbsoft.orderfoodonline.entities.ContentDefinition;
-import bmbsoft.orderfoodonline.entities.ContentEntry;
-import bmbsoft.orderfoodonline.entities.ExtraItem;
-import bmbsoft.orderfoodonline.entities.Language;
-import bmbsoft.orderfoodonline.entities.Menu;
-import bmbsoft.orderfoodonline.entities.MenuExtraItem;
-import bmbsoft.orderfoodonline.entities.MenuItem;
-import bmbsoft.orderfoodonline.entities.Restaurant;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
 import bmbsoft.orderfoodonline.model.ContentDefModel;
 import bmbsoft.orderfoodonline.model.ExtraItemRequest;
 import bmbsoft.orderfoodonline.model.LanguageViewModel;
@@ -258,6 +252,29 @@ public class MenuItemDAO {
 
 				}
 			}
+			Long idMenu =e.getMenuItemId();
+
+			List<MenuItemTimeAvailableModel> listMenuTime = vm.getListMenuTimeAvailableModel();
+			if(listMenuTime != null && !listMenuTime.isEmpty()){
+				String q = "DELETE FROM menu_item_time_available WHERE menu_item_id=:idMenu";
+				session.createNativeQuery(q).setParameter("idMenu", idMenu).executeUpdate();
+				for (MenuItemTimeAvailableModel mita : listMenuTime) {
+					if (mita != null) {
+						List<CloseOpen> cl = mita.getList();
+							if(cl != null && !cl.isEmpty()){
+								for(CloseOpen c : cl){
+									MenuItemTimeAvailable mit = new MenuItemTimeAvailable();
+									mit.setMenuItem(e);
+									mit.setEndTime(c.getCloseTime());
+									mit.setStartTime(c.getOpenTime());
+									mit.setWeekday(mita.getWeekDay());
+									session.save(mit);
+								}
+							}
+					}
+				}
+			}
+
 			if (!message.toString().isEmpty()) {
 				transaction.rollback();
 				return message.toString();

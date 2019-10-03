@@ -35,6 +35,8 @@ public class MenuItemService {
 	private MenuItemDAO menuItemDAO;
 	@Autowired
 	private LanguageService languageService;
+	@Autowired
+	private MenuItemTimeAvailableService menuItemTimeAvailableService;
 
 	public String create(MenuItemRequest vm, MenuItem e, Menu m, MultipartFile file) {
 		return menuItemDAO.save(vm, e, m, file);
@@ -165,7 +167,7 @@ public class MenuItemService {
 		vm.setOutOfStock(e.getOutOfStock());
 		vm.setPriority(e.getPriority());
 		vm.setLanguageLst(languageService.translate(e.getContentDefinition(), lang));
-
+		vm.setListMenuTimeAvailableModel(menuItemTimeAvailableService.getByMenutId(e.getMenuItemId()));
 		if (e.getMenu() != null) {
 			vm.setMenuId(e.getMenu().getMenuId());
 			if (e.getMenu().getRestaurant() != null) {
