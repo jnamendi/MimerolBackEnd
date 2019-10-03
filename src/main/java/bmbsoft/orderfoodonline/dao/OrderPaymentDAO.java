@@ -2,9 +2,7 @@ package bmbsoft.orderfoodonline.dao;
 
 import bmbsoft.orderfoodonline.entities.*;
 import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
-import bmbsoft.orderfoodonline.model.shared.OrderItem;
-import bmbsoft.orderfoodonline.model.shared.PaymentRequest;
-import bmbsoft.orderfoodonline.model.shared.PaymentResponse;
+import bmbsoft.orderfoodonline.model.shared.*;
 import bmbsoft.orderfoodonline.service.*;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
@@ -24,13 +22,9 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Repository(value = "orderPaymentDAO")
 @Transactional(rollbackOn = Exception.class)
@@ -70,11 +64,14 @@ public class OrderPaymentDAO {
 	@Autowired
 	private ZoneService zs;
 
-	Gson mapper = new Gson();
+	@Autowired
+	private MenuService menuService;
 
-	boolean isOk = true;
-	String msg = "";
-	String emailOwer = "";
+	private Gson mapper = new Gson();
+
+	private boolean isOk = true;
+	private String msg = "";
+	private String emailOwner = "";
 
 	public PaymentResponse create(PaymentRequest req) {
 		Session session = this.sessionFactory.openSession();
@@ -107,9 +104,9 @@ public class OrderPaymentDAO {
 			ps.setRestaurantId(r.getRestaurantId());
 
 			if (r.getUserRestaurants() != null && r.getUserRestaurants().size() > 0) {
-				List<UserRestaurant> lst = r.getUserRestaurants().stream().collect(Collectors.toList());
-				if (lst != null && lst.size() > 0) {
-					emailOwer = lst.get(0).getUser().getEmail();
+				List<UserRestaurant> lst = new ArrayList<>(r.getUserRestaurants());
+				if (lst.size() > 0) {
+					emailOwner = lst.get(0).getUser().getEmail();
 				}
 			}
 
@@ -175,7 +172,8 @@ public class OrderPaymentDAO {
 			o.setOrderCode(uu.toUpperCase());
 			o.setRestaurantName(r.getName());
 			o.setPaymentWith(req.getPaymentWith());
-
+			o.setDiscount(req.getDiscount());
+			o.setChargeFee(calculateChargeForOrder(req.getOrderItem().getOrderItemsRequest(), req.getDiscount()));
 			if (req.getOrderItem() == null) {
 				ps.setStatusCode(7);
 				ps.setErrMsg("Menu item not exist.");
@@ -219,16 +217,16 @@ public class OrderPaymentDAO {
 					// save extraItem
 					if (ol.getMenuExraItems() != null && ol.getMenuExraItems().size() > 0) {
 						ol.getMenuExraItems().forEach(ex -> {
-							MenuExtraItem mexi = eid.getByExtraItemId(ex.getMenuExtraItemId());
-							if (mexi != null) {
+							MenuExtraItem extraItem = eid.getByExtraItemId(ex.getMenuExtraItemId());
+							if (extraItem != null) {
 								if (ex.getExtraitems() != null && ex.getExtraitems().size() > 0) {
 									ex.getExtraitems().forEach(eti -> {
 										ExtraItem exi = eid.getById(eti.getExtraItemId());
 
 										if (exi != null) {
 											OrderExtraItem ei = new OrderExtraItem();
-											ei.setMenuItemId(mi.getMenuItemId());
-											ei.setMenuExtraItemId(mexi.getMenuExtraItemId());
+											ei.setMenuItemId(Objects.requireNonNull(mi).getMenuItemId());
+											ei.setMenuExtraItemId(extraItem.getMenuExtraItemId());
 											ei.setMenuExtraItemId(exi.getExtraItemId());
 											ei.setTotalPrice(eti.getPriceRate());
 											ei.setUnitPrice(eti.getPrice());
@@ -364,7 +362,7 @@ public class OrderPaymentDAO {
 							Executors.newSingleThreadExecutor().execute(new Runnable() {
 								public void run() {
 									try {
-										emailService.sendCcMessage(emailFrom, req.getEmail(), emailOwer, trpc, body,
+										emailService.sendCcMessage(emailFrom, req.getEmail(), emailOwner, trpc, body,
 												displayEmailName);
 									} catch (MessagingException | IOException e) {
 										logger.error(e.toString());
@@ -424,12 +422,33 @@ public class OrderPaymentDAO {
 	public List<Order> getAll() {
 		Session s = this.sessionFactory.getCurrentSession();
 		try {
-			List<Order> cs = s.createQuery("FROM Order", Order.class).getResultList();
-			return cs;
+			return s.createQuery("FROM Order", Order.class).getResultList();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return null;
 		}
+	}
+
+	private double calculateChargeForOrder(List<MenuItemLiteResponse> liteResponses, Long discount) {
+		double charge = 0d;
+		if(liteResponses != null && !liteResponses.isEmpty()) {
+			for (MenuItemLiteResponse item : liteResponses) {
+				Double rate = menuService.getById(item.getMenuId()).getRate();
+				Double priceOfItem = 0d;
+				if(item.getMenuExraItems() != null && !item.getMenuExraItems().isEmpty()) {
+					for (MenuExtraItemLiteResponse menuItem: item.getMenuExraItems()) {
+						if(menuItem.getExtraitems() != null && !menuItem.getExtraitems().isEmpty()) {
+							for(ExtraItemLiteResponse extraItemLiteResponse : menuItem.getExtraitems())	priceOfItem += extraItemLiteResponse.getPrice();
+						}
+					}
+				}
+				charge += priceOfItem * item.getQuantity() * rate / 100d;
+			}
+		}
+		if(discount > 0) {
+			charge = charge * (100d - discount.doubleValue()) / 100d;
+		}
+		return charge;
 	}
 
 }

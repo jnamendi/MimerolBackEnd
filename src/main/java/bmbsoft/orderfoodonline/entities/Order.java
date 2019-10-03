@@ -39,6 +39,8 @@ public class Order implements java.io.Serializable {
 	private Double paymentWith;
 	private String reasonReject;
 	private String reasonCancel;
+	private Double chargeFee;
+	private Long discount;
 	private Set<OrderInfo> orderInfos = new HashSet<OrderInfo>(0);
 	private Set<OrderPayment> orderPayments = new HashSet<OrderPayment>(0);
 	private Set<OrderLineItem> orderLineItems = new HashSet<OrderLineItem>(0);
@@ -50,7 +52,7 @@ public class Order implements java.io.Serializable {
 		this.restaurant = restaurant;
 	}
 
-	public Order(Long orderId, Restaurant restaurant, User user, String restaurantName, Date orderDate, Double totalPrice, Integer status, String currencyCode, Double taxTotal, String orderReq, String checkSum, String orderCode, Double paymentWith, String reasonReject, String reasonCancel, Set<OrderInfo> orderInfos, Set<OrderPayment> orderPayments, Set<OrderLineItem> orderLineItems) {
+	public Order(Long orderId, Restaurant restaurant, User user, String restaurantName, Date orderDate, Double totalPrice, Integer status, String currencyCode, Double taxTotal, String orderReq, String checkSum, String orderCode, Double paymentWith, String reasonReject, String reasonCancel, Double chargeFee, Long discount, Set<OrderInfo> orderInfos, Set<OrderPayment> orderPayments, Set<OrderLineItem> orderLineItems) {
 		this.orderId = orderId;
 		this.restaurant = restaurant;
 		this.user = user;
@@ -66,6 +68,8 @@ public class Order implements java.io.Serializable {
 		this.paymentWith = paymentWith;
 		this.reasonReject = reasonReject;
 		this.reasonCancel = reasonCancel;
+		this.chargeFee = chargeFee;
+		this.discount = discount;
 		this.orderInfos = orderInfos;
 		this.orderPayments = orderPayments;
 		this.orderLineItems = orderLineItems;
@@ -228,6 +232,24 @@ public class Order implements java.io.Serializable {
 
 	public void setReasonReject(String reasonReject) {
 		this.reasonReject = reasonReject;
+	}
+
+	@Column(name = "charge_fee", precision = 10, scale = 2)
+	public Double getChargeFee() {
+		return chargeFee;
+	}
+
+	public void setChargeFee(Double chargeFee) {
+		this.chargeFee = chargeFee;
+	}
+
+	@Column(name = "discount", precision = 10, scale = 2)
+	public Long getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Long discount) {
+		this.discount = discount;
 	}
 
 	@Column(name = "reason_cancel")
