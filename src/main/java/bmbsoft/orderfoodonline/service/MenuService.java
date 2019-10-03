@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import bmbsoft.orderfoodonline.model.shared.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,6 @@ import bmbsoft.orderfoodonline.entities.Menu;
 import bmbsoft.orderfoodonline.entities.MenuExtraItem;
 import bmbsoft.orderfoodonline.entities.MenuItem;
 import bmbsoft.orderfoodonline.model.MenuViewModel;
-import bmbsoft.orderfoodonline.model.shared.CurrencyResponse;
-import bmbsoft.orderfoodonline.model.shared.ExtraItemLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuExtraItemLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuItemLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuLiteResponse;
-import bmbsoft.orderfoodonline.model.shared.MenuRequest;
-import bmbsoft.orderfoodonline.model.shared.MenuResponse;
 import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.CommonHelper;
@@ -43,6 +37,8 @@ public class MenuService {
 	private LanguageService languageService;
 	@Autowired
 	CurrencyDAO currencyDAO;
+	@Autowired
+	MenuItemTimeAvailableService menuItemTimeAvailableService;
 
 	@Transactional
 	@Async
@@ -66,11 +62,7 @@ public class MenuService {
 		}
 
 		List<MenuViewModel> menuModels = new LinkedList<>();
-		if (Menus != null && !Menus.isEmpty()) {
-			Menus.forEach(res -> {
-				menuModels.add(entityToModel(res, codeLang));
-			});
-		}
+		Menus.forEach(res -> menuModels.add(entityToModel(res, codeLang)));
 
 		if (totalRecord > 0 && !menuModels.isEmpty()) {
 			content.setData(menuModels);
@@ -132,11 +124,7 @@ public class MenuService {
 		}
 
 		List<MenuViewModel> menuModels = new LinkedList<>();
-		if (menus != null && !menus.isEmpty()) {
-			menus.forEach(m -> {
-				menuModels.add(this.entityToModel(m, codeLang));
-			});
-		}
+		menus.forEach(m -> menuModels.add(this.entityToModel(m, codeLang)));
 
 		if (totalRecord > 0 && !menuModels.isEmpty()) {
 			content.setData(menuModels);
@@ -166,6 +154,7 @@ public class MenuService {
 		vm.setName(m.getName());
 		vm.setUrl_slug(m.getUrlSlug());
 		vm.setStatus(m.getStatus());
+		vm.setRate(m.getRate());
 		vm.setRestaurantId(m.getRestaurant().getRestaurantId());
 		vm.setRestaurantName(m.getRestaurant().getName());
 		vm.setLanguageLst(languageService.translate(m.getContentDefinition(), lang));
@@ -201,15 +190,12 @@ public class MenuService {
 		MenuResponse mr = new MenuResponse();
 
 		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
-			cur.setRate(1d);
-		}
 
 		List<Menu> res = menuDAO.getAll(1, 0, null, Constant.Status.Publish.getValue(), l.getCode(), restaurantId,
 				true);
 
 		List<MenuLiteResponse> lm = new ArrayList<>();
-		List<MenuItemLiteResponse> lmlr = new ArrayList<>();
+		List<MenuItemLiteResponse> menuItemLiteResponses = new ArrayList<>();
 
 		if (res != null && res.size() > 0) {
 			res.forEach(m -> {				
@@ -228,42 +214,42 @@ public class MenuService {
 						mlr.setMenuName(name);
 						mlr.setCurrencyCode(cur.getCode());
 						mlr.setUrlSlug(CommonHelper.toPrettyURL(name));
-						
+
 						// menu
 						lm.add(mlr); 
 						mr.setMennu(lm);
 						
 						smi.forEach(mi -> {
-							MenuItemLiteResponse milr = new MenuItemLiteResponse();
-							milr.setMenuItemId(mi.getMenuItemId());
-							milr.setMenuId(m.getMenuId());
+							MenuItemLiteResponse menuItemLiteResponse = new MenuItemLiteResponse();
+							menuItemLiteResponse.setMenuItemId(mi.getMenuItemId());
+							menuItemLiteResponse.setMenuId(m.getMenuId());
+							List<MenuItemTimeAvailableModel> mta = menuItemTimeAvailableService.getByMenutId(mi.getMenuItemId());
 
 							HashMap<String, String> miNames = languageService.hashMapTranslate1(mi.getContentDefinition(),
 									l);
 							String miName = miNames.get("menu_item_name");
 							String desc = miNames.get("menu_item_description");
 
-							milr.setMenuItemName(miName);
-							milr.setDesc(desc);
-							milr.setUrlImge(mi.getPicturePath());
-							milr.setUrlSlug(CommonHelper.toPrettyURL(miName));
-							milr.setPriceOriginal(mi.getPrice());
+							menuItemLiteResponse.setMenuItemName(miName);
+							menuItemLiteResponse.setDesc(desc);
+							menuItemLiteResponse.setUrlImge(mi.getPicturePath());
+							menuItemLiteResponse.setUrlSlug(CommonHelper.toPrettyURL(miName));
+							menuItemLiteResponse.setPriceOriginal(mi.getPrice());
 							String priceConvert = CommonHelper.formatDecimal(mi.getPrice() * cur.getRate(), l.getCode(),
 									cur.getCode());
-							milr.setPriceRateDisplay(priceConvert);
-							milr.setCurrencyRate(cur.getRate());
-							milr.setSymbolLeft(cur.getSymbolLeft());
-							milr.setPriceRate(mi.getPrice() * cur.getRate());
-							milr.setAvailable(checkItemAvailable(mi.getAvailableMonday(), mi.getAvailableTuesday(), mi.getAvailableWednesday(),
-							mi.getAvailableThursday(), mi.getAvailableFriday(), mi.getAvailableSaturday(), mi.getAvailableSunday()));
-							milr.setOutOfStock(mi.getOutOfStock());
-							milr.setPriority(mi.getPriority());
+							menuItemLiteResponse.setPriceRateDisplay(priceConvert);
+							menuItemLiteResponse.setCurrencyRate(cur.getRate());
+							menuItemLiteResponse.setSymbolLeft(cur.getSymbolLeft());
+							menuItemLiteResponse.setPriceRate(mi.getPrice() * cur.getRate());
+							menuItemLiteResponse.setAvailable(CommonHelper.checkBetweenTimeMenu(mta));
+							menuItemLiteResponse.setOutOfStock(mi.getOutOfStock());
+							menuItemLiteResponse.setPriority(mi.getPriority());
 							// get menu extra
-							Set<MenuExtraItem> smei = mi.getMenuExtraItems();
-							List<MenuExtraItemLiteResponse> lmeilr = new ArrayList<>();
+							Set<MenuExtraItem> menuExtraItems = mi.getMenuExtraItems();
+							List<MenuExtraItemLiteResponse> menuExtraItemLiteResponses = new ArrayList<>();
 
-							if (smei != null && smei.size() > 0) {
-								smei.forEach(mx -> {
+							if (menuExtraItems != null && menuExtraItems.size() > 0) {
+								menuExtraItems.forEach(mx -> {
 									MenuExtraItemLiteResponse meilr = new MenuExtraItemLiteResponse();
 									meilr.setMenuExtraItemId(mx.getMenuExtraItemId());
 									meilr.setExtraItemType(mx.getType());
@@ -272,55 +258,55 @@ public class MenuService {
 									String meName = meNames.get("menu_extra_item_name");
 									meilr.setName(meName);
 									// add to menu extra item
-									lmeilr.add(meilr);
+									menuExtraItemLiteResponses.add(meilr);
 
 									// get extra item
 
 									Set<ExtraItem> sei = mx.getExtraItems();
-									List<ExtraItemLiteResponse> leilr = new ArrayList();
+									List<ExtraItemLiteResponse> extraItemLiteResponseList = new ArrayList<>();
 
 									if (sei != null && sei.size() > 0) {
 
 										sei.forEach(se -> {
 
-											ExtraItemLiteResponse eilr = new ExtraItemLiteResponse();
-											eilr.setExtraItemId(se.getExtraItemId());
+											ExtraItemLiteResponse extraItemLiteResponse = new ExtraItemLiteResponse();
+											extraItemLiteResponse.setExtraItemId(se.getExtraItemId());
 											Double p = se.getPrice() == null ? 0 : se.getPrice();
-											eilr.setPrice(p);
+											extraItemLiteResponse.setPrice(p);
 											String exPrice = CommonHelper.formatDecimal(p * cur.getRate(), l.getCode(),
 													cur.getCode());
-											eilr.setPriceRateDisplay(exPrice);
-											eilr.setPriceRate(p * cur.getRate());
+											extraItemLiteResponse.setPriceRateDisplay(exPrice);
+											extraItemLiteResponse.setPriceRate(p * cur.getRate());
 
 											HashMap<String, String> exNames = languageService
 													.hashMapTranslate1(se.getContentDefinition(), l);
 											String exName = exNames.get("menu_extra_item_title");
-											eilr.setName(exName);
+											extraItemLiteResponse.setName(exName);
 
-											leilr.add(eilr);
+											extraItemLiteResponseList.add(extraItemLiteResponse);
 
 										});
 
 									}
 
 									// add extra item
-									meilr.setExtraitems(leilr);
+									meilr.setExtraitems(extraItemLiteResponseList);
 
 									// add to menu item
-									milr.setMenuExraItems(lmeilr);
+									menuItemLiteResponse.setMenuExraItems(menuExtraItemLiteResponses);
 								});
 							}
 
 							// add to menu item
-							lmlr.add(milr);
+							menuItemLiteResponses.add(menuItemLiteResponse);
 						});
 					}
 					
 				}
 				//sort menu item by priority
-				lmlr.sort((item1, item2) -> item1.getMenuId().compareTo(item2.getMenuId()) != 0 ? item1.getMenuId().compareTo(item2.getMenuId())
+				menuItemLiteResponses.sort((item1, item2) -> item1.getMenuId().compareTo(item2.getMenuId()) != 0 ? item1.getMenuId().compareTo(item2.getMenuId())
 						:  item1.getPriority().compareTo(item2.getPriority()) != 0 ? item2.getPriority().compareTo(item1.getPriority()) : item1.getMenuItemName().compareTo(item2.getMenuItemName()));
-				mr.setMenuItems(lmlr);
+				mr.setMenuItems(menuItemLiteResponses);
 			});
 
 			return mr;

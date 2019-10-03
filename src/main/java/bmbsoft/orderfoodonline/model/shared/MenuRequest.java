@@ -16,7 +16,10 @@ public class MenuRequest {
 	@NotNull
 	private Long restaurantId; 
 	private int status;
-	 
+	private Double rate;
+	private List<LanguageViewModel> languageLst;
+	private int sortOrder;
+
 	public Long getMenuId() {
 		return menuId;
 	}
@@ -53,7 +56,12 @@ public class MenuRequest {
 	public void setSortOrder(int sortOrder) {
 		this.sortOrder = sortOrder;
 	}
-	 
-	private List<LanguageViewModel> languageLst;
-	private int sortOrder;
+
+	public Double getRate() {
+		return rate;
+	}
+
+	public void setRate(Double rate) {
+		this.rate = rate;
+	}
 }

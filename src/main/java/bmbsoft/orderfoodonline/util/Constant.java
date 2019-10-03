@@ -9,7 +9,7 @@ public class Constant {
 	public static final String CASH_EN = "Cash";
 	public static final String VISA_EN = "Visa";
 	public static final String PAYPAL_EN = "Paypal";
-	public static final String CREDIT_DEBIT_ON_DELIVERY_EN = "Cash/Debit on delivery";
+	public static final String CREDIT_DEBIT_ON_DELIVERY_EN = "Credit/Debit on delivery";
 	public static final String CASH_ES = "EFECTIVO";
 	public static final String CREDIT_DEBIT_ON_DELIVERY_ES = "PAGO CON TARJETA";
 	public static final String PAYPAL_ES = "Paypal";

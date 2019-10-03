@@ -49,6 +49,30 @@ public class ZoneController {
         }
     }
 
+    @RequestMapping(value = "/api/zone/getZoneByDistrict/{districtId}/{restaurantId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getZoneByDistrict(@PathVariable long districtId,@PathVariable long restaurantId) {
+        ResponseGet responseGet = new ResponseGet();
+        try {
+            List<ZoneViewModel> c = zoneService.getZoneByDistrict(districtId,restaurantId);
+            return setContent(responseGet, c);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            responseGet.setStatus(1);
+            responseGet.setMessage(e.toString());
+            return new ResponseEntity<>(responseGet, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/api/zone/checkZoneRestaurant/{zoneId}/{restaurantId}", method = RequestMethod.GET)
+    public Boolean checkZoneRestaurant(@PathVariable long zoneId, @PathVariable long restaurantId) {
+        ResponseGet responseGet = new ResponseGet();
+        try {
+             return  zoneService.checkZoneByRestaurant(zoneId,restaurantId);
+        } catch (Exception e) {
+           return  false;
+        }
+    }
+
     private ResponseEntity<?> setContent(ResponseGet responseGet, List<ZoneViewModel> c) {
         if (c == null || c.isEmpty()) {
             responseGet.setStatus(0);

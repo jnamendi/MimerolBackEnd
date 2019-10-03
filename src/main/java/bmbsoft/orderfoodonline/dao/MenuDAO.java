@@ -136,8 +136,7 @@ public class MenuDAO {
 		queryMenu.select(rootMenu);
 		queryMenu.where(toPredicate(rootMenu, cb, null, Constant.Status.Publish.getValue(), codeLang, restaurantId));
 		queryMenu.distinct(rootMenu.get("menuId") != null);
-		List<Menu> Menus = session.createQuery(queryMenu).getResultList();
-		return Menus;
+		return session.createQuery(queryMenu).getResultList();
 	}
 
 	public String updateMenu(final MenuRequest menuModel, Menu menu, MultipartFile file) {
@@ -150,6 +149,7 @@ public class MenuDAO {
 			menu.setModifiedDate(new Date());
 			menu.setStatus(menuModel.getStatus());
 			menu.setSortOrder(menuModel.getSortOrder());
+			menu.setRate(menuModel.getRate());
 
 			String imageUrl = CommonHelper.doUpload(menu.getImageUrl(), file);
 			menu.setImageUrl(imageUrl);
@@ -158,7 +158,7 @@ public class MenuDAO {
 
 			String q = "DELETE FROM content_entry WHERE content_dep_id=:cd";
 			Long cdId = cd.getContentDepId();
-			int d = session.createNativeQuery(q).setParameter("cd", cdId).executeUpdate();
+			session.createNativeQuery(q).setParameter("cd", cdId).executeUpdate();
 
 			boolean isF = false;
 			List<LanguageViewModel> lvm = menuModel.getLanguageLst();
@@ -170,7 +170,7 @@ public class MenuDAO {
 						for (ContentDefModel cdm : l.getContentDef()) {
 							if (cdm.getValue() == null && cdm.getValue().isEmpty()) {
 								isF = true;
-								message.append("Value is field required. " + cdm.getCode());
+								message.append("Value is field required. ").append(cdm.getCode());
 								break;
 							}
 							ContentEntry ce = new ContentEntry();
@@ -223,6 +223,7 @@ public class MenuDAO {
 			menu.setSortOrder(menuModel.getSortOrder());
 			String imageUrl = CommonHelper.doUpload(null, file);
 			menu.setImageUrl(imageUrl);
+			menu.setRate(menuModel.getRate());
 
 			boolean isF = false;
 			List<LanguageViewModel> lvm = menuModel.getLanguageLst();
@@ -234,7 +235,7 @@ public class MenuDAO {
 						for (ContentDefModel cdm : l.getContentDef()) {
 							if (cdm.getValue() == null && cdm.getValue().isEmpty()) {
 								isF = true;
-								message.append("Value is field required. " + cdm.getCode());
+								message.append("Value is field required. ").append(cdm.getCode());
 								break;
 							}
 							ContentEntry ce = new ContentEntry();
@@ -269,33 +270,6 @@ public class MenuDAO {
 		}
 	}
 
-	/**
-	 * @param vm
-	 * @return new Menu miss ContenDefinition or old Menu updated
-	 */
-	private Menu convertModelToEntity(final MenuRequest vm) {
-		Menu menu = new Menu();
-		if (vm.getMenuId() != null && vm.getMenuId() > 0) {
-			menu = getById(vm.getMenuId());
-			// miss modified by.
-			menu.setName(vm.getName());
-			menu.setUrlSlug(CommonHelper.toPrettyURL(vm.getName()));
-			menu.setModifiedDate(new Date());
-			menu.setStatus(vm.getStatus());
-			menu.setSortOrder(vm.getSortOrder());
-			return menu;
-		}
-		// new menu object miss filed ContenDefinition
-		// miss create by.
-		menu.setName(vm.getName());
-		menu.setRestaurant(restaurantDAO.getById(vm.getRestaurantId()));
-		menu.setUrlSlug(CommonHelper.toPrettyURL(vm.getName()));
-		menu.setCreatedDate(new Date());
-		menu.setStatus(vm.getStatus());
-		menu.setSortOrder(vm.getSortOrder());
-		return menu;
-	}
-
 	public List<Menu> getMenuByOwner(final int firstResult, final int maxResult, long idOwner) {
 		Session session = this.sessionFactory.getCurrentSession();
 		CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -310,12 +284,11 @@ public class MenuDAO {
 		predicates.add(cb.equal(rootRestaurant.get("status"), Constant.Status.Publish.getValue()));
 		if (idOwner > 0)
 			predicates.add(cb.equal(userResJoin.join("user").<Long>get("userId"), idOwner));
-		queryMenu.select(rootRestaurant).where(predicates.stream().toArray(Predicate[]::new));
+		queryMenu.select(rootRestaurant).where(predicates.toArray(new Predicate[0]));
 
 		queryMenu.distinct(rootRestaurant.get("menuId") != null);
-		List<Menu> menus = (maxResult == 0) ? session.createQuery(queryMenu).getResultList()
-				: session.createQuery(queryMenu).setFirstResult(firstResult).setMaxResults(maxResult).getResultList();
 
-		return menus;
+		return (maxResult == 0) ? session.createQuery(queryMenu).getResultList()
+				: session.createQuery(queryMenu).setFirstResult(firstResult).setMaxResults(maxResult).getResultList();
 	}
 }

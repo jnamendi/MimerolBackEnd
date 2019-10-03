@@ -4,14 +4,10 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
+import bmbsoft.orderfoodonline.model.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import bmbsoft.orderfoodonline.model.AttributeViewModel;
-import bmbsoft.orderfoodonline.model.LanguageViewModel;
-import bmbsoft.orderfoodonline.model.PaymentProviderViewModel;
 
 public class RestaurantRequest {
 	private Long restaurantId;
@@ -69,6 +65,16 @@ public class RestaurantRequest {
 	private Long districtId;
 
 	private Long zoneId;
+
+	private List<DeliveryArea> deliveryArea;
+
+	public List<DeliveryArea> getDeliveryArea() {
+		return deliveryArea;
+	}
+
+	public void setDeliveryArea(List<DeliveryArea> deliveryArea) {
+		this.deliveryArea = deliveryArea;
+	}
 
 	public List<Long> getUserIds() {
 		return userIds;

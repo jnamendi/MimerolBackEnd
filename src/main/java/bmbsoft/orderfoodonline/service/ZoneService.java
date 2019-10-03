@@ -2,6 +2,7 @@ package bmbsoft.orderfoodonline.service;
 
 import bmbsoft.orderfoodonline.dao.ZoneDAO;
 import bmbsoft.orderfoodonline.entities.Zone;
+import bmbsoft.orderfoodonline.model.DeliveryArea;
 import bmbsoft.orderfoodonline.model.ZoneViewModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +21,15 @@ public class ZoneService {
     private ZoneDAO zoneDAO;
     @Autowired
     private DistrictService districtService;
+    @Autowired
+    private RestaurantAreaService restaurantAreaService;
 
     @Transactional
     public List<ZoneViewModel> getAll() {
         List<ZoneViewModel> listModel = new LinkedList<>();
         List<Zone> zones = zoneDAO.getAll();
 
-        zones.forEach(zone -> {
-            listModel.add(convertEntityToModel(zone));
-        });
+        zones.forEach(zone -> listModel.add(convertEntityToModel(zone)));
         return listModel;
     }
 
@@ -46,11 +47,32 @@ public class ZoneService {
     public List<ZoneViewModel> getByDistrict(final long id) {
         List<ZoneViewModel> listModel = new LinkedList<>();
         List<Zone> zones = zoneDAO.getZoneByDistrictId(id);
-        zones.forEach(zone -> {
-            listModel.add(convertEntityToModel(zone));
-        });
+        zones.forEach(zone -> listModel.add(convertEntityToModel(zone)));
         return listModel;
     }
+
+    @Transactional
+    public List<ZoneViewModel> getZoneByDistrict(final  long idDis, long idRes){
+        List<ZoneViewModel> listModel = new LinkedList<>();
+        List<DeliveryArea> zoneList = restaurantAreaService.getDeliveryZone(idRes,restaurantAreaService.getDistrictDeliveryListByRestaurant(idRes));
+        if(zoneList != null && !zoneList.isEmpty()){
+            zoneList.forEach( s ->{
+                if(s.getDeliveryAreaId() == idDis){
+                    s.getDeliveryZoneId().forEach(z -> listModel.add(convertEntityToModel(zoneDAO.getById(z))));
+                }
+            });
+        }
+        listModel.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
+
+        return listModel;
+    }
+
+    @Transactional
+    public boolean checkZoneByRestaurant(final  long zoneId, long idRes){
+        return restaurantAreaService.getZoneByRestaurant(zoneId,idRes);
+    }
+
+
 
     private ZoneViewModel convertEntityToModel(final Zone zone) {
         ZoneViewModel model = new ZoneViewModel();

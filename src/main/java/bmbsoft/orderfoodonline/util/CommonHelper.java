@@ -2,6 +2,7 @@ package bmbsoft.orderfoodonline.util;
 
 import bmbsoft.orderfoodonline.entities.CloseOpen;
 import bmbsoft.orderfoodonline.model.RestaurantWorkTimeModel;
+import bmbsoft.orderfoodonline.model.shared.MenuItemTimeAvailableModel;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -204,6 +205,48 @@ public class CommonHelper {
 			calendar2.setTime(time2);
 
 			return calendar1.after(calendar2);
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static boolean checkBetweenTimeMenu(List<MenuItemTimeAvailableModel> mitam) {
+		try {
+			if (mitam == null || mitam.isEmpty())
+				return false;
+			// check open time close time
+			Date now = new Date();
+			boolean isOpen = false;
+			for (MenuItemTimeAvailableModel model : mitam) {
+				if(model.getWeekDay().equals(Constant.Weekday.valueOf(now.getDay()).toString())) {
+					if (model.getList() != null && !model.getList().isEmpty()) {
+						for(CloseOpen co : model.getList()) {
+							String openTime = co.getOpenTime();
+							Date open = new SimpleDateFormat("HH:mm").parse(openTime);
+							Calendar openCalendar = Calendar.getInstance();
+							openCalendar.setTime(open);
+
+							String closeTime = co.getCloseTime();
+							Date close = new SimpleDateFormat("HH:mm").parse(closeTime);
+							Calendar closeCalendar = Calendar.getInstance();
+							closeCalendar.setTime(close);
+
+							String someRandomTime = now.getHours() + ":" + now.getMinutes();
+
+							Date d = new SimpleDateFormat("HH:mm").parse(someRandomTime);
+							Calendar ca = Calendar.getInstance();
+							ca.setTime(d);
+
+							Date x = ca.getTime();
+							if (x.after(openCalendar.getTime()) && x.before(closeCalendar.getTime())) {
+								isOpen = true;
+							}
+						}
+					}
+				}
+			}
+			return isOpen;
+
 		} catch (Exception e) {
 			return false;
 		}

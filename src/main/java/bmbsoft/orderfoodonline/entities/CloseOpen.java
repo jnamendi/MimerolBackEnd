@@ -11,6 +11,11 @@ public class CloseOpen {
         this.idRestaurantWork = idRestaurantWork;
     }
 
+    public CloseOpen(String closeTime, String openTime) {
+        this.closeTime = closeTime;
+        this.openTime = openTime;
+    }
+
     public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
     }

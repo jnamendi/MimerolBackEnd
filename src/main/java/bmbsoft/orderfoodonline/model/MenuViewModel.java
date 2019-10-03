@@ -16,6 +16,7 @@ public class MenuViewModel {
 	private Long restaurantId;
 	private String restaurantName;
 	private int status;
+	private Double rate;
 	private List<LanguageViewModel> languageLst;
 
 	public MenuViewModel() {
@@ -77,4 +78,11 @@ public class MenuViewModel {
 		this.status = status;
 	}
 
+	public Double getRate() {
+		return rate;
+	}
+
+	public void setRate(Double rate) {
+		this.rate = rate;
+	}
 }

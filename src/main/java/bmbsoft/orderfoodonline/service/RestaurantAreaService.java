@@ -1,12 +1,10 @@
 package bmbsoft.orderfoodonline.service;
 
 import bmbsoft.orderfoodonline.dao.RestaurantAreaDAO;
+import bmbsoft.orderfoodonline.entities.City;
 import bmbsoft.orderfoodonline.entities.District;
 import bmbsoft.orderfoodonline.entities.RestaurantArea;
-import bmbsoft.orderfoodonline.model.CityViewModel;
-import bmbsoft.orderfoodonline.model.DistrictViewModel;
-import bmbsoft.orderfoodonline.model.RestaurantDeliveryAreaModel;
-import bmbsoft.orderfoodonline.model.RestaurantDeliveryDistrictModel;
+import bmbsoft.orderfoodonline.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +22,15 @@ public class RestaurantAreaService {
     @Autowired
     private CityService cityService;
 
+    @Autowired
+    private RestaurantAreaService restaurantAreaService;
+
+    @Autowired
+    private DistrictService districtService;
+
     @Transactional
     public List<RestaurantDeliveryAreaModel> getDistrictByRestaurant(long restaurantId) {
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         List<RestaurantDeliveryAreaModel> deliveryAreaModelsList = new ArrayList<>();
         List<RestaurantDeliveryAreaModel> result = new ArrayList<>();
         Set<Long> cityList = new HashSet<>();
@@ -81,7 +85,7 @@ public class RestaurantAreaService {
 
     @Transactional
     public List<CityViewModel> getCityByRestaurant(long restaurantId) {
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         List<CityViewModel> cityViewModelList = new ArrayList<>();
         Set<Long> cityList = new HashSet<>();
 
@@ -116,25 +120,27 @@ public class RestaurantAreaService {
 
     @Transactional
     public List<DistrictViewModel> getDistrictByRestaurantAndCity(long restaurantId, long cityId) {
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
         List<DistrictViewModel> districtViewModels = new ArrayList<>();
-        if(ra != null && !ra.isEmpty()) {
-            for (RestaurantArea r: ra) {
-
-                if(r.getDistrict().getCity().getCityId().equals(cityId)) {
-                    DistrictViewModel model = convertEntityToModel(r.getDistrict());
-                    districtViewModels.add(model);
-                }
-            }
+        List<DistrictViewModel> districtViewModels2 = districtService.getAllByCityId(cityId);
+        List<Long> arrayDis = restaurantAreaService.getDistrictDeliveryListByRestaurant(restaurantId);
+        if(arrayDis != null && !arrayDis.isEmpty() && districtViewModels2 != null && !districtViewModels2.isEmpty()){
+            arrayDis.forEach(d->{
+                districtViewModels2.forEach( d2 -> {
+                    if(d == d2.getDistrictId()){
+                        districtViewModels.add(districtService.getById(d));
+                    }
+                });
+            });
         }
-
+        districtViewModels.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
         return districtViewModels;
     }
+
 
     @Transactional
     public List<Long> getDistrictDeliveryListByRestaurant(long restaurantId) {
         Set<Long> districts = new HashSet<>();
-        List<RestaurantArea> ra = areaDAO.getDistrictIdByRestaurantId(restaurantId);
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
         if(ra != null && !ra.isEmpty()) {
             for (RestaurantArea r: ra) {
                 districts.add(r.getDistrict().getDistrictId());
@@ -142,6 +148,33 @@ public class RestaurantAreaService {
         }
 
         return new ArrayList(districts);
+    }
+
+    @Transactional
+    public List<DeliveryArea> getDeliveryZone(long restaurantId, List<Long> idDis){
+        List<DeliveryArea> deliveryAreaList = new ArrayList<>();
+        List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
+
+        if(ra != null && !ra.isEmpty() && idDis!= null && !idDis.isEmpty()) {
+            for (Long l: idDis ){
+                DeliveryArea dlv = new DeliveryArea();
+                List<Long> z = new ArrayList<>();
+                dlv.setDeliveryAreaId(l);
+                for (RestaurantArea r: ra) {
+                    if(r.getDistrict().getDistrictId().equals(l) && r.getZone().getZoneId() != null){
+                        z.add(r.getZone().getZoneId());
+                    }
+                }
+                dlv.setDeliveryZoneId(z);
+                deliveryAreaList.add(dlv);
+            }
+        }
+        return deliveryAreaList;
+    }
+
+    @Transactional
+    public boolean getZoneByRestaurant(long zoneId,long restaurantId){
+        return areaDAO.checkZone(zoneId,restaurantId);
     }
 
     private DistrictViewModel convertEntityToModel(final District district) {
