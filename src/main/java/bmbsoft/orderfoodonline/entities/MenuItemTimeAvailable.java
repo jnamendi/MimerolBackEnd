@@ -6,7 +6,7 @@ import java.util.Date;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "menu_item_time_available", catalog = "ofo")
+@Table(name = "menu_item_time_available")
 public class MenuItemTimeAvailable {
     private Long menuTimeAvailableId;
     private MenuItem menuItem;
