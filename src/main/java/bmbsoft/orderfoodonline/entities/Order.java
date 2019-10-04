@@ -243,7 +243,7 @@ public class Order implements java.io.Serializable {
 		this.chargeFee = chargeFee;
 	}
 
-	@Column(name = "discount", precision = 10, scale = 2)
+	@Column(name = "discount_percent", precision = 3)
 	public Long getDiscount() {
 		return discount;
 	}

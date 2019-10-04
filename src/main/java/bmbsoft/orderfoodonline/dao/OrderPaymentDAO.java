@@ -434,7 +434,7 @@ public class OrderPaymentDAO {
 		if(liteResponses != null && !liteResponses.isEmpty()) {
 			for (MenuItemLiteResponse item : liteResponses) {
 				Double rate = menuService.getById(item.getMenuId()).getRate();
-				Double priceOfItem = 0d;
+				Double priceOfItem = item.getPriceOriginal();
 				if(item.getMenuExraItems() != null && !item.getMenuExraItems().isEmpty()) {
 					for (MenuExtraItemLiteResponse menuItem: item.getMenuExraItems()) {
 						if(menuItem.getExtraitems() != null && !menuItem.getExtraitems().isEmpty()) {
