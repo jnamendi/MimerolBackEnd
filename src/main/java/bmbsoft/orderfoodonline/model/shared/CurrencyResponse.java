@@ -9,7 +9,14 @@ public class CurrencyResponse {
 	private String symbolRight; 
 	private Long roundDecimal;
 	private Double rate;
-	
+
+	public CurrencyResponse() {
+	}
+
+	public CurrencyResponse(Double rate) {
+		this.rate = rate;
+	}
+
 	public Long getCurrencyId() {
 		return currencyId;
 	}
