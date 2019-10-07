@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -39,15 +36,8 @@ public class OrderService {
 	@Transactional
 	public ResponseGetPaging getAll(int pageIndex, int pageSize, String orderCode, String restaurantName,
 			Integer status) {
-		ResponseGetPaging rs = orderDAO.getAll(pageIndex, pageSize, orderCode, restaurantName, status);
 
-		return rs;
-	}
-
-	@Transactional
-	public boolean update(final OrderRequest OrderModel) {
-		Order Order = convertModelToEntity(OrderModel);
-		return orderDAO.update(Order);
+		return orderDAO.getAll(pageIndex, pageSize, orderCode, restaurantName, status);
 	}
 
 	@Transactional
@@ -100,10 +90,7 @@ public class OrderService {
 			if (!isTrue)
 				return null;
 			// currency
-			CurrencyResponse cur = currencyDAO.getByDefault();
-			if (cur == null) {
-				cur.setRate(1d);
-			}
+			CurrencyResponse cur = currencyDAO.getByDefault() == null ? new CurrencyResponse(1d) : currencyDAO.getByDefault();
 			return toModelResponse(o, cur.getSymbolLeft());
 		} catch (Exception e) {
 			logger.error(e.toString());
@@ -117,32 +104,6 @@ public class OrderService {
 	}
 
 	// miss Function get Order by code -> check exists?
-
-	private Order convertModelToEntity(final OrderRequest OrderModel) {
-		Order Order = new Order();
-		// if (null == OrderModel.getOrderId()) {
-		// // new
-		// Order.setOrderName(OrderModel.getName());
-		// Order.setOrderCode(OrderModel.getCode());
-		// Order.setStatus(OrderModel.getStatus());
-		// // Order.setCreatedBy(createdBy); miss
-		// Order.setCreatedDate(new Date());
-		// // check countryId -> true get country by id
-		// if (null != OrderModel.getCountry().getCountryId())
-		// Order.setCountry(countryDAO.getById(OrderModel.getCountry().getCountryId()));
-		// } else {
-		// // update
-		// Order = OrderDAO.getById(OrderModel.getOrderId());
-		// Order.setOrderName(OrderModel.getName());
-		// Order.setOrderCode(OrderModel.getCode());
-		// Order.setStatus(OrderModel.getStatus());
-		// // Order.setModifiedBy(modifiedBy); miss
-		// if (null != OrderModel.getCountry().getCountryId())
-		// Order.setCountry(countryDAO.getById(OrderModel.getCountry().getCountryId()));
-		// Order.setModifiedDate(new Date());
-		// }
-		return null;
-	}
 
 	public OrderViewModel convertEntityToModel(final Order o) {
 		if (null == o)
@@ -181,40 +142,30 @@ public class OrderService {
 	@Transactional
 	public List<OrderResponse> getOderByUser(Long userId) {
 		List<Order> ods = orderDAO.getOderByUser(userId);
-		List<OrderResponse> odrs = new LinkedList<>();
+		List<OrderResponse> orderResponses = new LinkedList<>();
 
 		// currency
-		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
-			cur.setRate(1d);
-		}
+		CurrencyResponse cur = currencyDAO.getByDefault() == null ? new CurrencyResponse(1d) : currencyDAO.getByDefault();
 
 		if (ods != null && ods.size() > 0) {
-			ods.forEach(o -> {
-				odrs.add(this.toModelResponse(o, cur.getSymbolLeft()));
-			});
+			ods.forEach(o -> orderResponses.add(this.toModelResponse(o, cur.getSymbolLeft())));
 		}
-		return odrs;
+		return orderResponses;
 	}
 
 	@Transactional
 	public List<OrderResponse> getOrderByOwner(Long ownerId) {
 
 		List<Order> ods = orderDAO.getOrderByOwner(ownerId);
-		List<OrderResponse> odrs = new LinkedList<>();
+		List<OrderResponse> orderResponses = new LinkedList<>();
 
 		// currency
-		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
-			cur.setRate(1d);
-		}
+		CurrencyResponse cur = currencyDAO.getByDefault() == null ? new CurrencyResponse(1d) : currencyDAO.getByDefault();
 
 		if (ods != null && ods.size() > 0) {
-			ods.forEach(o -> {
-				odrs.add(this.toModelResponse(o, cur.getSymbolLeft()));
-			});
+			ods.forEach(o -> orderResponses.add(this.toModelResponse(o, cur.getSymbolLeft())));
 		}
-		return odrs;
+		return orderResponses;
 
 	}
 
@@ -222,20 +173,18 @@ public class OrderService {
 	public List<OrderResponse> getAllOrder() {
 
 		List<Order> ods = orderDAO.getAllOrder();
-		List<OrderResponse> odrs = new LinkedList<>();
+		List<OrderResponse> orderResponses = new LinkedList<>();
 
 		// currency
 		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
+		if (cur != null) {
 			cur.setRate(1d);
 		}
 
 		if (ods != null && ods.size() > 0) {
-			ods.forEach(o -> {
-				odrs.add(this.toModelResponse(o, cur.getSymbolLeft()));
-			});
+			ods.forEach(o -> orderResponses.add(this.toModelResponse(o, Objects.requireNonNull(cur).getSymbolLeft())));
 		}
-		return odrs;
+		return orderResponses;
 
 	}
 
@@ -279,7 +228,7 @@ public class OrderService {
 
 	}
 
-	private OrderResponse toModelResponse(Order o, String symbo) {
+	private OrderResponse toModelResponse(Order o, String symbol) {
 		OrderResponse or = new OrderResponse();
 		or.setOrderId(o.getOrderId());
 		if (o.getRestaurant() != null) {
@@ -301,12 +250,14 @@ public class OrderService {
 		or.setTaxTotal(o.getTaxTotal());
 		or.setCurrencyCode(o.getCurrencyCode());
 		or.setOrderCode(o.getOrderCode());
-		or.setSymbolLeft(symbo);
+		or.setSymbolLeft(symbol);
 		or.setPaymentWith(o.getPaymentWith());
+		or.setDiscountPercent(o.getDiscount());
+		or.setCharge(o.getChargeFee());
 		or.setReasonCancel(o.getReasonCancel());
 		or.setReasonReject(o.getReasonReject());
 
-		List<OrderInfoResponse> oirs = new LinkedList<>();
+		List<OrderInfoResponse> orderInfoResponses = new LinkedList<>();
 		Set<OrderInfo> ois = o.getOrderInfos();
 		if (ois != null && ois.size() > 0) {
 			for (OrderInfo oi : ois) {
@@ -322,10 +273,10 @@ public class OrderService {
 				oir.setRemark(oi.getRemark());
 				oir.setAddressDescription(oi.getAddressDesc());
 				oir.setZone(oi.getZone());
-				oirs.add(oir);
+				orderInfoResponses.add(oir);
 			}
 		}
-		or.setOrderInfos(oirs);
+		or.setOrderInfos(orderInfoResponses);
 
 //		Set<OrderLineItem> sol = o.getOrderLineItems();
 //		List<OrderLineItemResponse> loli = new ArrayList<>();
@@ -344,25 +295,22 @@ public class OrderService {
 //
 //			or.setOrderLineItems(loli);
 //		}
-		List<MenuItemLiteResponse> addlist = getDataMenuExtra(o.getOrderReq());
-		or.setOrderLineItems(addlist);
+		List<MenuItemLiteResponse> menuItemLiteResponses = getDataMenuExtra(o.getOrderReq());
+		or.setOrderLineItems(menuItemLiteResponses);
 
 
 		Set<OrderPayment> sop = o.getOrderPayments();
 		if (sop != null && sop.size() > 0) {
-			sop.forEach(p -> {
-				or.setPaymentType(p.getOrderPaymentType());
-			});
+			sop.forEach(p -> or.setPaymentType(p.getOrderPaymentType()));
 
 		}
 		return or;
 	}
-	public static List<MenuItemLiteResponse> getDataMenuExtra(String jsonString){
-		List<MenuItemLiteResponse> list = new ArrayList<>();
+	private static List<MenuItemLiteResponse> getDataMenuExtra(String jsonString){
 		Gson s = new Gson();
 		PaymentRequest req = s.fromJson(jsonString, PaymentRequest.class);
 		if (req != null && !req.getOrderItem().getOrderItemsRequest().isEmpty()) {
-				list.addAll(req.getOrderItem().getOrderItemsRequest());
+			List<MenuItemLiteResponse> list = new ArrayList<>(req.getOrderItem().getOrderItemsRequest());
 			return  list.size() != 0 ? list : null;
 		}else{
 			return null;
@@ -391,16 +339,11 @@ public class OrderService {
 		}
 
 		// currency
-		CurrencyResponse cur = currencyDAO.getByDefault();
-		if (cur == null) {
-			cur.setRate(1d);
-		}
+		CurrencyResponse cur = currencyDAO.getByDefault() == null ? new CurrencyResponse(1d) : currencyDAO.getByDefault();
 
 		List<OrderResponse> lmr = new LinkedList<>();
-		if (result != null && !result.isEmpty()) {
-			result.forEach(res -> {
-				lmr.add(toModelResponse(res, cur.getSymbolLeft()));
-			});
+		if (!result.isEmpty()) {
+			result.forEach(res -> lmr.add(toModelResponse(res, cur.getSymbolLeft())));
 		}
 		if (totalRecord > 0 && !lmr.isEmpty()) {
 			content.setData(lmr);

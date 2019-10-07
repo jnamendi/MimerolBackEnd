@@ -1,15 +1,12 @@
 package bmbsoft.orderfoodonline.model;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import bmbsoft.orderfoodonline.model.shared.MenuExtraItemLiteResponse;
 import bmbsoft.orderfoodonline.model.shared.MenuItemLiteResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import bmbsoft.orderfoodonline.model.shared.OrderLineItemResponse;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 @JsonInclude(value = Include.NON_NULL)
 public class OrderResponse {
@@ -34,6 +31,8 @@ public class OrderResponse {
 	private Double paymentWith;
 	private String reasonReject;
 	private String reasonCancel;
+	private Long discountPercent;
+	private Double charge;
 
 	private List<OrderInfoResponse> orderInfos = new LinkedList<>();
 
@@ -213,5 +212,21 @@ public class OrderResponse {
 
 	public void setOrderLineItems(List<MenuItemLiteResponse> orderLineItems) {
 		this.orderLineItems = orderLineItems;
+	}
+
+	public Long getDiscountPercent() {
+		return discountPercent;
+	}
+
+	public void setDiscountPercent(Long discountPercent) {
+		this.discountPercent = discountPercent;
+	}
+
+	public Double getCharge() {
+		return charge;
+	}
+
+	public void setCharge(Double charge) {
+		this.charge = charge;
 	}
 }

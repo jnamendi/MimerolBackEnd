@@ -10,6 +10,8 @@ public class OrderItem {
 	private Double taxTotal;
 	@NotNull(message = "totalPrice is required")
 	private Double totalPrice;
+	@NotNull(message = "OrderItemsRequest is required")
+	private List<MenuItemLiteResponse> OrderItemsRequest;
 
 	public Double getTotalSubPrice() {
 		return totalSubPrice;
@@ -43,6 +45,4 @@ public class OrderItem {
 		OrderItemsRequest = orderItemsRequest;
 	}
 
-	@NotNull(message = "OrderItemsRequest is required")
-	private List<MenuItemLiteResponse> OrderItemsRequest;
 }

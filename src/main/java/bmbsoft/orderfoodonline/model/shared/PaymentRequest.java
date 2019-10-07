@@ -34,7 +34,11 @@ public class PaymentRequest {
 	private String promotionCode;
 	private Double paymentWith;
 	private String addressDesc;
-	
+	private String remarks;
+
+	@NotNull(message = "symbolLeft name is required")
+	private String symbolLeft;
+
 	private Long discount;
 
 	public Long getPromotionId() {
@@ -69,9 +73,6 @@ public class PaymentRequest {
 		this.voucherCode = voucherCode;
 	}
 
-	@NotNull(message = "symbolLeft name is required")
-	private String symbolLeft;
-
 	public int getPaymentType() {
 		return paymentType;
 	}
@@ -94,7 +95,8 @@ public class PaymentRequest {
 
 	public void setEmail(String email) {
 		this.email = email;
-	} 
+	}
+
 	public String getCompanyName() {
 		return companyName;
 	}
@@ -246,8 +248,6 @@ public class PaymentRequest {
 	public void setDistrictId(Long districtId) {
 		this.districtId = districtId;
 	}
-
-	private String remarks;
 
 	public Long getDiscount() {
 		return discount;
