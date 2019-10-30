@@ -459,6 +459,14 @@ public class RestaurantDAO {
 							ra.setZone(zone1);
 							session.save(ra);
 						}
+
+						if(c.getDeliveryCost() != null){
+							RestaurantDeliveryCost restaurantDeliveryCost = new RestaurantDeliveryCost();
+							restaurantDeliveryCost.setRestaurant(res);
+							restaurantDeliveryCost.setDistrict(c.getDeliveryAreaId());
+							restaurantDeliveryCost.setDeliveryCost(c.getDeliveryCost());
+							session.save(restaurantDeliveryCost);
+						}
 					}
 				}
 
