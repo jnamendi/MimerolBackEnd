@@ -35,7 +35,7 @@ public class PaymentRequest {
 	private Double paymentWith;
 	private String addressDesc;
 	
-	private Long discount;
+	private Double discount;
 
 	public Long getPromotionId() {
 		return promotionId;
@@ -249,11 +249,11 @@ public class PaymentRequest {
 
 	private String remarks;
 
-	public Long getDiscount() {
+	public Double getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Long discount) {
+	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
 

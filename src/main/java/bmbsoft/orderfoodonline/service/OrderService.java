@@ -305,6 +305,7 @@ public class OrderService {
 		or.setPaymentWith(o.getPaymentWith());
 		or.setReasonCancel(o.getReasonCancel());
 		or.setReasonReject(o.getReasonReject());
+		or.setDiscount(o.getDiscount());
 
 		List<OrderInfoResponse> oirs = new LinkedList<>();
 		Set<OrderInfo> ois = o.getOrderInfos();

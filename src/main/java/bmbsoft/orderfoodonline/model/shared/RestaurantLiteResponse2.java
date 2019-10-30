@@ -35,6 +35,16 @@ public class RestaurantLiteResponse2 {
 	private boolean restaurantClosed;
 	private List<PaymentProviderViewModel> paymentProviderLst;
 
+	private List<RestaurantDeliveryCostResponse> restaurantDeliveryCost;
+
+	public List<RestaurantDeliveryCostResponse> getRestaurantDeliveryCost() {
+		return restaurantDeliveryCost;
+	}
+
+	public void setRestaurantDeliveryCost(List<RestaurantDeliveryCostResponse> restaurantDeliveryCost) {
+		this.restaurantDeliveryCost = restaurantDeliveryCost;
+	}
+
 	public Double getDeliveryCost() {
 		return deliveryCost;
 	}

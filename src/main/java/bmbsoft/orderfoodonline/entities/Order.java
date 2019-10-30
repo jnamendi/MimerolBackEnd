@@ -39,6 +39,7 @@ public class Order implements java.io.Serializable {
 	private Double paymentWith;
 	private String reasonReject;
 	private String reasonCancel;
+	private Double discount;
 	private Set<OrderInfo> orderInfos = new HashSet<OrderInfo>(0);
 	private Set<OrderPayment> orderPayments = new HashSet<OrderPayment>(0);
 	private Set<OrderLineItem> orderLineItems = new HashSet<OrderLineItem>(0);
@@ -237,5 +238,14 @@ public class Order implements java.io.Serializable {
 
 	public void setReasonCancel(String reasonCancel) {
 		this.reasonCancel = reasonCancel;
+	}
+
+	@Column(name = "discount_percent")
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
 	}
 }

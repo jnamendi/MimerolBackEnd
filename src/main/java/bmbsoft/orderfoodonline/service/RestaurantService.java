@@ -42,6 +42,8 @@ public class RestaurantService {
 	private RestaurantAreaService restaurantAreaService;
 	@Autowired
 	private PaymentProviderService paymentProviderService;
+	@Autowired
+	private RestaurantDeliveryCostService restaurantDeliveryCostService;
 
 	@Transactional
 	public ResponseGetPaging getAll(final int pageIndex, final int pageSize, final String title, Integer status)
@@ -217,7 +219,7 @@ public class RestaurantService {
 				// payment provider
 				List<PaymentProviderViewModel> paymentProviderViewModelList = paymentProviderService.getPaymentProvidersByRestaurant(r.getRestaurantId());
 				vm.setPaymentProviderLst(paymentProviderViewModelList);
-
+				vm.setRestaurantDeliveryCost(restaurantDeliveryCostService.getDeliveryByRestaurantId(r.getRestaurantId()));
 				// promotion
 
 				Set<PromotionLineitem> sp = r.getPromotionLineitems();
@@ -446,7 +448,7 @@ public class RestaurantService {
 		c.setLatitude(res.getLatitude());
 		c.setLongitude(res.getLongitude());
 		c.setRestaurantClosed(!CommonHelper.checkBetweenTime(rwt));
-
+		c.setRestaurantDeliveryCost(restaurantDeliveryCostService.getDeliveryByRestaurantId(res.getRestaurantId()));
 		c.setRestaurantWorkTimeModels(rwt);
 
 		if (res.getContentDefinition() != null) {
