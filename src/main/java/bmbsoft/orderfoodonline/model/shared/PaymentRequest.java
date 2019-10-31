@@ -39,7 +39,7 @@ public class PaymentRequest {
 	@NotNull(message = "symbolLeft name is required")
 	private String symbolLeft;
 
-	private Long discount;
+	private long discount;
 
 	public Long getPromotionId() {
 		return promotionId;
@@ -248,11 +248,11 @@ public class PaymentRequest {
 		this.districtId = districtId;
 	}
 
-	public Long getDiscount() {
+	public long getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Long discount) {
+	public void setDiscount(long discount) {
 		this.discount = discount;
 	}
 

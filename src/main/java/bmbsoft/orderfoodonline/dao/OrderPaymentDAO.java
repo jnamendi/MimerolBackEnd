@@ -431,7 +431,7 @@ public class OrderPaymentDAO {
 		}
 	}
 
-	private double calculateChargeForOrder(List<MenuItemLiteResponse> liteResponses, Long discount) {
+	private double calculateChargeForOrder(List<MenuItemLiteResponse> liteResponses, long discount) {
 		double charge = 0d;
 		if(liteResponses != null && !liteResponses.isEmpty()) {
 			for (MenuItemLiteResponse item : liteResponses) {
@@ -448,7 +448,7 @@ public class OrderPaymentDAO {
 			}
 		}
 		if(discount > 0) {
-			charge = charge * (100d - discount.doubleValue()) / 100d;
+			charge = charge * (100d - (double) discount) / 100d;
 		}
 		return charge;
 	}
