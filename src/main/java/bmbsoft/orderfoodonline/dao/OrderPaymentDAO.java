@@ -176,6 +176,7 @@ public class OrderPaymentDAO {
 			o.setRestaurantName(r.getName());
 			o.setPaymentWith(req.getPaymentWith());
 			o.setDiscount(req.getDiscount());
+			o.setDeliveryCost(req.getDeliveryCost());
 
 			if (req.getOrderItem() == null) {
 				ps.setStatusCode(7);

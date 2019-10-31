@@ -34,14 +34,14 @@ public class OrderResponse {
 	private Double paymentWith;
 	private String reasonReject;
 	private String reasonCancel;
-	private Double discount;
+	private Double discountPercent;
 
-	public Double getDiscount() {
-		return discount;
+	public Double getDiscountPercent() {
+		return discountPercent;
 	}
 
-	public void setDiscount(Double discount) {
-		this.discount = discount;
+	public void setDiscountPercent(Double discountPercent) {
+		this.discountPercent = discountPercent;
 	}
 
 	private List<OrderInfoResponse> orderInfos = new LinkedList<>();

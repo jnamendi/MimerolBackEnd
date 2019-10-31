@@ -40,6 +40,7 @@ public class Order implements java.io.Serializable {
 	private String reasonReject;
 	private String reasonCancel;
 	private Double discount;
+	private Double deliveryCost;
 	private Set<OrderInfo> orderInfos = new HashSet<OrderInfo>(0);
 	private Set<OrderPayment> orderPayments = new HashSet<OrderPayment>(0);
 	private Set<OrderLineItem> orderLineItems = new HashSet<OrderLineItem>(0);
@@ -121,6 +122,15 @@ public class Order implements java.io.Serializable {
 
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	@Column(name = "delivery_cost", length = 19)
+	public Double getDeliveryCost() {
+		return deliveryCost;
+	}
+
+	public void setDeliveryCost(Double deliveryCost) {
+		this.deliveryCost = deliveryCost;
 	}
 
 	@Column(name = "total_price", precision = 10, scale = 2)
