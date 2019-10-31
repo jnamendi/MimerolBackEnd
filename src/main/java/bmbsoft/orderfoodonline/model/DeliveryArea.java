@@ -4,7 +4,16 @@ import java.util.List;
 
 public class DeliveryArea {
     private Long deliveryAreaId;
+    private Double deliveryCost;
     private List<Long> deliveryZoneId;
+
+    public Double getDeliveryCost() {
+        return deliveryCost;
+    }
+
+    public void setDeliveryCost(Double deliveryCost) {
+        this.deliveryCost = deliveryCost;
+    }
 
     public Long getDeliveryAreaId() {
         return deliveryAreaId;

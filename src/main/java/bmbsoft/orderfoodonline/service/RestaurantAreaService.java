@@ -1,10 +1,12 @@
 package bmbsoft.orderfoodonline.service;
 
 import bmbsoft.orderfoodonline.dao.RestaurantAreaDAO;
+import bmbsoft.orderfoodonline.dao.RestaurantDeliveryCostDAO;
 import bmbsoft.orderfoodonline.entities.City;
 import bmbsoft.orderfoodonline.entities.District;
 import bmbsoft.orderfoodonline.entities.RestaurantArea;
 import bmbsoft.orderfoodonline.model.*;
+import bmbsoft.orderfoodonline.model.shared.RestaurantDeliveryCostModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,9 @@ public class RestaurantAreaService {
 
     @Autowired
     private DistrictService districtService;
+
+    @Autowired
+    private RestaurantDeliveryCostService restaurantDeliveryCostService;
 
     @Transactional
     public List<RestaurantDeliveryAreaModel> getDistrictByRestaurant(long restaurantId) {
@@ -154,12 +159,19 @@ public class RestaurantAreaService {
     public List<DeliveryArea> getDeliveryZone(long restaurantId, List<Long> idDis){
         List<DeliveryArea> deliveryAreaList = new ArrayList<>();
         List<RestaurantArea> ra = areaDAO.getZoneIdByRestaurantId(restaurantId);
-
+        List<RestaurantDeliveryCostModel> restaurantDeliveryCostModelList = restaurantDeliveryCostService.getDeliveryByRestaurant(restaurantId);
         if(ra != null && !ra.isEmpty() && idDis!= null && !idDis.isEmpty()) {
             for (Long l: idDis ){
                 DeliveryArea dlv = new DeliveryArea();
                 List<Long> z = new ArrayList<>();
                 dlv.setDeliveryAreaId(l);
+                if(restaurantDeliveryCostModelList != null && !restaurantDeliveryCostModelList.isEmpty()){
+                    for(RestaurantDeliveryCostModel cost : restaurantDeliveryCostModelList){
+                        if(cost.getDistrict() == l){
+                            dlv.setDeliveryCost(cost.getDeliveryCost());
+                        }
+                    }
+                }
                 for (RestaurantArea r: ra) {
                     if(r.getDistrict().getDistrictId().equals(l) && r.getZone().getZoneId() != null){
                         z.add(r.getZone().getZoneId());

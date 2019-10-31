@@ -283,6 +283,22 @@ public class RestaurantDAO {
 							session.save(ra);
 						}
 					}
+
+					String removeDeliveryCost = "DELETE FROM restaurant_delivery_cost WHERE restaurant_id=:resId";
+					session.createNativeQuery(removeDeliveryCost).setParameter("resId", resId)
+							.executeUpdate();
+
+					// save data
+					for (DeliveryArea c : vm.getDeliveryArea()) {
+							if (c.getDeliveryCost() != null ){
+								RestaurantDeliveryCost restaurantDeliveryCost = new RestaurantDeliveryCost();
+								restaurantDeliveryCost.setRestaurant(res);
+								restaurantDeliveryCost.setDistrict(c.getDeliveryAreaId());
+								restaurantDeliveryCost.setDeliveryCost(c.getDeliveryCost());
+								session.save(restaurantDeliveryCost);
+							}
+					}
+
 				}
 
 				if (!isF) {
@@ -442,6 +458,14 @@ public class RestaurantDAO {
 							ra.setRestaurant(res);
 							ra.setZone(zone1);
 							session.save(ra);
+						}
+
+						if(c.getDeliveryCost() != null){
+							RestaurantDeliveryCost restaurantDeliveryCost = new RestaurantDeliveryCost();
+							restaurantDeliveryCost.setRestaurant(res);
+							restaurantDeliveryCost.setDistrict(c.getDeliveryAreaId());
+							restaurantDeliveryCost.setDeliveryCost(c.getDeliveryCost());
+							session.save(restaurantDeliveryCost);
 						}
 					}
 				}

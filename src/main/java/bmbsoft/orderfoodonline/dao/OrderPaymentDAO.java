@@ -174,6 +174,8 @@ public class OrderPaymentDAO {
 			o.setPaymentWith(req.getPaymentWith());
 			o.setDiscount(req.getDiscount());
 			o.setChargeFee(calculateChargeForOrder(req.getOrderItem().getOrderItemsRequest(), req.getDiscount()));
+			o.setDeliveryCost(req.getDeliveryCost());
+
 			if (req.getOrderItem() == null) {
 				ps.setStatusCode(7);
 				ps.setErrMsg("Menu item not exist.");

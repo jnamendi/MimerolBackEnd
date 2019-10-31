@@ -1,6 +1,7 @@
 package bmbsoft.orderfoodonline.model;
 
 import bmbsoft.orderfoodonline.model.shared.PromotionLineitemResponse;
+import bmbsoft.orderfoodonline.model.shared.RestaurantDeliveryCostResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -47,6 +48,16 @@ public class RestaurantViewModel {
 	private Long zoneId;
 	private String zone;
 	private List<DeliveryArea> deliveryArea;
+
+	private List<RestaurantDeliveryCostResponse> restaurantDeliveryCost;
+
+	public List<RestaurantDeliveryCostResponse> getRestaurantDeliveryCost() {
+		return restaurantDeliveryCost;
+	}
+
+	public void setRestaurantDeliveryCost(List<RestaurantDeliveryCostResponse> restaurantDeliveryCost) {
+		this.restaurantDeliveryCost = restaurantDeliveryCost;
+	}
 
 	public List<HashMap> getUserList() {
 		return userList;

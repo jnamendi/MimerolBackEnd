@@ -95,8 +95,7 @@ public class PaymentRequest {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
+	} 
 	public String getCompanyName() {
 		return companyName;
 	}
