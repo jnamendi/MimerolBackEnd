@@ -236,7 +236,7 @@ public class OrderService {
 			or.setRestaurantName(r.getName());
 			or.setRestaurantId(r.getRestaurantId());
 			or.setImageUrl(r.getImageUrl());
-			or.setDeliveryCost(r.getDeliveryCost());
+			or.setDeliveryCost(o.getDeliveryCost());
 		}
 		User u = o.getUser();
 		if (u != null) {
@@ -256,6 +256,7 @@ public class OrderService {
 		or.setCharge(o.getChargeFee());
 		or.setReasonCancel(o.getReasonCancel());
 		or.setReasonReject(o.getReasonReject());
+		or.setDiscountPercent(o.getDiscount());
 
 		List<OrderInfoResponse> orderInfoResponses = new LinkedList<>();
 		Set<OrderInfo> ois = o.getOrderInfos();

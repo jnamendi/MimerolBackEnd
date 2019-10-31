@@ -1,2 +1,2 @@
 ALTER TABLE [order]
-ADD dis_count bigint(20);
+ADD discount bigint(20);

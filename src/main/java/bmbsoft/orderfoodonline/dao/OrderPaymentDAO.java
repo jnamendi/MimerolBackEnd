@@ -174,6 +174,8 @@ public class OrderPaymentDAO {
 			o.setPaymentWith(req.getPaymentWith());
 			o.setDiscount(req.getDiscount());
 			o.setChargeFee(calculateChargeForOrder(req.getOrderItem().getOrderItemsRequest(), req.getDiscount()));
+			o.setDeliveryCost(req.getDeliveryCost());
+
 			if (req.getOrderItem() == null) {
 				ps.setStatusCode(7);
 				ps.setErrMsg("Menu item not exist.");
@@ -429,7 +431,7 @@ public class OrderPaymentDAO {
 		}
 	}
 
-	private double calculateChargeForOrder(List<MenuItemLiteResponse> liteResponses, Long discount) {
+	private double calculateChargeForOrder(List<MenuItemLiteResponse> liteResponses, long discount) {
 		double charge = 0d;
 		if(liteResponses != null && !liteResponses.isEmpty()) {
 			for (MenuItemLiteResponse item : liteResponses) {
@@ -446,7 +448,7 @@ public class OrderPaymentDAO {
 			}
 		}
 		if(discount > 0) {
-			charge = charge * (100d - discount.doubleValue()) / 100d;
+			charge = charge * (100d - (double) discount) / 100d;
 		}
 		return charge;
 	}

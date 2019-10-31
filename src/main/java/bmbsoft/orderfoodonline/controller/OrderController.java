@@ -226,7 +226,7 @@ public class OrderController extends BaseController {
                         vars.put("symbolLeft", req.getSymbolLeft() == null || req.getSymbolLeft().isEmpty() ? ""
                                 : req.getSymbolLeft());
 
-                        vars.put("discount", req.getDiscount() == null ? "0%" : req.getDiscount().toString() + "%");
+                        vars.put("discount", req.getDiscount() == 0d ? "0%" : req.getDiscount() + "%");
                         vars.put("guestPay", req.getPaymentWith() == null ? "" : req.getPaymentWith().toString());
                         vars.put("refunds", req.getPaymentWith() != null && req.getOrderItem().getTotalPrice() != null ?
                                 String.valueOf(Math.round((req.getPaymentWith() - req.getOrderItem().getTotalPrice()) * 100) / 100.0) : "");
