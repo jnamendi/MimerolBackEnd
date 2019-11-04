@@ -48,6 +48,7 @@ public class ZoneService {
         List<ZoneViewModel> listModel = new LinkedList<>();
         List<Zone> zones = zoneDAO.getZoneByDistrictId(id);
         zones.forEach(zone -> listModel.add(convertEntityToModel(zone)));
+        listModel.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
         return listModel;
     }
 
