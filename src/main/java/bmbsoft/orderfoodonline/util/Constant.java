@@ -224,6 +224,21 @@ public class Constant {
 
 	}
 
+	public enum NotificationParameter {
+		SOUND("default"),
+		COLOR("#FFFF00");
+
+		private String value;
+
+		NotificationParameter(String value) {
+			this.value = value;
+		}
+
+		public String getValue() {
+			return this.value;
+		}
+	}
+
 	public static final class ErrorTypeCommon {
 		public static final String OK = "OK";
 		public static final String NOT_FOUND_ITEM = "NOT_FOUND_ITEM";
