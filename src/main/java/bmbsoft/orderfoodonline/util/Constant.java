@@ -358,4 +358,13 @@ public class Constant {
 		public static final String EN = "You have a new order %s. Please go to your admin console to review it and confirm or reject it.";
 		public static final String ES = "Tiene una nueva orden %s. Vaya a su consola de administración para revisarla y confirmarla o rechazarla.";
 	}
+
+	//Firebase Cloud Message
+	public static final String FCM_TITLE = "Mimerol";
+	public static class Notification {
+		public static String NEW_ORDER_TO_OWNER_EN = "You have a new order %1s at %2s";
+		public static String NEW_ORDER_TO_OWNER_ES = "Tiene una nueva orden %1s en %2s";
+		public static String NEW_ORDER_TO_USER_EN = "The restaurant has confirmed your order %s.";
+		public static String NEW_ORDER_TO_USER_ES = "El restaurante ha confirmado su orden %s.";
+	}
 }

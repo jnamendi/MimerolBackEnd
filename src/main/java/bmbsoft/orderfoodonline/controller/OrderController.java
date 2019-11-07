@@ -7,6 +7,7 @@ import bmbsoft.orderfoodonline.model.shared.*;
 import bmbsoft.orderfoodonline.response.ResponseGet;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.service.*;
+import bmbsoft.orderfoodonline.service.fcm.UserFCMService;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
 import com.google.gson.Gson;
@@ -62,6 +63,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private SmsService smsService;
+
+    @Autowired
+    private UserFCMService userFCMService;
 
     private Gson mapper = new Gson();
 
@@ -352,11 +356,38 @@ public class OrderController extends BaseController {
                                                 pro.getBody(), displayEmailName);
                                     }
                                 }
+
+                                //push Notification
+                                // To User
+                                if (req.getUserId() != null) {
+                                    List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByUserId(req.getUserId());
+                                    String message;
+                                    if(req.getLanguageCode().equalsIgnoreCase("en")) {
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_EN, ps.getOrderCode());
+                                    } else {
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_ES, ps.getOrderCode());
+                                    }
+                                    userFCMService.pushNotificationToUsersWithoutTopic(Constant.FCM_TITLE, message, userFCMModelList);
+                                }
+
+                                // To Owner
+                                List<Long> ownerIds = userRestaurantService.getOwnersIdByRestaurant(req.getRestaurantId());
+                                if(!ownerIds.isEmpty()) {
+                                    List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByListUserIds(ownerIds);
+                                    String message;
+                                    if(req.getLanguageCode().equalsIgnoreCase("en")) {
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_EN, ps.getOrderCode(), ps.getName());
+                                    } else {
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_ES, ps.getOrderCode(), ps.getName());
+                                    }
+                                    userFCMService.pushNotificationToUsersWithoutTopic(Constant.FCM_TITLE, message, userFCMModelList);
+                                }
                             } catch (MessagingException | IOException e) {
                                 logger.error(e.toString());
                             }
                         });
                     }
+
                     rs.setStatus(0);
                     rs.setMessage("OK");
                     rs.setContent(new HashMap() {

@@ -1,4 +1,4 @@
-package bmbsoft.orderfoodonline.service;
+package bmbsoft.orderfoodonline.service.fcm;
 
 import bmbsoft.orderfoodonline.model.PushNotificationRequest;
 import bmbsoft.orderfoodonline.util.Constant;
@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -27,6 +28,15 @@ public class FCMService {
         Message message = getPreconfiguredMessageWithoutData(request);
         String response = sendAndGetResponse(message);
         logger.info("Sent message without data. Topic: " + request.getTopic() + ", " + response);
+    }
+
+    public void sendMulticast(String title, String content, List<String> registrationTokens) throws FirebaseMessagingException {
+        MulticastMessage message = MulticastMessage.builder()
+                .putData(title, content)
+                .addAllTokens(registrationTokens)
+                .build();
+        BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
+        logger.info("Sent message multicast " + ", " + response);
     }
 
     public void sendMessageToToken(PushNotificationRequest request)
