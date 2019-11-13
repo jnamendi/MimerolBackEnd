@@ -229,7 +229,8 @@ public class OrderPaymentDAO {
 											OrderExtraItem ei = new OrderExtraItem();
 											ei.setMenuItemId(Objects.requireNonNull(mi).getMenuItemId());
 											ei.setMenuExtraItemId(extraItem.getMenuExtraItemId());
-											ei.setMenuExtraItemId(exi.getExtraItemId());
+											ei.setExtraItemId(exi.getExtraItemId());
+											ei.setOrderLineItem(oli);
 											ei.setTotalPrice(eti.getPriceRate());
 											ei.setUnitPrice(eti.getPrice());
 
@@ -360,15 +361,13 @@ public class OrderPaymentDAO {
 
 							String body = matcher.replace(cm.getBody(), vars);
 
-							String trpc = cm.getSubject();
-							Executors.newSingleThreadExecutor().execute(new Runnable() {
-								public void run() {
-									try {
-										emailService.sendCcMessage(emailFrom, req.getEmail(), emailOwner, trpc, body,
-												displayEmailName);
-									} catch (MessagingException | IOException e) {
-										logger.error(e.toString());
-									}
+							String subject = cm.getSubject();
+							Executors.newSingleThreadExecutor().execute(() -> {
+								try {
+									emailService.sendCcMessage(emailFrom, req.getEmail(), emailOwner, subject, body,
+											displayEmailName);
+								} catch (MessagingException | IOException e) {
+									logger.error(e.toString());
 								}
 							});
 						}
