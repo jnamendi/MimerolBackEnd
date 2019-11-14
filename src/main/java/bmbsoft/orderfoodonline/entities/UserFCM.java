@@ -2,7 +2,6 @@ package bmbsoft.orderfoodonline.entities;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "user_fcm")
 public class UserFCM implements java.io.Serializable {
     private Long userFCMId;
-    private Long userId;
+    private User user;
     private String deviceId;
     private String token;
     private Date createdDate;
@@ -26,9 +25,9 @@ public class UserFCM implements java.io.Serializable {
         this.userFCMId = userFCMId;
     }
 
-    public UserFCM(Long userFCMId, Long userId, String deviceId, String token, Date createdDate, Date modifiedDate) {
+    public UserFCM(Long userFCMId, User user, String deviceId, String token, Date createdDate, Date modifiedDate) {
         this.userFCMId = userFCMId;
-        this.userId = userId;
+        this.user = user;
         this.deviceId = deviceId;
         this.token = token;
         this.createdDate = createdDate;
@@ -46,13 +45,14 @@ public class UserFCM implements java.io.Serializable {
         this.userFCMId = userFCMId;
     }
 
-    @Column(name = "user_id")
-    public Long getUserId() {
-        return userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Column(name = "device_id")

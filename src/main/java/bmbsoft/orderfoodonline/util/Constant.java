@@ -360,11 +360,41 @@ public class Constant {
 	}
 
 	//Firebase Cloud Message
-	public static final String FCM_TITLE = "Mimerol";
 	public static class Notification {
-		public static String NEW_ORDER_TO_OWNER_EN = "You have a new order %1s at %2s";
-		public static String NEW_ORDER_TO_OWNER_ES = "Tiene una nueva orden %1s en %2s";
-		public static String NEW_ORDER_TO_USER_EN = "The restaurant has confirmed your order %s.";
-		public static String NEW_ORDER_TO_USER_ES = "El restaurante ha confirmado su orden %s.";
+		// new order to user
+		public static String NEW_ORDER_TO_USER_TITLE_EN = "New order at Mimerol";
+		public static String NEW_ORDER_TO_USER_TITLE_ES = "Nueva order en Mimerol";
+		public static String NEW_ORDER_TO_USER_CONTENT_EN = "Your new order %s has been informed to Mimerol";
+		public static String NEW_ORDER_TO_USER_CONTENT_ES = "Su nueva orden %s ha sido enviada a Mimerol";
+
+		// new order to owner
+		public static String NEW_ORDER_TO_OWNER_TITLE_EN = "You have a new Order";
+		public static String NEW_ORDER_TO_OWNER_TITLE_ES = "Tiene una nueva orden";
+		public static String NEW_ORDER_TO_OWNER_CONTENT_EN = "The new order %s has been submited. Please confirm.";
+		public static String NEW_ORDER_TO_OWNER_CONTENT_ES = "La nueva orden %s ha sido enviada. Favor confirmar.";
+
+		// order confirmed
+		public static String CONFIRMED_ORDER_TO_USER_TITLE_EN = "Your order has been confirmed";
+		public static String CONFIRMED_ORDER_TO_USER_TITLE_ES = "Su orden ha sido confirmada";
+		public static String CONFIRMED_ORDER_TO_USER_CONTENT_EN = "The restaurant has confirmed your order %s. It is now being prepared.";
+		public static String CONFIRMED_ORDER_TO_USER_CONTENT_ES = "El restaurante ha confirmado su orden %s. Ahora esta siendo preparada.";
+
+		// order delivered
+		public static String DELIVERED_ORDER_TO_USER_TITLE_EN = "Your order has been delivered";
+		public static String DELIVERED_ORDER_TO_USER_TITLE_ES = "Su orden ha sido entregada";
+		public static String DELIVERED_ORDER_TO_USER_CONTENT_EN = "Enjoy your food. Thank you!";
+		public static String DELIVERED_ORDER_TO_USER_CONTENT_ES = "Disfrute su comida. Gracias!";
+
+		// order rejected
+		public static String REJECTED_ORDER_TO_USER_TITLE_EN = "Your order has been rejected";
+		public static String REJECTED_ORDER_TO_USER_TITLE_ES = "Su orden ha sido rechazada";
+		public static String REJECTED_ORDER_TO_USER_CONTENT_EN = "The restaurant has rejected your order %s. We are so sorry about this inconvenience.";
+		public static String REJECTED_ORDER_TO_USER_CONTENT_ES = "El restaurante ha rechazado su orden %s. Disculpas por el inconveniente.";
+
+		// order canceled
+		public static String CANCELED_ORDER_TO_USER_TITLE_EN = "Your order has been canceled";
+		public static String CANCELED_ORDER_TO_USER_TITLE_ES = "Su orden ha sido cancelada";
+		public static String CANCELED_ORDER_TO_USER_CONTENT_EN = "The restaurant has canceled your order %s. Need to re-order?";
+		public static String CANCELED_ORDER_TO_USER_CONTENT_ES = "El restaurante ha cancelado su orden %s. ¿Le gustaría ordenar de nuevo?";
 	}
 }

@@ -56,7 +56,7 @@ public class UserFCMDAO {
         //Adding predicates in case of parameter not being null
         if (userId != null) {
             predicates.add(
-                    criteriaBd.equal(root.get("userId"), userId));
+                    criteriaBd.equal(root.get("user"), userId));
         }
         if (deviceId != null) {
             predicates.add(

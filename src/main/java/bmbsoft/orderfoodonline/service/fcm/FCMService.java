@@ -30,9 +30,9 @@ public class FCMService {
         logger.info("Sent message without data. Topic: " + request.getTopic() + ", " + response);
     }
 
-    public void sendMulticast(String title, String content, List<String> registrationTokens) throws FirebaseMessagingException {
+    public void sendMulticast(Map<String, String> data, List<String> registrationTokens) throws FirebaseMessagingException {
         MulticastMessage message = MulticastMessage.builder()
-                .putData(title, content)
+                .putAllData(data)
                 .addAllTokens(registrationTokens)
                 .build();
         BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);

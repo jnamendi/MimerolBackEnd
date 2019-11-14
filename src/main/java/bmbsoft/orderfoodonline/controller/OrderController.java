@@ -362,12 +362,15 @@ public class OrderController extends BaseController {
                                 if (req.getUserId() != null) {
                                     List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByUserId(req.getUserId());
                                     String message;
+                                    String subject;
                                     if(req.getLanguageCode().equalsIgnoreCase("en")) {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_EN, ps.getOrderCode());
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_CONTENT_EN, ps.getOrderCode());
+                                        subject = Constant.Notification.NEW_ORDER_TO_USER_TITLE_EN;
                                     } else {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_ES, ps.getOrderCode());
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_CONTENT_ES, ps.getOrderCode());
+                                        subject = Constant.Notification.NEW_ORDER_TO_USER_TITLE_ES;
                                     }
-                                    userFCMService.pushNotificationToUsersWithoutTopic(Constant.FCM_TITLE, message, userFCMModelList);
+                                    userFCMService.pushNotificationToUsersWithoutTopic(ps.getOrderId(), ps.getOrderCode(), subject, message, userFCMModelList);
                                 }
 
                                 // To Owner
@@ -375,12 +378,15 @@ public class OrderController extends BaseController {
                                 if(!ownerIds.isEmpty()) {
                                     List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByListUserIds(ownerIds);
                                     String message;
+                                    String subject;
                                     if(req.getLanguageCode().equalsIgnoreCase("en")) {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_EN, ps.getOrderCode(), ps.getName());
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_CONTENT_EN, ps.getOrderCode());
+                                        subject = Constant.Notification.NEW_ORDER_TO_OWNER_TITLE_EN;
                                     } else {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_ES, ps.getOrderCode(), ps.getName());
+                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_CONTENT_ES, ps.getOrderCode());
+                                        subject = Constant.Notification.NEW_ORDER_TO_OWNER_TITLE_ES;
                                     }
-                                    userFCMService.pushNotificationToUsersWithoutTopic(Constant.FCM_TITLE, message, userFCMModelList);
+                                    userFCMService.pushNotificationToOwnersWithoutTopic(subject, message, userFCMModelList);
                                 }
                             } catch (MessagingException | IOException e) {
                                 logger.error(e.toString());
@@ -773,6 +779,48 @@ public class OrderController extends BaseController {
                 }
             }
 
+            // push notification
+            Executors.newSingleThreadExecutor().execute(() -> {
+                // To User
+                if (o.getUser().getUserId() != null) {
+                    List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByUserId(o.getUser().getUserId());
+                    String message = "";
+                    String subject = "";
+                    if (req.getLanguageCode().equalsIgnoreCase("en")) {
+                        if(req.getStatus() == Constant.Order.Confirmed.getValue()) {
+                            message = String.format(Constant.Notification.CONFIRMED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
+                            subject = Constant.Notification.CONFIRMED_ORDER_TO_USER_TITLE_EN;
+                        } else if (req.getStatus() == Constant.Order.Delivered.getValue()) {
+                            message = String.format(Constant.Notification.DELIVERED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
+                            subject = Constant.Notification.DELIVERED_ORDER_TO_USER_TITLE_EN;
+                        } else if (req.getStatus() == Constant.Order.Rejected.getValue()) {
+                            message = String.format(Constant.Notification.REJECTED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
+                            subject = Constant.Notification.REJECTED_ORDER_TO_USER_TITLE_EN;
+                        } else if (req.getStatus() == Constant.Order.Canceled.getValue()) {
+                            message = String.format(Constant.Notification.CANCELED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
+                            subject = Constant.Notification.CANCELED_ORDER_TO_USER_TITLE_EN;
+                        }
+
+                    } else {
+                        if(req.getStatus() == Constant.Order.Confirmed.getValue()) {
+                            message = String.format(Constant.Notification.CONFIRMED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
+                            subject = Constant.Notification.CONFIRMED_ORDER_TO_USER_TITLE_ES;
+                        } else if (req.getStatus() == Constant.Order.Delivered.getValue()) {
+                            message = String.format(Constant.Notification.DELIVERED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
+                            subject = Constant.Notification.DELIVERED_ORDER_TO_USER_TITLE_ES;
+                        } else if (req.getStatus() == Constant.Order.Rejected.getValue()) {
+                            message = String.format(Constant.Notification.REJECTED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
+                            subject = Constant.Notification.REJECTED_ORDER_TO_USER_TITLE_ES;
+                        } else if (req.getStatus() == Constant.Order.Canceled.getValue()) {
+                            message = String.format(Constant.Notification.CANCELED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
+                            subject = Constant.Notification.CANCELED_ORDER_TO_USER_TITLE_ES;
+                        }
+                    }
+
+                    userFCMService.pushNotificationToUsersWithoutTopic(o.getOrderId(), o.getOrderCode(), subject, message, userFCMModelList);
+                }
+            });
+
             if (checkSaveHis) {
                 rs.setStatus(0);
                 rs.setMessage("Update success");
@@ -783,6 +831,7 @@ public class OrderController extends BaseController {
                 rs.setErrorType(Constant.ErrorTypeCommon.ERROR_PROCESS_DATA);
                 return new ResponseEntity<>(rs, HttpStatus.BAD_REQUEST);
             }
+
         } catch (Exception e) {
             logger.error(e.getMessage());
             rs.setStatus(1);
