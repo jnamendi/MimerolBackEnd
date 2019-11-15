@@ -49,5 +49,14 @@ public class UserRestaurantService {
 				.map(p -> p.getUser().getEmail()).collect(Collectors.toList());
 
 	}
+
+	@Transactional
+	public List<Long> getOwnersIdByRestaurant(Long resId) {
+		List<UserRestaurant> ur = urd.getOwnerIdByRestaurantId(resId);
+
+		return ur.stream().filter(u -> u.getUser().getStatus() != Constant.Status.Deleted.getValue())
+				.map(p -> p.getUser().getUserId()).collect(Collectors.toList());
+
+	}
 	
 }

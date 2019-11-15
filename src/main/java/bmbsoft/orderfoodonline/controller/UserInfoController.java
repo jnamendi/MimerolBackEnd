@@ -1,21 +1,14 @@
 package bmbsoft.orderfoodonline.controller;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-
+import bmbsoft.orderfoodonline.entities.User;
+import bmbsoft.orderfoodonline.entities.UserInfo;
+import bmbsoft.orderfoodonline.model.UserInfoRequest;
+import bmbsoft.orderfoodonline.model.UserInfoResponse;
+import bmbsoft.orderfoodonline.response.ResponseGet;
+import bmbsoft.orderfoodonline.service.ContentEmailService;
+import bmbsoft.orderfoodonline.service.UserService;
+import bmbsoft.orderfoodonline.util.Constant;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,45 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import bmbsoft.orderfoodonline.entities.Role;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.entities.UserInfo;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.model.ActiveAccountViewModel;
-import bmbsoft.orderfoodonline.model.ChangePasswordViewModel;
-import bmbsoft.orderfoodonline.model.ContentEmaiLViewModel;
-import bmbsoft.orderfoodonline.model.FacebookViewModel;
-import bmbsoft.orderfoodonline.model.ResendEmailRequest;
-import bmbsoft.orderfoodonline.model.RoleModel;
-import bmbsoft.orderfoodonline.model.UserInfoRequest;
-import bmbsoft.orderfoodonline.model.UserInfoResponse;
-import bmbsoft.orderfoodonline.model.UserRegisterViewModel;
-import bmbsoft.orderfoodonline.model.UserViewModel;
-import bmbsoft.orderfoodonline.model.shared.DeleteManyRequest;
-import bmbsoft.orderfoodonline.response.ResponseGet;
-import bmbsoft.orderfoodonline.response.ResponseGetPaging;
-import bmbsoft.orderfoodonline.service.ContentEmailService;
-import bmbsoft.orderfoodonline.service.EmailService;
-import bmbsoft.orderfoodonline.service.FBGraphService;
-import bmbsoft.orderfoodonline.service.JwtService;
-import bmbsoft.orderfoodonline.service.RoleService;
-import bmbsoft.orderfoodonline.service.UserRestaurantService;
-import bmbsoft.orderfoodonline.service.UserService;
-import bmbsoft.orderfoodonline.util.CommonHelper;
-import bmbsoft.orderfoodonline.util.Constant;
-import bmbsoft.orderfoodonline.util.Constant.Provider;
-import bmbsoft.orderfoodonline.util.RandomStringHelper;
-import jlibs.core.util.regex.TemplateMatcher;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -208,12 +165,12 @@ public class UserInfoController extends BaseController {
 		HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 		try {
 			// permission
-						if (!permission(Constant.Module.UserInfo, Constant.Action.getById)) {
-							rs.setStatus(7);
-							rs.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
-							rs.setMessage("Access Denied!");
-							return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
-						}
+			if (!permission(Constant.Module.UserInfo, Constant.Action.getById)) {
+				rs.setStatus(7);
+				rs.setErrorType(Constant.ErrorTypeCommon.Access_Denied);
+				rs.setMessage("Access Denied!");
+				return new ResponseEntity<ResponseGet>(rs, HttpStatus.BAD_REQUEST);
+			}
 			if (id == null) {
 				rs.setStatus(7);
 				rs.setMessage("Field is required");
