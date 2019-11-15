@@ -56,9 +56,6 @@ public class OrderController extends BaseController {
     private UserRestaurantService userRestaurantService;
 
     @Autowired
-    private DistrictService districtService;
-
-    @Autowired
     private ZoneService zoneService;
 
     @Autowired
@@ -361,32 +358,26 @@ public class OrderController extends BaseController {
                                 // To User
                                 if (req.getUserId() != null) {
                                     List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByUserId(req.getUserId());
-                                    String message;
-                                    String subject;
-                                    if(req.getLanguageCode().equalsIgnoreCase("en")) {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_CONTENT_EN, ps.getOrderCode());
-                                        subject = Constant.Notification.NEW_ORDER_TO_USER_TITLE_EN;
-                                    } else {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_USER_CONTENT_ES, ps.getOrderCode());
-                                        subject = Constant.Notification.NEW_ORDER_TO_USER_TITLE_ES;
-                                    }
-                                    userFCMService.pushNotificationToUsersWithoutTopic(ps.getOrderId(), ps.getOrderCode(), subject, message, userFCMModelList);
+                                    MessageFCMModel messageFCMModel= new MessageFCMModel();
+                                    messageFCMModel.setTitleEn(Constant.Notification.NEW_ORDER_TO_USER_TITLE_EN);
+                                    messageFCMModel.setMessageEn(String.format(Constant.Notification.NEW_ORDER_TO_USER_CONTENT_EN, ps.getOrderCode()));
+                                    messageFCMModel.setTitleEs(Constant.Notification.NEW_ORDER_TO_USER_TITLE_ES);
+                                    messageFCMModel.setMessageEs(String.format(Constant.Notification.NEW_ORDER_TO_USER_CONTENT_ES, ps.getOrderCode()));
+
+                                    userFCMService.pushNotificationToUsersWithoutTopic(ps.getOrderId(), ps.getOrderCode(), messageFCMModel, userFCMModelList);
                                 }
 
                                 // To Owner
                                 List<Long> ownerIds = userRestaurantService.getOwnersIdByRestaurant(req.getRestaurantId());
                                 if(!ownerIds.isEmpty()) {
                                     List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByListUserIds(ownerIds);
-                                    String message;
-                                    String subject;
-                                    if(req.getLanguageCode().equalsIgnoreCase("en")) {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_CONTENT_EN, ps.getOrderCode());
-                                        subject = Constant.Notification.NEW_ORDER_TO_OWNER_TITLE_EN;
-                                    } else {
-                                        message = String.format(Constant.Notification.NEW_ORDER_TO_OWNER_CONTENT_ES, ps.getOrderCode());
-                                        subject = Constant.Notification.NEW_ORDER_TO_OWNER_TITLE_ES;
-                                    }
-                                    userFCMService.pushNotificationToOwnersWithoutTopic(subject, message, userFCMModelList);
+                                    MessageFCMModel messageFCMModel= new MessageFCMModel();
+                                    messageFCMModel.setTitleEn(Constant.Notification.NEW_ORDER_TO_OWNER_TITLE_EN);
+                                    messageFCMModel.setMessageEn(String.format(Constant.Notification.NEW_ORDER_TO_OWNER_CONTENT_EN, ps.getOrderCode()));
+                                    messageFCMModel.setTitleEs(Constant.Notification.NEW_ORDER_TO_OWNER_TITLE_ES);
+                                    messageFCMModel.setMessageEs(String.format(Constant.Notification.NEW_ORDER_TO_OWNER_CONTENT_ES, ps.getOrderCode()));
+
+                                    userFCMService.pushNotificationToOwnersWithoutTopic(messageFCMModel, userFCMModelList);
                                 }
                             } catch (MessagingException | IOException e) {
                                 logger.error(e.toString());
@@ -784,40 +775,32 @@ public class OrderController extends BaseController {
                 // To User
                 if (o.getUser().getUserId() != null) {
                     List<UserFCMModel> userFCMModelList = userFCMService.getListTokenByUserId(o.getUser().getUserId());
-                    String message = "";
-                    String subject = "";
-                    if (req.getLanguageCode().equalsIgnoreCase("en")) {
-                        if(req.getStatus() == Constant.Order.Confirmed.getValue()) {
-                            message = String.format(Constant.Notification.CONFIRMED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
-                            subject = Constant.Notification.CONFIRMED_ORDER_TO_USER_TITLE_EN;
-                        } else if (req.getStatus() == Constant.Order.Delivered.getValue()) {
-                            message = String.format(Constant.Notification.DELIVERED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
-                            subject = Constant.Notification.DELIVERED_ORDER_TO_USER_TITLE_EN;
-                        } else if (req.getStatus() == Constant.Order.Rejected.getValue()) {
-                            message = String.format(Constant.Notification.REJECTED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
-                            subject = Constant.Notification.REJECTED_ORDER_TO_USER_TITLE_EN;
-                        } else if (req.getStatus() == Constant.Order.Canceled.getValue()) {
-                            message = String.format(Constant.Notification.CANCELED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode());
-                            subject = Constant.Notification.CANCELED_ORDER_TO_USER_TITLE_EN;
-                        }
+                    MessageFCMModel messageFCMModel = new MessageFCMModel();
+                    if (req.getStatus() == Constant.Order.Confirmed.getValue()) {
+                        messageFCMModel.setMessageEn(String.format(Constant.Notification.CONFIRMED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode()));
+                        messageFCMModel.setTitleEn(Constant.Notification.CONFIRMED_ORDER_TO_USER_TITLE_EN);
+                        messageFCMModel.setMessageEs(String.format(Constant.Notification.CONFIRMED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode()));
+                        messageFCMModel.setTitleEs(Constant.Notification.CONFIRMED_ORDER_TO_USER_TITLE_ES);
 
-                    } else {
-                        if(req.getStatus() == Constant.Order.Confirmed.getValue()) {
-                            message = String.format(Constant.Notification.CONFIRMED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
-                            subject = Constant.Notification.CONFIRMED_ORDER_TO_USER_TITLE_ES;
-                        } else if (req.getStatus() == Constant.Order.Delivered.getValue()) {
-                            message = String.format(Constant.Notification.DELIVERED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
-                            subject = Constant.Notification.DELIVERED_ORDER_TO_USER_TITLE_ES;
-                        } else if (req.getStatus() == Constant.Order.Rejected.getValue()) {
-                            message = String.format(Constant.Notification.REJECTED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
-                            subject = Constant.Notification.REJECTED_ORDER_TO_USER_TITLE_ES;
-                        } else if (req.getStatus() == Constant.Order.Canceled.getValue()) {
-                            message = String.format(Constant.Notification.CANCELED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode());
-                            subject = Constant.Notification.CANCELED_ORDER_TO_USER_TITLE_ES;
-                        }
+                    } else if (req.getStatus() == Constant.Order.Delivered.getValue()) {
+                        messageFCMModel.setMessageEn(String.format(Constant.Notification.DELIVERED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode()));
+                        messageFCMModel.setTitleEn(Constant.Notification.DELIVERED_ORDER_TO_USER_TITLE_EN);
+                        messageFCMModel.setMessageEs(String.format(Constant.Notification.DELIVERED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode()));
+                        messageFCMModel.setTitleEs(Constant.Notification.DELIVERED_ORDER_TO_USER_TITLE_ES);
+                    } else if (req.getStatus() == Constant.Order.Rejected.getValue()) {
+                        messageFCMModel.setMessageEn(String.format(Constant.Notification.REJECTED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode()));
+                        messageFCMModel.setTitleEn(Constant.Notification.REJECTED_ORDER_TO_USER_TITLE_EN);
+                        messageFCMModel.setMessageEs(String.format(Constant.Notification.REJECTED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode()));
+                        messageFCMModel.setTitleEs(Constant.Notification.REJECTED_ORDER_TO_USER_TITLE_ES);
+                    } else if (req.getStatus() == Constant.Order.Canceled.getValue()) {
+                        messageFCMModel.setMessageEn(String.format(Constant.Notification.CANCELED_ORDER_TO_USER_CONTENT_EN, req.getOrderCode()));
+                        messageFCMModel.setTitleEn(Constant.Notification.CANCELED_ORDER_TO_USER_TITLE_EN);
+                        messageFCMModel.setMessageEs(String.format(Constant.Notification.CANCELED_ORDER_TO_USER_CONTENT_ES, req.getOrderCode()));
+                        messageFCMModel.setTitleEs(Constant.Notification.CANCELED_ORDER_TO_USER_TITLE_ES);
                     }
 
-                    userFCMService.pushNotificationToUsersWithoutTopic(o.getOrderId(), o.getOrderCode(), subject, message, userFCMModelList);
+
+                    userFCMService.pushNotificationToUsersWithoutTopic(o.getOrderId(), o.getOrderCode(), messageFCMModel, userFCMModelList);
                 }
             });
 

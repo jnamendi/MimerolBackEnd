@@ -3,6 +3,7 @@ package bmbsoft.orderfoodonline.service.fcm;
 import bmbsoft.orderfoodonline.dao.UserFCMDAO;
 import bmbsoft.orderfoodonline.entities.User;
 import bmbsoft.orderfoodonline.entities.UserFCM;
+import bmbsoft.orderfoodonline.model.MessageFCMModel;
 import bmbsoft.orderfoodonline.model.UserFCMModel;
 import bmbsoft.orderfoodonline.service.UserService;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -61,7 +62,7 @@ public class UserFCMService {
         return list;
     }
 
-    public void pushNotificationToUsersWithoutTopic(Long orderId, String orderCode, String title, String message, List<UserFCMModel> userFCMS) {
+    public void pushNotificationToUsersWithoutTopic(Long orderId, String orderCode, MessageFCMModel messageFCMModel, List<UserFCMModel> userFCMS) {
         if (!userFCMS.isEmpty()) {
             try {
                 List<String> listToken = new ArrayList<>();
@@ -75,8 +76,10 @@ public class UserFCMService {
 
                 Map<String, String> data = new HashMap<>();
                 data.put("type", "1");
-                data.put("message", message);
-                data.put("title", title);
+                data.put("messageEn", messageFCMModel.getMessageEn());
+                data.put("titleEn", messageFCMModel.getTitleEn());
+                data.put("messageEs", messageFCMModel.getTitleEs());
+                data.put("titleEs", messageFCMModel.getTitleEs());
                 data.put("content", content.toString());
                 fcmService.sendMulticast(data, listToken);
             } catch (FirebaseMessagingException ex) {
@@ -85,7 +88,7 @@ public class UserFCMService {
         }
     }
 
-    public void pushNotificationToOwnersWithoutTopic(String title, String message, List<UserFCMModel> userFCMS) {
+    public void pushNotificationToOwnersWithoutTopic(MessageFCMModel messageFCMModel, List<UserFCMModel> userFCMS) {
         if (!userFCMS.isEmpty()) {
             try {
                 List<String> listToken = new ArrayList<>();
@@ -95,8 +98,10 @@ public class UserFCMService {
 
                 Map<String, String> data = new HashMap<>();
                 data.put("type", "2");
-                data.put("message", message);
-                data.put("title", title);
+                data.put("messageEn", messageFCMModel.getMessageEn());
+                data.put("titleEn", messageFCMModel.getTitleEn());
+                data.put("messageEs", messageFCMModel.getTitleEs());
+                data.put("titleEs", messageFCMModel.getTitleEs());
                 fcmService.sendMulticast(data, listToken);
             } catch (FirebaseMessagingException ex) {
                 ex.printStackTrace();
