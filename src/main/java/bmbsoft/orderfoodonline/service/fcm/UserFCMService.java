@@ -78,7 +78,7 @@ public class UserFCMService {
                 data.put("type", "1");
                 data.put("messageEn", messageFCMModel.getMessageEn());
                 data.put("titleEn", messageFCMModel.getTitleEn());
-                data.put("messageEs", messageFCMModel.getTitleEs());
+                data.put("messageEs", messageFCMModel.getMessageEs());
                 data.put("titleEs", messageFCMModel.getTitleEs());
                 data.put("content", content.toString());
                 fcmService.sendMulticast(data, listToken);
@@ -100,7 +100,7 @@ public class UserFCMService {
                 data.put("type", "2");
                 data.put("messageEn", messageFCMModel.getMessageEn());
                 data.put("titleEn", messageFCMModel.getTitleEn());
-                data.put("messageEs", messageFCMModel.getTitleEs());
+                data.put("messageEs", messageFCMModel.getMessageEs());
                 data.put("titleEs", messageFCMModel.getTitleEs());
                 fcmService.sendMulticast(data, listToken);
             } catch (FirebaseMessagingException ex) {
