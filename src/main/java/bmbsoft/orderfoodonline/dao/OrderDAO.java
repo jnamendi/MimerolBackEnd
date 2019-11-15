@@ -179,7 +179,7 @@ public class OrderDAO {
 		// predicates.add(cb.equal(rootRestaurant.get("keySearch"), key));
 		predicates.add(cb.and(cb.equal(form.join("user").<Long>get("userId"), userId)));
 		predicates.add(cb.and(cb.notEqual(form.<Integer>get("status"), Constant.Status.Deleted.getValue())));
-		query.select(form).where(predicates.stream().toArray(Predicate[]::new));
+		query.select(form).where(predicates.stream().toArray(Predicate[]::new)).orderBy(cb.desc(form.get("orderId")));
 		List<Order> menus = session.createQuery(query).getResultList();
 
 		return menus;
