@@ -307,7 +307,7 @@ public class OrderService {
 		}
 		return or;
 	}
-	private static List<MenuItemLiteResponse> getDataMenuExtra(String jsonString){
+	private List<MenuItemLiteResponse> getDataMenuExtra(String jsonString){
 		Gson s = new Gson();
 		PaymentRequest req = s.fromJson(jsonString, PaymentRequest.class);
 		if (req != null && !req.getOrderItem().getOrderItemsRequest().isEmpty()) {

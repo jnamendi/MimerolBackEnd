@@ -1,28 +1,7 @@
 package bmbsoft.orderfoodonline.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import bmbsoft.orderfoodonline.dao.UserDAO;
-import bmbsoft.orderfoodonline.entities.Role;
-import bmbsoft.orderfoodonline.entities.RoleModule;
-import bmbsoft.orderfoodonline.entities.User;
-import bmbsoft.orderfoodonline.entities.UserInfo;
-import bmbsoft.orderfoodonline.entities.UserRestaurant;
-import bmbsoft.orderfoodonline.entities.UserRole;
+import bmbsoft.orderfoodonline.entities.*;
 import bmbsoft.orderfoodonline.model.RoleModel;
 import bmbsoft.orderfoodonline.model.UserInfoResponse;
 import bmbsoft.orderfoodonline.model.UserViewModel;
@@ -30,6 +9,16 @@ import bmbsoft.orderfoodonline.response.Data;
 import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
