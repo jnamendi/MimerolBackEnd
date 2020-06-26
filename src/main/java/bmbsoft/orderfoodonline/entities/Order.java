@@ -88,7 +88,7 @@ public class Order implements java.io.Serializable {
 		this.orderId = orderId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "restaurant_id", nullable = false)
 	public Restaurant getRestaurant() {
 		return this.restaurant;
@@ -98,7 +98,7 @@ public class Order implements java.io.Serializable {
 		this.restaurant = restaurant;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	public User getUser() {
 		return this.user;

@@ -18,6 +18,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -279,4 +280,29 @@ public class OrderDAO {
 		return totalCount.intValue();
 	}
 
+	public List<Order> getOrderByRestaurantIdFromTo(Date fromDate, Date toDate) {
+		logger.error("getOrderByRestaurantIdFromTo ---------Start");
+		Session session = this.sessionFactory.getCurrentSession();
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Order> query = criteriaBuilder.createQuery(Order.class);
+		Root<Order> order = query.from(Order.class);
+		Predicate predicateLessThanToDate
+				= criteriaBuilder.lessThanOrEqualTo(order.get("orderDate"), toDate);
+		Predicate predicateMoreThanFromDate
+				= criteriaBuilder.greaterThanOrEqualTo(order.get("orderDate"), fromDate);
+		Predicate predicateStatusRelivered
+				= criteriaBuilder.greaterThanOrEqualTo(order.get("status"), Constant.Order.Delivered.getValue());
+		Predicate predicateNotCancel
+				= criteriaBuilder.isNull(order.get("reasonCancel"));
+		Predicate predicateNotReject
+				= criteriaBuilder.isNull(order.get("reasonReject"));
+//		Predicate finalPredicate = criteriaBuilder.and(predicateLessThanToDate, predicateMoreThanFromDate);
+		Predicate finalPredicate = criteriaBuilder.and(predicateLessThanToDate,
+				predicateMoreThanFromDate, predicateStatusRelivered,
+				predicateNotCancel, predicateNotReject);
+		query.orderBy(criteriaBuilder.asc(order.get("orderDate")));
+		query.where(finalPredicate);
+		logger.error("getOrderByRestaurantIdFromTo ---------Done");
+		return session.createQuery(query).getResultList();
+	}
 }

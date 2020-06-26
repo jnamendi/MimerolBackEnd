@@ -13,17 +13,55 @@ import bmbsoft.orderfoodonline.response.ResponseGetPaging;
 import bmbsoft.orderfoodonline.util.CommonHelper;
 import bmbsoft.orderfoodonline.util.Constant;
 import com.google.gson.Gson;
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import jlibs.core.util.regex.TemplateMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
 	public static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+	private static final String DATA_SPECIFICATIONS = "<table style=\"width: 100%;\">" +
+			"            <thead>" +
+			"                <tr>" +
+			"                    <th style=\"text-align: left;\">" +
+			"                        Date" +
+			"                    </th>" +
+			"                    <th style=\"text-align: left;\">" +
+			"                        #" +
+			"                    </th>" +
+			"                    <th style=\"text-align: left;\">" +
+			"                        C$" +
+			"                    </th>" +
+			"                    <th style=\"min-width: 20%;\">" +
+			"                    </th>"+
+			"                </tr>" +
+			"            </thead>" +
+			"            <tbody>";
 
 	@Autowired
 	private OrderDAO orderDAO;
@@ -356,5 +394,132 @@ public class OrderService {
 			rs.setMessage("Success.");
 		}
 		return rs;
+	}
+
+	public ByteArrayOutputStream createInvoice(String from, String to, Long restaurantId) {
+		logger.error("createInvoice----------Start");
+		String lastToDate = to.trim() + " 23:59:59";
+		String beginFromDate = from.trim() + " 00:00:00";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+		try {
+			Date fromDate = formatter.parse(beginFromDate);
+			Date toDate = formatter.parse(lastToDate);
+			List<Order> orders = orderDAO.getOrderByRestaurantIdFromTo(fromDate, toDate);
+			List<Order> ordersByRestaurantId = new ArrayList<>();
+			BigDecimal totalAmount = BigDecimal.ZERO;
+			List<InvoiceDto> invoiceDtos = new ArrayList<>();
+			for (Order order : orders) {
+				if (order.getRestaurant().getRestaurantId().equals(restaurantId)) {
+					ordersByRestaurantId.add(order);
+					totalAmount = totalAmount.add(new BigDecimal(order.getTotalPrice(), MathContext.DECIMAL64));
+					invoiceDtos.add(new InvoiceDto(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(order.getOrderDate()),
+							order.getOrderCode(),
+							new BigDecimal(order.getTotalPrice()).setScale(3, RoundingMode.HALF_UP).toString()));
+				}
+			}
+//			Path path = Paths.get("../src/main/resources/templates/mimerol-invoice-page-info.html");
+			String restaurantName = !orders.isEmpty() ? orders.get(0).getRestaurantName() : "";
+			String userName = !orders.isEmpty() ? orders.get(0).getUser().getUserName() : "";
+			String address = !orders.isEmpty() ? orders.get(0).getRestaurant().getAddressLine() : "";
+			String phoneNumber = !orders.isEmpty() ? orders.get(0).getRestaurant().getPhone1() : "";
+//			String content = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
+			String content = read(getClass().getClassLoader().getResourceAsStream("/templates/mimerol-invoice-page-info.html"));
+			TemplateMatcher matcher = new TemplateMatcher("{{", "}}");
+			Map<String, String> vars = new HashMap<>();
+			vars.put("restaurantName", restaurantName);
+			vars.put("userName", userName);
+			vars.put("address", address);
+			vars.put("tel", phoneNumber);
+//			content.replace()/(/"{{customerNumber}}", "No");
+			vars.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+			vars.put("invoiceNumber", "No");
+			vars.put("fromDate", from);
+			vars.put("toDate", to);
+			vars.put("orderCount", String.valueOf(ordersByRestaurantId.size()));
+			vars.put("totalPrice", totalAmount.setScale(3, RoundingMode.HALF_UP).toString());
+			vars.put("charges", "15");
+			BigDecimal totalPriceResult = totalAmount.multiply(new BigDecimal(0.15)).setScale(3, RoundingMode.HALF_UP);
+			vars.put("totalPriceResult", totalPriceResult.toString());
+			BigDecimal subTotal = totalAmount.multiply(new BigDecimal(0.15)).setScale(3, RoundingMode.HALF_UP);
+			vars.put("subTotal", subTotal.setScale(3, RoundingMode.HALF_UP).toString());
+			vars.put("vat", "10");
+			BigDecimal priceVat = totalAmount.multiply(new BigDecimal(0.15)).multiply(new BigDecimal(0.1)).setScale(3, RoundingMode.HALF_UP);
+			vars.put("priceVat", priceVat.toString());
+			BigDecimal totalAmount1 = (totalAmount.multiply(new BigDecimal(0.15))).add((totalAmount.multiply(new BigDecimal(0.15)).multiply(new BigDecimal(0.1)))).setScale(3, RoundingMode.HALF_UP);
+			vars.put("totalAmount", totalAmount1.toString());
+			vars.put("paid", new BigDecimal(0).setScale(3, RoundingMode.HALF_UP).toString());
+			vars.put("outstanding", totalAmount1.toString());
+			vars.put("startDate", from);
+			vars.put("endDate", to);
+			vars.put("duringPrice",totalAmount.setScale(3, RoundingMode.HALF_UP).toString());
+			vars.put("paidOnline", String.valueOf(0));
+			String table = fillDataTable(invoiceDtos);
+			vars.put("dataBody",table);
+			String bodyTemp = matcher.replace(content, vars);
+			logger.error("createInvoice----------Done");
+			return generatePDFSaveInStream(bodyTemp);
+		} catch (ParseException | IOException e) {
+			System.out.println("Format date is wrong!");
+			logger.error("createInvoice----------Exeption" + e.getCause() + "==**==" + e.getMessage());
+			ResponseEntity.status(HttpStatus.BAD_REQUEST);
+		}
+		logger.error("createInvoice----------Exeption------" + "NUll");
+		return null;
+	}
+
+	public static String read(InputStream input) throws IOException {
+		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(input, "UTF8"))) {
+			return buffer.lines().collect(Collectors.joining("\n"));
+		}
+	}
+
+	private String fillDataTable(List<InvoiceDto> invoiceDtos) {
+		logger.error("fillDataTable ---------Start");
+		if (invoiceDtos.isEmpty()) {
+			return "";
+		}
+		String html = DATA_SPECIFICATIONS;
+		StringBuilder str = new StringBuilder(html);
+		for (InvoiceDto invoiceDto : invoiceDtos) {
+			html = "<tr>"
+					+ "					<td \">"
+					+ "						{{date}}, " + "{{time}}				    </td>"
+					+ "					<td style=\"font-size: 0.7rem;\">"
+					+ "						{{orderCode}}" + "						</td>"
+					+ "					<td \">"
+					+ "						{{price}}" + "							</td>";
+			html = html.replace("{{date}}", invoiceDto.getDate().split(" ")[0]);
+			html = html.replace("{{time}}", invoiceDto.getDate().split(" ")[1]);
+			html = html.replace("{{orderCode}}", String.valueOf(invoiceDto.getOrderCode()));
+			html = html.replace("{{price}}", String.valueOf(invoiceDto.getPrice()));
+			str.append(html);
+		}
+		str.append("</tr></tbody></table>");
+		logger.error("fillDataTable ---------Done");
+		return str.toString();
+	}
+
+	public ByteArrayOutputStream generatePDFSaveInStream(String textHtml) {
+		logger.error("generatePDFSaveInStream ---------Start");
+		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+		PageSize pageSize = new PageSize(PageSize.LEDGER.getWidth(), PageSize.LEDGER.getHeight() * 2);
+		try {
+
+			PdfWriter pdfWriter = new PdfWriter(arrayOutputStream);
+			ConverterProperties converterProperties = new ConverterProperties();
+			PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+
+			//For setting the PAGE SIZE
+			pdfDocument.setDefaultPageSize(pageSize);
+
+//	        Document document = HtmlConverter.convertToDocument(getClass().getClassLoader().getResourceAsStream("Formato_Ficha_Tecnica.html"), pdfDocument, converterProperties);
+			Document document = HtmlConverter.convertToDocument(textHtml, pdfDocument, converterProperties);
+			document.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		logger.error("generatePDFSaveInStream ---------Done");
+		return arrayOutputStream;
 	}
 }
