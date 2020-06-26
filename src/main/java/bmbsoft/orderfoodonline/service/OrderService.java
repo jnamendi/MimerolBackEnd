@@ -45,23 +45,13 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
 	public static final Logger logger = LoggerFactory.getLogger(OrderService.class);
-	private static final String DATA_SPECIFICATIONS = "<table style=\"width: 100%;\">" +
-			"            <thead>" +
-			"                <tr>" +
-			"                    <th style=\"text-align: left;\">" +
-			"                        Date" +
-			"                    </th>" +
-			"                    <th style=\"text-align: left;\">" +
-			"                        #" +
-			"                    </th>" +
-			"                    <th style=\"text-align: left;\">" +
-			"                        C$" +
-			"                    </th>" +
-			"                    <th style=\"min-width: 20%;\">" +
-			"                    </th>"+
-			"                </tr>" +
-			"            </thead>" +
-			"            <tbody>";
+	private static final String DATA_SPECIFICATIONS = "<table>\n" +
+			"                <thead>\n" +
+			"                    <th class=\"service\">Date</th>\n" +
+			"                    <th class=\"desc\">#</th>\n" +
+			"                    <th>C$</th>\n" +
+			"                </thead>\n" +
+			"                <tbody>";
 
 	@Autowired
 	private OrderDAO orderDAO;
@@ -481,13 +471,10 @@ public class OrderService {
 		String html = DATA_SPECIFICATIONS;
 		StringBuilder str = new StringBuilder(html);
 		for (InvoiceDto invoiceDto : invoiceDtos) {
-			html = "<tr>"
-					+ "					<td \">"
-					+ "						{{date}}, " + "{{time}}				    </td>"
-					+ "					<td style=\"font-size: 0.7rem;\">"
-					+ "						{{orderCode}}" + "						</td>"
-					+ "					<td \">"
-					+ "						{{price}}" + "							</td>";
+			html = "<tr>\n" +
+					"                        <td class=\"service\">{{date}}, {{time}}</td>\n" +
+					"                        <td class=\"desc\">{{orderCode}}</td>\n" +
+					"                        <td class=\"total\">{{price}}</td>";
 			html = html.replace("{{date}}", invoiceDto.getDate().split(" ")[0]);
 			html = html.replace("{{time}}", invoiceDto.getDate().split(" ")[1]);
 			html = html.replace("{{orderCode}}", String.valueOf(invoiceDto.getOrderCode()));
