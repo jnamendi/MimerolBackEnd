@@ -291,7 +291,7 @@ public class OrderDAO {
 		Predicate predicateMoreThanFromDate
 				= criteriaBuilder.greaterThanOrEqualTo(order.get("orderDate"), fromDate);
 		Predicate predicateStatusRelivered
-				= criteriaBuilder.greaterThanOrEqualTo(order.get("status"), Constant.Order.Delivered.getValue());
+				= criteriaBuilder.equal(order.get("status"), Constant.Order.Delivered.getValue());
 		Predicate predicateNotCancel
 				= criteriaBuilder.isNull(order.get("reasonCancel"));
 		Predicate predicateNotReject
