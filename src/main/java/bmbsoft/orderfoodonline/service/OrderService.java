@@ -424,8 +424,8 @@ public class OrderService {
 //			content.replace()/(/"{{customerNumber}}", "No");
 			vars.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			vars.put("invoiceNumber", "No");
-			vars.put("fromDate", formatter2.parse(from).toString());
-			vars.put("toDate", formatter2.parse(to).toString());
+			vars.put("fromDate", new SimpleDateFormat("yyyy-MM-dd").format(formatter2.parse(from)));
+			vars.put("toDate", new SimpleDateFormat("yyyy-MM-dd").format(formatter2.parse(to)));
 			vars.put("orderCount", String.valueOf(ordersByRestaurantId.size()));
 			vars.put("totalPrice", totalAmount.setScale(3, RoundingMode.HALF_UP).toString());
 			vars.put("charges", "15");
@@ -440,8 +440,8 @@ public class OrderService {
 			vars.put("totalAmount", totalAmount1.toString());
 			vars.put("paid", new BigDecimal(0).setScale(3, RoundingMode.HALF_UP).toString());
 			vars.put("outstanding", totalAmount1.toString());
-			vars.put("startDate", formatter2.parse(from).toString());
-			vars.put("endDate", formatter2.parse(to).toString());
+			vars.put("startDate", new SimpleDateFormat("yyyy-MM-dd").format(formatter2.parse(from)));
+			vars.put("endDate", new SimpleDateFormat("yyyy-MM-dd").format(formatter2.parse(to)));
 			vars.put("duringPrice",totalAmount.setScale(3, RoundingMode.HALF_UP).toString());
 			vars.put("paidOnline", String.valueOf(0));
 			String table = fillDataTable(invoiceDtos);
